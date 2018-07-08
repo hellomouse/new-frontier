@@ -1,0 +1,23 @@
+{
+  "name": "new-frontier",
+  "version": "1.0.0",
+  "description": "2D Space Sim Game",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "electron ."
+  },
+  "keywords": [
+    "game",
+    "space",
+    "simulation",
+    "electron",
+    "pixi"
+  ],
+  "author": "Bowserinator",
+  "license": "MIT",
+  "devDependencies": {
+    "electron": "^1.8.4"
+  },
+  "dependencies": {}
+}

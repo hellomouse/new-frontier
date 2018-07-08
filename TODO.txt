@@ -1,0 +1,49 @@
+Set current rocket as controllable
+    rocket.control = true;
+
+you have to use "stage.toLocal(pos)" to get coordinates on stage. "pos" must be something with "x" and "y"
+You can calculate coordinates relative to any element in pixi, please look in the docs for "displayObject.toLocal()"
+Also, there is a shortcut: "event.getLocalPosition(stage)" works just fine.
+
+
+Create a (dynamically calculated from rocket grid size) scale for pixels to meters
+
+Controls
+    Scroll = zoom
+        camera.scale = <whatever>
+        set between 0.05 and 1.9
+    Left/right control rocket (later)
+
+
+
+
+Create planets
+    getDensity(height) method
+    idfk
+
+Apply forces
+    drag
+    gravity
+
+
+Properly set masses and densities from the rocket parts
+Remove fuel only from attached fuel tanks
+
+Seperators
+
+money
+
+radar/radio comms
+heat sim
+    heat shields
+    radiators
+astronauts :D
+power
+
+drones
+drills
+science instruments
+
+orbital decay
+fake lagrange points
+re-entry heat

@@ -1,11 +1,15 @@
 'use strict';
 
+const config = require('../game/config.js');
+
 /**
  * This file acts like a template for a planet/moon. Extend
  * this class and override all variables
  */
 class Planet {
-    constructor() {
+    constructor(x, y) {
+        this.position = {x: x, y: y};
+
         this.orbital_e = 0;  // Eccentricity
         this.orbital_distance = 0;
         this.rotation_speed = 0;
@@ -35,4 +39,29 @@ class Planet {
             getHeight: angle => 1
         };
     }
+
+    createBody() {
+        this.body = Matter.Bodies.circle(this.position.x, this.position.y, this.radius);
+        Matter.Body.setStatic(this.body, true); // Planets are static bodies
+    }
+
+    applyGravity(rocket) {
+        // Calculate force magnitude to apply
+        let x1 = rocket.position.x;
+        let y1 = rocket.position.y;
+        let x2 = this.position.x;
+        let y2 = this.position.y;
+
+        let f_mag = config.G_CONSTANT * 1 * this.mass / ((x1 - x2) ** 2 + (y1 - y2) ** 2);
+
+        // Calculate force direction to apply
+        let angle = Math.atan2(y2 - y1, x2 - x1);
+        console.log(angle, angle * 180 / Math.PI)
+        console.log(f_mag)
+        console.log({x: f_mag * Math.cos(angle), y: f_mag * Math.sin(angle)})
+
+        rocket.applyForceToAll({x: f_mag * Math.cos(angle), y: f_mag * Math.sin(angle)});
+    }
 }
+
+module.exports = Planet;

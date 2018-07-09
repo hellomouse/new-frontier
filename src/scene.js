@@ -13,10 +13,12 @@ class Scene {
      * @param  {null} background        Currently unused
      * @param  {null} name              Currently unused
      */
-    constructor(physical_sprites, sprites, background, name) {
+    constructor(physical_sprites, sprites, bodies, updatable, background, name) {
         this.name = name;
         this.physical_sprites = physical_sprites;
         this.sprites = sprites;
+        this.bodies = bodies;
+        this.updatable = updatable;
     }
 
     /**
@@ -36,12 +38,19 @@ class Scene {
         // Add physical sprites
         for(let physical_sprite of this.physical_sprites) {
             stage.addChild(physical_sprite.sprite);
-            bodies.push(physical_sprite.body);
+            if (!physical_sprite.skip_add_body) {
+                bodies.push(physical_sprite.body);
+            }
         }
 
         // Add non-physical sprites
         for(let sprite of this.sprites) {
             stage.addChild(sprite.sprite);
+        }
+
+        // Add matterjs bodies
+        for(let body of this.bodies) {
+            bodies.push(body);
         }
 
         // Add all physical objects
@@ -54,8 +63,12 @@ class Scene {
      * will be run.
      */
     update() {
-        for(let physical_sprite of this.physical_sprites) {
+        for (let physical_sprite of this.physical_sprites) {
             physical_sprite.update();
+        }
+
+        for (let updatable of this.updatable) {
+            updatable.update();
         }
     }
 }

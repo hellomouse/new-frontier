@@ -21,6 +21,7 @@ class PhysicalSprite extends ImageSprite {
     constructor(image_path, width, height, body) {
         super(image_path, width, height);
         this.body = body;
+        this.skip_add_body = false; // Should it skip adding the body (Ie it's part of a compound object)
     }
 
     /**

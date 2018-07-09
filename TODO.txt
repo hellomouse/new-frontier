@@ -1,3 +1,8 @@
+Fix rotation along the center
+
+Optimize planets
+    split int osections or something
+
 Set current rocket as controllable
     rocket.control = true;
 
@@ -25,6 +30,7 @@ Apply forces
     drag
     gravity
 
+rotate camera to align down with planet
 
 Properly set masses and densities from the rocket parts
 Remove fuel only from attached fuel tanks

@@ -4,16 +4,19 @@ class Rocket {
     constructor(parts, Matter) {
         this.parts = parts;
         this.control = false;  // Can it be controlled?
-        this.center_pos = {};
+        this.position = {};
 
-        this.body = Matter.Composite.create({});
+        this.comp = Matter.Composite.create({});
+
         for (let part of this.parts) {
             part.rocket = this;
-            Matter.Composite.add(this.body, part.body);
+            Matter.Composite.add(this.comp, part.body);
         }
 
-        Matter.Events.on(this.body, 'afterAdd', this.updateCenterPos);
-        Matter.Events.on(this.body, 'afterRemove', this.updateCenterPos);
+        this.body = Matter.Body.create({parts: this.parts.map(x => x.body)});
+
+        Matter.Events.on(this.comp, 'afterAdd', this.updateCenterPos);
+        Matter.Events.on(this.comp, 'afterRemove', this.updateCenterPos);
         this.updateCenterPos();
     }
 
@@ -24,27 +27,35 @@ class Rocket {
      * @param  {Vector} vector Force vector, in format {x: num, y: num}
      */
     applyForceToAll(vector) {
-        for (let body of this.body.bodies) {
+        Matter.Body.applyForce(this.body, this.body.position, vector);
+        /* for (let body of this.comp.bodies) {
             Matter.Body.applyForce(body, body.position, vector);
-        }
+        } */
     }
 
     getPos() {
         this.updateCenterPos();
-        return this.center_pos;
+        return this.position;
     }
 
     updateCenterPos() {
         let avg_x = 0;
         let avg_y = 0;
 
-        for (let body of this.body.bodies) {
+        for (let body of this.comp.bodies) {
             avg_x += body.position.x;
             avg_y += body.position.y;
         }
 
-        this.center_pos.x = avg_x / this.body.bodies.length;
-        this.center_pos.y = avg_y / this.body.bodies.length;
+        this.position.x = avg_x / this.comp.bodies.length;
+        this.position.y = avg_y / this.comp.bodies.length;
+    }
+
+    update() {
+        // Make sure rotation is consistent
+        for (let body of this.comp.bodies) {
+            body.angle = this.body.angle;
+        }
     }
 }
 

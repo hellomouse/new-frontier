@@ -18,7 +18,7 @@ const Scene = require(path.resolve(appPath, './src/scene.js'));
 const Camera = require(path.resolve(appPath, './src/ui/camera.js'));
 
 
-
+const Earth = require(path.resolve(appPath, './src/game/bodies/earth.js'));
 const PhysicalSprite = require(path.resolve(appPath, './src/components/physical-sprite.js'));
 
 const Rocket = require(path.resolve(appPath, './src/game/rocket.js'));
@@ -29,18 +29,12 @@ let blocks = [
     new FuelTank(90, 400),
     new FuelTank(90, 350),
     new FuelTank(90, 300),
-    new Thruster(90, 450)
+    //new Thruster(90, 450)
 ];
 
-
-let current_scene = new Scene(
-    blocks,
-    [],
-    null,
-    'test-level'
-);
-
+let earth = new Earth(0, -1000);
 let rocket = new Rocket(blocks, Matter);
+
 
 const camera = new Camera();
 
@@ -57,6 +51,16 @@ let stage, renderer;
 let engine = Engine.create();
 
 
+let current_scene = new Scene(
+    blocks,
+    [],
+    [rocket.body, earth.body],
+    [rocket],
+    null,
+    'test-level'
+);
+
+
 
 
 let far;
@@ -64,14 +68,17 @@ let far;
 function init(){
     resetAll();
 
-    current_scene.load(stage, World, engine);
-
-    World.add(engine.world, []);
+    engine.world.gravity.y = 0;                 // Disable gravity
+    current_scene.load(stage, World, engine);   // Load the current scene (Add all objects)
+    World.add(engine.world, []);                // Init the current world
 
     // Start the scene
     Engine.run(engine);
     renderer.render(stage);
     requestAnimationFrame(update);
+
+    // Add all the planets
+    earth.addToStage(PIXI, stage);
 }
 
 

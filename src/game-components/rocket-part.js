@@ -22,6 +22,8 @@ class RocketPart extends PhysicalSprite {
         let body = Matter.Bodies.rectangle(x, y, width, height);
         super(image_path, width, height, body);
 
+        this.skip_add_body = true;
+
         /* Data that should be overrided by another
          * class that extends this class */
         this.id = null;
@@ -41,7 +43,7 @@ class RocketPart extends PhysicalSprite {
          *     },
          *     volume: <number>,  Volume in m^3
          *     density: <number>, Density in kg/m^3
-         *     description: <string> 
+         *     description: <string>
          * }
          */
         this.data = data;

@@ -42,6 +42,7 @@ class Planet {
 
     createBody() {
         this.body = Matter.Bodies.circle(this.position.x, this.position.y, this.radius);
+        this.body.label = 'Planet';
         Matter.Body.setStatic(this.body, true); // Planets are static bodies
     }
 

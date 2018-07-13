@@ -10,6 +10,7 @@ class Earth extends Planet {
         this.mass = 100000;
 
         this.createBody();
+        this.body.mass = 500 //5.972 * 10**24 (Real value freezes application - Need workaround to handle large values and forces)
     }
 
     addToStage(PIXI, stage) {

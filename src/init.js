@@ -17,6 +17,7 @@ let appPath = remote.app.getAppPath();
 const Scene = require(path.resolve(appPath, './src/scene.js'));
 const Camera = require(path.resolve(appPath, './src/ui/camera.js'));
 
+const config = require(path.resolve(appPath, './src/game/config.js'));
 
 const Earth = require(path.resolve(appPath, './src/game/bodies/earth.js'));
 const PhysicalSprite = require(path.resolve(appPath, './src/components/physical-sprite.js'));
@@ -60,8 +61,8 @@ let current_scene = new Scene(
     'test-level'
 );
 
-
-
+/* Game rules */
+var ruleDoGravity = true;
 
 let far;
 
@@ -82,12 +83,43 @@ function init(){
 }
 
 
-
+// Gravity
 function update() {
     current_scene.update();
 
     camera.focusOn(rocket.getPos());
     camera.updateScene(stage, renderer);
+
+    let bodies = engine.world.bodies
+    for (var i = 0; i < bodies.length; i++) {
+        if (!ruleDoGravity) break;
+        let originalBody = bodies[i]
+        if (originalBody.label != 'Planet') continue;
+        for (var j = 0; j < bodies.length - i; j++) {
+            let targetBody = bodies[j]
+            if (targetBody.label == 'Planet') continue; // static body
+
+            // Calculate force magnitude to apply
+            let x1 = targetBody.position.x;
+            let y1 = targetBody.position.y;
+            let x2 = originalBody.position.x;
+            let y2 = originalBody.position.y;
+
+            // Newstons law of Universal Gravitation - The force between the two bodies
+            // G((m1*m2)/distance^2)
+            console.log(`Origin Body: ${originalBody.label}, Target Body: ${targetBody.label}`)
+            console.log(`Gravitational Constant ${config.G_CONSTANT}, Origin Mass ${originalBody.mass}, targetBodyMass ${targetBody.mass}`)
+            let f_mag = config.G_CONSTANT * originalBody.mass * targetBody.mass / ((x1 - x2) ** 2 + (y1 - y2) ** 2);
+            
+            // Calculate force direction to apply
+            let angle = Math.atan2(y2 - y1, x2 - x1);
+            //console.log(angle, angle * 180 / Math.PI)
+            console.log(f_mag)
+
+            let vector = {x: f_mag * Math.cos(angle), y: f_mag * Math.sin(angle)}
+            Matter.Body.applyForce(targetBody, targetBody.position, vector);
+        }
+    }
 
     renderer.render(stage);
     requestAnimationFrame(update);

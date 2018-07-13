@@ -107,14 +107,14 @@ function update() {
 
             // Newstons law of Universal Gravitation - The force between the two bodies
             // G((m1*m2)/distance^2)
-            console.log(`Origin Body: ${originalBody.label}, Target Body: ${targetBody.label}`)
-            console.log(`Gravitational Constant ${config.G_CONSTANT}, Origin Mass ${originalBody.mass}, targetBodyMass ${targetBody.mass}`)
+            //console.log(`Origin Body: ${originalBody.label}, Target Body: ${targetBody.label}`)
+            //console.log(`Gravitational Constant ${config.G_CONSTANT}, Origin Mass ${originalBody.mass}, targetBodyMass ${targetBody.mass}`)
             let f_mag = config.G_CONSTANT * originalBody.mass * targetBody.mass / ((x1 - x2) ** 2 + (y1 - y2) ** 2);
             
             // Calculate force direction to apply
             let angle = Math.atan2(y2 - y1, x2 - x1);
             //console.log(angle, angle * 180 / Math.PI)
-            console.log(f_mag)
+            //console.log(f_mag)
 
             let vector = {x: f_mag * Math.cos(angle), y: f_mag * Math.sin(angle)}
             Matter.Body.applyForce(targetBody, targetBody.position, vector);
@@ -125,6 +125,18 @@ function update() {
     requestAnimationFrame(update);
 }
 
+window.addEventListener('wheel', function(e) {
+
+    let scaleDelta = 0;
+    console.log(e.wheelDelta);
+    if (e.wheelDelta > 0 && camera.scale !== 1) {
+        scaleDelta = 0.1
+    } else if (camera.scale !== 0.1) {
+        scaleDelta -= 0.1
+    }
+    camera.scale = +(camera.scale + scaleDelta).toFixed(1);
+
+})
 
 /**
  * resetAll - Resets the World, engine, stage

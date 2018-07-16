@@ -46,6 +46,16 @@ class Planet {
         Matter.Body.setStatic(this.body, true); // Planets are static bodies
     }
 
+    addToStage(PIXI, stage) {
+        let graphics = new PIXI.Graphics();
+
+        graphics.beginFill(0xe74c3c); // Red
+        graphics.drawCircle(this.position.x, this.position.y, this.radius);
+        graphics.endFill();
+
+        stage.addChild(graphics);
+    }
+
     applyGravity(rocket) {
         // Calculate force magnitude to apply
         let x1 = rocket.position.x;
@@ -57,9 +67,9 @@ class Planet {
 
         // Calculate force direction to apply
         let angle = Math.atan2(y2 - y1, x2 - x1);
-        console.log(angle, angle * 180 / Math.PI)
-        console.log(f_mag)
-        console.log({x: f_mag * Math.cos(angle), y: f_mag * Math.sin(angle)})
+        //console.log(angle, angle * 180 / Math.PI)
+        //console.log(f_mag)
+        //console.log({x: f_mag * Math.cos(angle), y: f_mag * Math.sin(angle)})
 
         rocket.applyForceToAll({x: f_mag * Math.cos(angle), y: f_mag * Math.sin(angle)});
     }

@@ -60,6 +60,7 @@ class Planet {
             gameUtil.math.copySign((position.y - this.position.y)) * 9999999 :
             ratio;
         let angle = Math.atan(ratio); // gameUtil.math.fastAtan(ratio);
+        let added = false;
 
         // Round angle to lowest multiple of a PLANET_SECTOR_SIZE
         for (let i=-1; i<=1; i++) {
@@ -71,10 +72,11 @@ class Planet {
             console.log("Adding sector")
             this.sectors[angle] = new PlanetSector(angle, this);
             World.add(sim.engine.world, this.sectors[angle].body);
+            added = true;
         }
 
-        /* Randomly trim extra angles that are too far away */
-        if (Math.random() < 0.1) {
+        /* Trim extra angles that are too far away */
+        if (added) {
             for (let a of Object.keys(this.sectors)) {
                 if (Math.abs(angle - a) > config.planet_sector_size * 2) {
                     console.log("Removing sector")

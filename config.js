@@ -6,7 +6,7 @@ module.exports = {
         height: 700,
         resizable: false,
 
-        title: "City of Valoran",
+        title: "New Frontier",
         icon: undefined,
 
         webPreferences: {

@@ -7,7 +7,7 @@ module.exports = {
     planet_sector_inc: 0.001,     // Increment for precision of each sector
 
     // Physics
-    G_CONSTANT: 20,
+    G_CONSTANT: 2000,
 
     // Game
     MIN_SCROLL: 0.005,

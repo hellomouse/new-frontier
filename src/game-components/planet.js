@@ -38,7 +38,7 @@ class Planet {
             ocean_level: 0,
             ocean_type: 'water',
 
-            getHeight: angle => this.radius
+            getHeight: angle => this.radius + Math.sin(angle * 100) * 1000
         };
 
         this.sectors = {};

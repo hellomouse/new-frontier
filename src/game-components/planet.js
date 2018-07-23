@@ -51,15 +51,7 @@ class Planet {
      * @param  {Vector} position Position of rocket, in {x, y} coordinates
      */
     updateSector(position, sim) {
-        let ratio = (position.y - this.position.y) / (position.x - this.position.x);
-
-        /**
-         * This is a fix in case of divison by 0, in which case it will replace
-         * the ratio with a really large number */
-        ratio = Number.isNaN(ratio) ?
-            gameUtil.math.copySign((position.y - this.position.y)) * 9999999 :
-            ratio;
-        let angle = Math.atan(ratio); // gameUtil.math.fastAtan(ratio);
+        let angle = Math.atan2(position.y - this.position.y, position.x - this.position.x); // gameUtil.math.fastAtan(ratio);
         let added = false;
 
         // Round angle to lowest multiple of a PLANET_SECTOR_SIZE
@@ -69,7 +61,7 @@ class Planet {
             // Sector already exists
             if (this.sectors[angle]) continue;
 
-            console.log("Adding sector")
+            console.log("Adding sector, angle " + (angle / 3.1415926535 * 180))
             this.sectors[angle] = new PlanetSector(angle, this);
             World.add(sim.engine.world, this.sectors[angle].body);
             added = true;

@@ -36,12 +36,13 @@ class Planet {
             ocean_level: 0,
             ocean_type: 'water',
 
-            getHeight: angle => 1
+            getHeight: angle => this.radius
         };
     }
 
     createBody() {
-        this.body = Matter.Bodies.circle(this.position.x, this.position.y, this.radius);
+        //TODO don't render planet ody, use sectors
+        this.body = Matter.Bodies.circle(this.position.x, this.position.y, 2);
         this.body.label = 'Planet';
         Matter.Body.setStatic(this.body, true); // Planets are static bodies
     }

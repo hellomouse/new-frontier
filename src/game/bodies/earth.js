@@ -6,7 +6,7 @@ class Earth extends Planet {
     constructor(x, y) {
         super(x, y);
 
-        this.radius = 10000;
+        this.radius = 1000000;
         this.mass = 100000;
 
         this.createBody();

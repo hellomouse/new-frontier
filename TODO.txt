@@ -1,10 +1,25 @@
 Fix rotation along the center
 
+Optimized zoom
+    At some point just stop rendering
+        Perhaps only render close up zoom
+            Avoids rendering planets except in map view
+
+Create a simulation (calculations only)
+    and renderers
+        map
+        in game
+        title screen
+        editor
+
+    https://www.grc.nasa.gov/www/K-12/airplane/drageq.html
+    https://stackoverflow.com/questions/29429219/how-put-a-texture-on-pixi-js-polygon
+
+
 Optimize planets
     split int osections or something
+    Only body needs to be optimized
 
-Set current rocket as controllable
-    rocket.control = true;
 
 you have to use "stage.toLocal(pos)" to get coordinates on stage. "pos" must be something with "x" and "y"
 You can calculate coordinates relative to any element in pixi, please look in the docs for "displayObject.toLocal()"

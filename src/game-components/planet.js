@@ -1,6 +1,8 @@
 'use strict';
 
 const config = require('../game/config.js');
+const PlanetSector = require('./planet-sector.js');
+const gameUtil = require('../util.js');
 
 /**
  * This file acts like a template for a planet/moon. Extend
@@ -38,13 +40,49 @@ class Planet {
 
             getHeight: angle => this.radius
         };
+
+        this.sectors = {};
     }
 
-    createBody() {
-        //TODO don't render planet ody, use sectors
-        this.body = Matter.Bodies.circle(this.position.x, this.position.y, 2);
-        this.body.label = 'Planet';
-        Matter.Body.setStatic(this.body, true); // Planets are static bodies
+    /**
+     * getSector - Given a position, updates this.sectors
+     * and add it to the world
+     *
+     * @param  {Vector} position Position of rocket, in {x, y} coordinates
+     */
+    updateSector(position, sim) {
+        let ratio = (position.y - this.position.y) / (position.x - this.position.x);
+
+        /**
+         * This is a fix in case of divison by 0, in which case it will replace
+         * the ratio with a really large number */
+        ratio = Number.isNaN(ratio) ?
+            gameUtil.math.copySign((position.y - this.position.y)) * 9999999 :
+            ratio;
+        let angle = Math.atan(ratio); // gameUtil.math.fastAtan(ratio);
+
+        // Round angle to lowest multiple of a PLANET_SECTOR_SIZE
+        for (let i=-1; i<=1; i++) {
+            angle = Math.floor(angle / config.planet_sector_size + i) * config.planet_sector_size;
+
+            // Sector already exists
+            if (this.sectors[angle]) continue;
+
+            console.log("Adding sector")
+            this.sectors[angle] = new PlanetSector(angle, this);
+            World.add(sim.engine.world, this.sectors[angle].body);
+        }
+
+        /* Randomly trim extra angles that are too far away */
+        if (Math.random() < 0.1) {
+            for (let a of Object.keys(this.sectors)) {
+                if (Math.abs(angle - a) > config.planet_sector_size * 2) {
+                    console.log("Removing sector")
+                    Matter.Composite.remove(sim.engine.world, this.sectors[a].body);
+                    delete this.sectors[a];
+                }
+            }
+        }
     }
 
     addToStage(PIXI, stage) {
@@ -54,7 +92,7 @@ class Planet {
         graphics.drawCircle(this.position.x, this.position.y, this.radius);
         graphics.endFill();
 
-        stage.addChild(graphics);
+        //stage.addChild(graphics);
     }
 
     applyGravity(rocket) {

@@ -6,6 +6,7 @@
 'use strict';
 
 const Camera = require('../ui/camera.js');
+const gameUtil = require('../util.js');
 
 
 class Simulation {
@@ -87,12 +88,24 @@ class Simulation {
      * the simulation
      */
     update() {
+        // Scene update
         this.scene.update();
 
+        // Camera update
         if (this.getActiveRocket() !== null) {
             this.camera.focusOn(this.getActiveRocket().getPos());
+            this.camera.updateScene(this.stage, this.renderer);
         }
-        this.camera.updateScene(this.stage, this.renderer);
+
+        // Sector uodate
+        for (let planet of this.planets) {
+            //TODO maybe optimize with a cache of distances and stuff
+
+            // 1.5 is a "close enough" to start adding the planet's land collision box
+            if (gameUtil.math.fastDistance(planet.position, this.rockets[0].position) < planet.radius * 1.5) {
+                planet.updateSector(this.rockets[0].getPos(), this);
+            }
+        }
 
         /* let bodies = engine.world.bodies
         for (var i = 0; i < bodies.length; i++) {

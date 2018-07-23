@@ -20,6 +20,22 @@ Optimize planets
     split int osections or something
     Only body needs to be optimized
 
+Fix small lag spike when rendering new sector
+
+If rocket is inside planet teleport it out
+
+
+
+https://github.com/liabru/matter-js/issues/141
+Rather than remove the bodies from the world do this instead:
+
+add the body to a garbage array
+set the body to sleep
+set the body collisionFilter so it is not colliding with anything
+stop rendering the body
+
+
+
 
 you have to use "stage.toLocal(pos)" to get coordinates on stage. "pos" must be something with "x" and "y"
 You can calculate coordinates relative to any element in pixi, please look in the docs for "displayObject.toLocal()"
@@ -35,6 +51,7 @@ Controls
     Left/right control rocket (later)
 
 
+Minimize js
 
 
 Create planets

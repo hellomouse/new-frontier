@@ -38,6 +38,18 @@ module.exports = {
         },
 
         /**
+         * distance - Naive distance algorithim
+         * between 2 position vectors
+         *
+         * @param  {Vector} pos1 {x: number, y: number}
+         * @param  {Vector} pos2 {x: number, y: number}
+         * @return {number}      Distance (2D)
+         */
+        distance(pos1, pos2) {
+            return Math.sqrt((pos1.x - pos2.x) ** 2 + (pos1.y - pos2.y) ** 2);
+        },
+
+        /**
          * copySign - Return a number, either 1
          * or -1, that matches the sign of the number
          *

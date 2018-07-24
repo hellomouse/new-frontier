@@ -6,11 +6,13 @@
 'use strict';
 
 const Camera = require('../ui/camera.js');
+const RenderableScene = require('../ui/renderable-scene.js');
 const gameUtil = require('../util.js');
 
 
-class Simulation {
+class Simulation extends RenderableScene {
     constructor() {
+        super();
         this.camera = new Camera;
 
         // Bodies
@@ -18,18 +20,16 @@ class Simulation {
         this.rockets = [];
 
         // Game
-        this.stage = null;
-        this.renderer = null;
         this.engine = Engine.create();;
         this.scene = null;
         this.active_rocket = null;
 
         // Gamerules
         this.rules = {
-            doGravity: true
+            doGravity: true,
+            doAirFriction: true
         };
     }
-
 
     /**
      * addPlanet - Add a new planet to the simulation.
@@ -66,7 +66,7 @@ class Simulation {
      * main loop
      */
     init() {
-        this.resetAll();
+        super.init();
 
         this.engine.world.gravity.y = 0;                    // Disable universial downward gravity
         this.scene.load(this.stage, World, this.engine);   // Load the current scene (Add all objects)
@@ -74,8 +74,6 @@ class Simulation {
 
         // Start the scene
         Engine.run(this.engine);
-        this.renderer.render(this.stage);
-        requestAnimationFrame(this.update.bind(this));
 
         // Add all the planets
         for (let planet of this.planets) {
@@ -102,7 +100,7 @@ class Simulation {
             //TODO maybe optimize with a cache of distances and stuff
 
             // 1.5 is a "close enough" to start adding the planet's land collision box
-            if (gameUtil.math.fastDistance(planet.position, this.rockets[0].position) < planet.radius * 1.5) {
+            if (gameUtil.math.fastDistance(planet.position, this.rockets[0].position) < planet.radius * 1.03) {
                 planet.updateSector(this.rockets[0].getPos(), this);
             }
         }
@@ -111,7 +109,22 @@ class Simulation {
         // TODO optimize with spheres of influence approximations
         // and distance approximations
         // planets should have gravitational interactions with other planets too
+        //
 
+        this.updateGravity();
+
+        // TODO optimize checks with a cache of planets the rocket is nearby
+        this.updateAirFriction();
+
+        this.renderer.render(this.stage);
+        requestAnimationFrame(this.update.bind(this));
+    }
+
+    /**
+     * updateGravity - Update gravity calculations
+     * if gravity gamerule is active
+     */
+    updateGravity() {
         if (this.rules.doGravity) {
             for (let planet of this.planets) {
                 for (let rocket of this.rockets) {
@@ -128,9 +141,27 @@ class Simulation {
                 }
             }
         }
+    }
 
-        this.renderer.render(this.stage);
-        requestAnimationFrame(this.update.bind(this));
+    /**
+     * updateAirFriction - Update air friction calculations
+     * if game rule is active
+     */
+    updateAirFriction() {
+        if (this.rules.doAirFriction) {
+            for (let rocket of this.rockets) {
+                rocket.body.airFriction = 0;
+
+                for (let planet of this.planets) {
+                    let height = gameUtil.math.distance(planet.position, rocket.position);
+
+                    if (height <= planet.radius + planet.atmosphere.height) {
+                        rocket.body.airFriction = planet.atmosphere.getDrag(height);
+                        break;
+                    }
+                }
+            }
+        }
     }
 
     /**
@@ -142,13 +173,8 @@ class Simulation {
         // if (World && engine)
         //    World.clear();
 
+        super.resetAll();
         this.engine = Engine.create();
-        this.stage = new PIXI.Container();
-        this.renderer = PIXI.autoDetectRenderer(
-            window.innerWidth,
-            window.innerHeight,
-            { view: document.getElementById('canvas') }
-        );
     }
 
     /**

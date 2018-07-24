@@ -20,9 +20,15 @@ Optimize planets
     split int osections or something
     Only body needs to be optimized
 
-Fix small lag spike when rendering new sector
 
 If rocket is inside planet teleport it out
+
+Load more chunks at once?
+
+Rotate camera when in planet's atmosphere to face downwards
+
+
+Relativity so ships cannot exceed lightspeed
 
 
 
@@ -52,6 +58,8 @@ Controls
 
 
 Minimize js
+
+
 
 
 Create planets

@@ -24,12 +24,13 @@ class Planet {
 
         this.atmosphere = {
             present: true,
-            height: 0,
+            height: 100,
             oxygen: true,
             molar_weight: 0,
 
             getPressure: height => 1,
-            getTemperature: height => 1
+            getTemperature: height => 1,
+            getDrag: height => height > this.radius + this.atmosphere.height ? 0 : 0.01
         };
 
         this.color = '#FFFFFF';

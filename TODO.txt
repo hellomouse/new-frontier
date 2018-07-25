@@ -27,12 +27,8 @@ Load more chunks at once?
 
 Rotate camera when in planet's atmosphere to face downwards
 
-
-
-Switch screens
-    Replace with something idk
-    Only one renderer, change stage.visible 
-
+Cameras should function depending on screen
+    Move controls to seperate file 
 
 Relativity so ships cannot exceed lightspeed
 

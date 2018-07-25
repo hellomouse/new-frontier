@@ -14,7 +14,6 @@ class StageHandler {
 
     init() {
         for (let key of Object.keys(this.stages)) {
-            console.log(key)
             this.stages[key].renderer = this.renderer;
             this.stages[key].init();
         }

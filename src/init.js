@@ -36,7 +36,8 @@ let blocks = [
     //new Thruster(90, 450)
 ];
 
-let earth = new Earth(0, -1000000);
+let earth = new Earth(0, 0);
+earth.position.y = -earth.radius;
 let rocket = new Rocket(blocks, Matter);
 
 
@@ -56,8 +57,9 @@ let engine = Engine.create();
 
 let sim = new Simulation();
 let map = new MapView();
-let stage_handler
+let stage_handler;
 
+require(path.resolve(appPath, './src/controls.js')); // Load in controls
 
 
 function init() {
@@ -88,18 +90,9 @@ function init() {
     sim.addPlanet(earth);
 
     map.loadPlanetSprites();
-
     stage_handler.startRender();
 }
 
-window.addEventListener('wheel', function(e) {
-    let scaleDelta = e.wheelDelta > 0 ? config.SCROLL_SPEED : 1 / config.SCROLL_SPEED;
-
-    if (sim.camera.scale * scaleDelta > config.MAX_SCROLL || sim.camera.scale * scaleDelta < config.MIN_SCROLL) {
-        return;
-    }
-    sim.camera.scale = +(sim.camera.scale * scaleDelta).toFixed(4);
-});
 
 
 

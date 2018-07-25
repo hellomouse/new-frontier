@@ -100,7 +100,7 @@ class Simulation extends RenderableScene {
             //TODO maybe optimize with a cache of distances and stuff
 
             // 1.5 is a "close enough" to start adding the planet's land collision box
-            if (gameUtil.math.fastDistance(planet.position, this.rockets[0].position) < planet.radius * 1.03) {
+            if (gameUtil.math.fastDistance(planet.position, this.rockets[0].position) < planet.radius + 5000) {
                 planet.updateSector(this.rockets[0].getPos(), this);
             }
         }

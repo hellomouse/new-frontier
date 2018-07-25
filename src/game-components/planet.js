@@ -22,16 +22,12 @@ class Planet {
         this.mass = 0;
         this.density = this.mass / (this.radius ** 2 * 3.1415926535);
 
-        this.image = '../assets/planets/default.png';
-        this.map_sprite = null; // Created in map.js
-
         this.atmosphere = {
             present: true,
             height: 100,
             oxygen: true,
             molar_weight: 0,
 
-            getPressure: height => 1,
             getTemperature: height => 1,
             getDrag: height => height > this.radius + this.atmosphere.height ? 0 : 0.01
         };
@@ -46,6 +42,10 @@ class Planet {
         };
 
         this.sectors = {};
+
+        // Map stuff
+        this.image = '../assets/planets/default.png';
+        this.map_sprite = null; // Created in map.js
     }
 
     /**

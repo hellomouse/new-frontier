@@ -13,7 +13,7 @@ const gameUtil = require('../util.js');
 class Simulation extends RenderableScene {
     constructor() {
         super();
-        this.camera = new Camera;
+        this.camera = new Camera();
 
         // Bodies
         this.planets = [];
@@ -116,8 +116,8 @@ class Simulation extends RenderableScene {
         // TODO optimize checks with a cache of planets the rocket is nearby
         this.updateAirFriction();
 
-        this.renderer.render(this.stage);
-        requestAnimationFrame(this.update.bind(this));
+        //this.renderer.render(this.stage);
+        //requestAnimationFrame(this.update.bind(this));
     }
 
     /**

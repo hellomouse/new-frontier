@@ -16,6 +16,9 @@ let appPath = remote.app.getAppPath();
 /* Require some modules */
 const Scene = require(path.resolve(appPath, './src/scene.js'));
 const Simulation = require(path.resolve(appPath, './src/simulation'));
+const MapView = require(path.resolve(appPath, './src/simulation/map.js'));
+const StageHandler = require(path.resolve(appPath, './src/ui/stage-handler.js'));
+
 
 const config = require(path.resolve(appPath, './src/game/config.js'));
 
@@ -52,10 +55,14 @@ let stage, renderer;
 let engine = Engine.create();
 
 let sim = new Simulation();
+let map = new MapView();
+let stage_handler
 
 
 
 function init() {
+    stage_handler = new StageHandler();
+
     let current_scene = new Scene(
         blocks,
         [],
@@ -65,15 +72,24 @@ function init() {
         'test-level'
     );
 
-
+    // map.init();
 
     sim.scene = current_scene;
+
+    stage_handler.stages['map'] = map;
+    stage_handler.stages['sim'] = sim;
+
+    // sim.init();
+
+    stage_handler.init();
 
     rocket.control = true;
     sim.addRocket(rocket);
     sim.addPlanet(earth);
 
-    sim.init();
+    map.loadPlanetSprites();
+
+    stage_handler.startRender();
 }
 
 window.addEventListener('wheel', function(e) {

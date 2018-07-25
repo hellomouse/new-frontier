@@ -16,8 +16,6 @@ class RenderableScene {
      */
     init() {
         this.resetAll();
-        this.renderer.render(this.stage);
-        requestAnimationFrame(this.update.bind(this));
     }
 
     /**
@@ -26,6 +24,13 @@ class RenderableScene {
      */
     resetAll(){
         this.stage = new PIXI.Container();
+        // this.resetRenderer();
+    }
+
+    /**
+     * resetRenderer - Reset the renderer
+     */
+    resetRenderer() {
         this.renderer = PIXI.autoDetectRenderer(
             window.innerWidth,
             window.innerHeight,

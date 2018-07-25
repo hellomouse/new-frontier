@@ -27,8 +27,8 @@ Load more chunks at once?
 
 Rotate camera when in planet's atmosphere to face downwards
 
-Cameras should function depending on screen
-    Move controls to seperate file 
+Add another stage overlay called UI or something
+    draw actual UI
 
 Relativity so ships cannot exceed lightspeed
 
@@ -50,7 +50,6 @@ You can calculate coordinates relative to any element in pixi, please look in th
 Also, there is a shortcut: "event.getLocalPosition(stage)" works just fine.
 
 
-Create a (dynamically calculated from rocket grid size) scale for pixels to meters
 
 Controls
     Scroll = zoom

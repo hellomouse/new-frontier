@@ -90,6 +90,7 @@ function init() {
     sim.addPlanet(earth);
 
     map.loadPlanetSprites();
+    stage_handler.init();
     stage_handler.startRender();
 }
 

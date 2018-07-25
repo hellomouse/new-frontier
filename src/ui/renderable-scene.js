@@ -6,7 +6,7 @@ class RenderableScene {
      */
     constructor() {
         this.stage = null;
-        this.renderer = null;
+        this.ui = null;
     }
 
     /**
@@ -24,18 +24,7 @@ class RenderableScene {
      */
     resetAll(){
         this.stage = new PIXI.Container();
-        // this.resetRenderer();
-    }
-
-    /**
-     * resetRenderer - Reset the renderer
-     */
-    resetRenderer() {
-        this.renderer = PIXI.autoDetectRenderer(
-            window.innerWidth,
-            window.innerHeight,
-            { view: document.getElementById('canvas') }
-        );
+        this.ui = new PIXI.Container();
     }
 }
 

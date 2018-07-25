@@ -19,9 +19,9 @@ class Earth extends Planet {
 
         this.atmosphere = {
             present: true,
-            height: conversion.meterToPixel(100),
+            height: conversion.meterToPixel(100 * 1000),
             oxygen: true,
-            molar_weight: 0,
+            molar_weight: 0.0288,
 
             getTemperature: height => 1,
             getDrag: height => height > this.radius + this.atmosphere.height ? 0 : 0.01
@@ -33,7 +33,7 @@ class Earth extends Planet {
             ocean_level: conversion.meterToPixel(12742 * 1000),
             ocean_type: 'water',
 
-            getHeight: angle => this.radius + Math.sin(angle * 100) * 1000
+            getHeight: angle => this.radius + Math.sin(angle * 100000) * 500
         };
 
         this.sectors = {};
@@ -41,6 +41,7 @@ class Earth extends Planet {
         // Map stuff
         this.image = '../assets/planets/default.png';
         this.map_sprite = null; // Created in map.js
+        this.min_radius = this.radius - 1000; // Smallest possible height of the planet
     }
 
     update() {

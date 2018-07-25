@@ -23,8 +23,8 @@ class PlanetSector {
             vert.push(getPos(i, planet.surface.getHeight(i), planet.position));
         }
 
-        vert.push(getPos(end_angle, planet.surface.getHeight(end_angle) - 1000, planet.position));
-        vert.push(getPos(angle, planet.surface.getHeight(angle) - 1000, planet.position));
+        vert.push(getPos(end_angle, planet.surface.getHeight(end_angle) - 10000, planet.position));
+        vert.push(getPos(angle, planet.surface.getHeight(angle) - 10000, planet.position));
 
         let pos = Matter.Vertices.centre(vert);
 

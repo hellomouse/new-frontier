@@ -8,7 +8,7 @@ const Camera = require('../ui/camera.js');
 const RenderableScene = require('../ui/renderable-scene.js');
 const gameUtil = require('../util.js');
 
-const DEFAULT_MAP_ZOOM = 1000; // Map is 1000x smaller than sim initially
+const DEFAULT_MAP_ZOOM = 100000; // Map is 1000x smaller than sim initially
 
 class Map extends RenderableScene {
     /**

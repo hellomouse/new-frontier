@@ -38,14 +38,15 @@ class Planet {
             ocean_level: 0,
             ocean_type: 'water',
 
-            getHeight: angle => this.radius + Math.sin(angle * 100) * 1000
+            getHeight: angle => this.radius + Math.sin(angle * 10) * 1000
         };
 
         this.sectors = {};
 
-        // Map stuff
+        // Graphics stuff
         this.image = '../assets/planets/default.png';
         this.map_sprite = null; // Created in map.js
+        this.min_radius = this.radius; // Smallest possible height of the planet
     }
 
     /**
@@ -84,13 +85,15 @@ class Planet {
     }
 
     addToStage(PIXI, stage) {
-        let graphics = new PIXI.Graphics();
+        let sprite = new PIXI.Sprite.fromImage(this.image);
 
-        graphics.beginFill(0xe74c3c); // Red
-        graphics.drawCircle(this.position.x, this.position.y, this.radius);
-        graphics.endFill();
+        sprite.width = this.min_radius * 2;
+        sprite.height = this.min_radius * 2;
+        sprite.anchor.set(0.5, 0.5);
 
-        //stage.addChild(graphics);
+        sprite.x = this.position.x;
+        sprite.y = this.position.y;
+        stage.addChild(sprite);
     }
 
     applyGravity(rocket) {

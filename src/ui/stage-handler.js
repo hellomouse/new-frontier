@@ -31,6 +31,10 @@ class StageHandler {
         this.renderer.render(current.stage);
         requestAnimationFrame(this.update.bind(this));
     }
+
+    getCurrentStage() {
+        return this.stages[this.current_stage];
+    }
 }
 
 module.exports = StageHandler;

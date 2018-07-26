@@ -42,8 +42,14 @@ class PlanetSector {
 
         /**
          * Finish off the polygon with a bit at the bottom
-         * Slightly below the lowest point on the planet's surface
+         * Slightly below the lowest point on the planet's surface, or
+         * if the surrounding points are lower, those points
          */
+        lowest = Math.min(
+            lowest,
+            planet.surface.getHeight(angle - config.planet_sector_inc),
+            planet.surface.getHeight(end_angle + config.planet_sector_inc)
+        );
         vert.push(getPos(end_angle, lowest - 100, planet.position));
         vert.push(getPos(angle,  lowest - 100, planet.position));
 

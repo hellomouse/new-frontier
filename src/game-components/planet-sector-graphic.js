@@ -40,14 +40,14 @@ function getDif(height, planet) {
  * A sector of a planet, used for collision detection
  * (As large bodies horribly lag the game)
  */
-class PlanetSector {
-    constructor(angle, planet) {
+class PlanetSectorGraphic {
+    constructor(angle, planet, stage, options) {
         // Create the body itself
         let vert = [];
-        let end_angle = angle + config.planet_sector_size + config.planet_sector_inc;
+        let end_angle = angle + config.planet_graphic_sector_size + config.planet_graphic_sector_inc;
         let lowest = Infinity;
 
-        for (let i = angle; i <= end_angle; i += config.planet_sector_inc) {
+        for (let i = angle; i <= end_angle; i += config.planet_graphic_sector_inc) {
             let h = planet.surface.getHeight(i);
 
             if (h < lowest) {
@@ -64,26 +64,34 @@ class PlanetSector {
         let h1 = planet.surface.getHeight(end_angle);
         let h2 = planet.surface.getHeight(angle);
 
-        vert.push(getPos(end_angle, lowest - 100, planet.position));
-        vert.push(getPos(angle,  lowest - 100, planet.position));
+        vert.push(getPos(end_angle, h1 - getDif(h1, planet) - 10000, planet.position));
+        vert.push(getPos(angle,  h2 - getDif(h2, planet) - 10000, planet.position));
 
-        /* Position the body at the correct location */
+        /* Create a texture and append to stage */
+        let texture = PIXI.Texture.fromImage('../assets/parts/fuel-tank.png');
+        let tilingSprite = new PIXI.extras.TilingSprite(texture, 100000, 10000000);
         let pos = Matter.Vertices.centre(vert);
 
-        this.body = Matter.Bodies.fromVertices(pos.x, pos.y, vert);
-        this.body.label = 'Planet-sector-' + angle;
-        Matter.Body.setStatic(this.body, true);
+        tilingSprite.anchor.set(0.5, 0.5);
+        tilingSprite.rotation = angle;
+        tilingSprite.x = pos.x;
+        tilingSprite.y = pos.y;
 
-        // Debugging
+        stage.addChild(tilingSprite);
+
         let graphics = new PIXI.Graphics();
+        graphics.beginFill(0);
+        graphics.moveTo(vert[0].x, vert[0].y);
 
-        for (let i=1;i<vert.length;i++) {
-            graphics.lineStyle(20, 0xffffff)
-               .moveTo(vert[i-1].x, vert[i-1].y)
-               .lineTo(vert[i].x, vert[i].y);
+        for (let i=1; i<vert.length; i++) {
+            graphics.lineTo(vert[i].x, vert[i].y);
         }
-        sim.stage.addChild(graphics);
+        graphics.lineTo(vert[0].x, vert[0].y);
+        graphics.endFill();
+
+        stage.addChild(graphics);
+        tilingSprite.mask = graphics;
     }
 }
 
-module.exports = PlanetSector;
+module.exports = PlanetSectorGraphic;

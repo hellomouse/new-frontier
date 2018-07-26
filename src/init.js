@@ -84,7 +84,7 @@ function init() {
 
     // sim.init();
 
-    stage_handler.init();
+    map.init();
 
     rocket.control = true;
     sim.addRocket(rocket);

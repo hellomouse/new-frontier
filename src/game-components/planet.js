@@ -1,8 +1,10 @@
 'use strict';
 
 const config = require('../game/config.js');
-const PlanetSector = require('./planet-sector.js');
 const gameUtil = require('../util.js');
+
+const PlanetSector = require('./planet-sector.js');
+const PlanetSectorGraphic = require('./planet-sector-graphic.js');
 
 /**
  * This file acts like a template for a planet/moon. Extend
@@ -42,6 +44,7 @@ class Planet {
         };
 
         this.sectors = {};
+        this.texture_sectors = {};
 
         // Science and info
         this.desc = 'Default planet desc';
@@ -75,9 +78,20 @@ class Planet {
             added = true;
         }
 
+        // Add graphical sectors
+        for (let i=-1; i<=1; i++) {
+            let angle2 = Math.floor(angle / config.planet_graphic_sector_size + i) * config.planet_graphic_sector_size;
+
+            // Sector already exists
+            if (this.texture_sectors[angle2]) continue;
+
+            this.texture_sectors[angle2] = new PlanetSectorGraphic(angle2, this, stage_handler.getCurrentStage().stage);
+        }
+
         /* Trim extra angles that are too far away */
         if (added) {
             for (let a of Object.keys(this.sectors)) {
+                //TODO aslso remove graphics
                 if (Math.abs(angle - a) > config.planet_sector_size * 5) {
                     Matter.Composite.remove(sim.engine.world, this.sectors[a].body);
                     delete this.sectors[a];
@@ -89,13 +103,14 @@ class Planet {
     addToStage(PIXI, stage) {
         let sprite = new PIXI.Sprite.fromImage(this.image);
 
-        sprite.width = this.min_radius * 1.99;
-        sprite.height = this.min_radius * 1.99;
+        sprite.width = this.min_radius * 1.988;
+        sprite.height = this.min_radius * 1.988;
         sprite.anchor.set(0.5, 0.5);
 
         sprite.x = this.position.x;
         sprite.y = this.position.y;
-        // stage.addChild(sprite);
+
+        stage.addChild(sprite);
     }
 
     applyGravity(rocket) {

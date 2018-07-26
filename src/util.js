@@ -58,6 +58,51 @@ module.exports = {
          */
         copySign(number) {
             return number < 0 ? -1 : 1;
+        },
+
+        /**
+         * degToRad - Convert degrees to radian
+         *
+         * @param  {number} deg Degree
+         * @return {number}     Radian
+         */
+        degToRad(deg) {
+            return deg / 180 * Math.PI;
+        },
+
+        /**
+         * radToDeg - Convert radian to degrees
+         *
+         * @param  {number} rad Radian
+         * @return {number}     Degree
+         */
+        radToDeg(rad) {
+            return rad / Math.PI * 180;
+        },
+
+        /**
+         * isBetween - Is x between a and b, inclusive?
+         *
+         * @param  {number} x Number to compare
+         * @param  {number} a Low bound
+         * @param  {number} b High bound
+         * @return {boolean}  Is it between?
+         */
+        isBetween(x, a, b) {
+            return a <= x && x <= b;
+        },
+
+        /**
+         * isAngleBetween - Is an angle between
+         * 2 boundaries, inclusive?
+         *
+         * @param  {number} x Number to compare
+         * @param  {number} a Low bound (Degrees)
+         * @param  {number} b High bound (Degrees)
+         * @return {boolean}  Is it between?
+         */
+        isAngleBetween(x, a, b) {
+            return this.isBetween(this.radToDeg(x), a, b);
         }
     }
 };

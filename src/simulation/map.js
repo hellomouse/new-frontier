@@ -28,7 +28,7 @@ class Map extends RenderableScene {
      */
     loadPlanetSprites() {
         for (let planet of sim.planets) {
-            let sprite = new PIXI.Sprite.fromImage(planet.image);
+            let sprite = new PIXI.Sprite.fromImage(planet.map_image);
             sprite.width = planet.radius / DEFAULT_MAP_ZOOM;
             sprite.height = planet.radius / DEFAULT_MAP_ZOOM;
             sprite.anchor.set(0.5, 0.5);

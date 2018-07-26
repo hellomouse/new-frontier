@@ -43,8 +43,12 @@ class Planet {
 
         this.sectors = {};
 
+        // Science and info
+        this.desc = 'Default planet desc';
+
         // Graphics stuff
         this.image = '../assets/planets/default.png';
+        this.map_image = '../assets/planets/default.png';
         this.map_sprite = null; // Created in map.js
         this.min_radius = this.radius; // Smallest possible height of the planet
     }
@@ -61,22 +65,20 @@ class Planet {
 
         // Round angle to lowest multiple of a PLANET_SECTOR_SIZE
         for (let i=-1; i<=1; i++) {
-            angle = Math.floor(angle / config.planet_sector_size + i) * config.planet_sector_size;
+            let angle2 = Math.floor(angle / config.planet_sector_size + i) * config.planet_sector_size;
 
             // Sector already exists
-            if (this.sectors[angle]) continue;
+            if (this.sectors[angle2]) continue;
 
-            console.log("Adding sector, angle " + (angle / 3.1415926535 * 180))
-            this.sectors[angle] = new PlanetSector(angle, this);
-            World.add(sim.engine.world, this.sectors[angle].body);
+            this.sectors[angle2] = new PlanetSector(angle2, this);
+            World.add(sim.engine.world, this.sectors[angle2].body);
             added = true;
         }
 
         /* Trim extra angles that are too far away */
         if (added) {
             for (let a of Object.keys(this.sectors)) {
-                if (Math.abs(angle - a) > config.planet_sector_size * 2) {
-                    console.log("Removing sector")
+                if (Math.abs(angle - a) > config.planet_sector_size * 5) {
                     Matter.Composite.remove(sim.engine.world, this.sectors[a].body);
                     delete this.sectors[a];
                 }
@@ -87,31 +89,26 @@ class Planet {
     addToStage(PIXI, stage) {
         let sprite = new PIXI.Sprite.fromImage(this.image);
 
-        sprite.width = this.min_radius * 2;
-        sprite.height = this.min_radius * 2;
+        sprite.width = this.min_radius * 1.99;
+        sprite.height = this.min_radius * 1.99;
         sprite.anchor.set(0.5, 0.5);
 
         sprite.x = this.position.x;
         sprite.y = this.position.y;
-        stage.addChild(sprite);
+        // stage.addChild(sprite);
     }
 
     applyGravity(rocket) {
-        // Calculate force magnitude to apply
-        let x1 = rocket.position.x;
-        let y1 = rocket.position.y;
-        let x2 = this.position.x;
-        let y2 = this.position.y;
+        let x1 = this.position.x;
+        let y1 = this.position.y;
+        let x2 = rocket.position.x;
+        let y2 = rocket.position.y;
 
-        let f_mag = config.G_CONSTANT * 1 * this.mass / ((x1 - x2) ** 2 + (y1 - y2) ** 2);
+        let f_mag = config.G_CONSTANT * this.mass * rocket.body.mass / ((x1 - x2) ** 2 + (y1 - y2) ** 2);
+        let angle = Math.atan2(y1 - y2, x1 - x2);
 
-        // Calculate force direction to apply
-        let angle = Math.atan2(y2 - y1, x2 - x1);
-        //console.log(angle, angle * 180 / Math.PI)
-        //console.log(f_mag)
-        //console.log({x: f_mag * Math.cos(angle), y: f_mag * Math.sin(angle)})
-
-        rocket.applyForceToAll({x: f_mag * Math.cos(angle), y: f_mag * Math.sin(angle)});
+        let vector = {x: f_mag * Math.cos(angle), y: f_mag * Math.sin(angle)};
+        Matter.Body.applyForce(rocket.body, rocket.position, vector);
     }
 }
 

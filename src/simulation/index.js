@@ -128,16 +128,7 @@ class Simulation extends RenderableScene {
         if (this.rules.doGravity) {
             for (let planet of this.planets) {
                 for (let rocket of this.rockets) {
-                    let x1 = planet.position.x;
-                    let y1 = planet.position.y;
-                    let x2 = rocket.position.x;
-                    let y2 = rocket.position.y;
-
-                    let f_mag = config.G_CONSTANT * planet.mass * rocket.body.mass / ((x1 - x2) ** 2 + (y1 - y2) ** 2);
-                    let angle = Math.atan2(y1 - y2, x1 - x2);
-
-                    let vector = {x: f_mag * Math.cos(angle), y: f_mag * Math.sin(angle)};
-                    Matter.Body.applyForce(rocket.body, rocket.position, vector);
+                    planet.applyGravity(rocket);
                 }
             }
         }

@@ -2,11 +2,33 @@
 
 const config = require('../game/config.js');
 
+/**
+ * getPos - Get a x y position vector given an
+ * angle of a circle (math), a radius of the circle,
+ * and the center of the circle
+ *
+ * @param  {number} angle  Angle, in radians, starting 0 = right
+ * @param  {number} radius Radius of circle, in pixels
+ * @param  {object} center {x: number, y : number}, position of center
+ * @return {object}        {x: number, y: number}
+ */
 function getPos(angle, radius, center) {
     return {
         x: center.x + Math.cos(angle) * radius,
         y: center.y + Math.sin(angle) * radius
     };
+}
+
+/**
+ * getDif - Get the difference between
+ * height and the planet's lowest height
+ *
+ * @param  {number} height Height at point
+ * @param  {Planet} planet Planet to check
+ * @return {number}        Height difference
+ */
+function getDif(height, planet) {
+    return height - planet.min_radius;
 }
 
 /**
@@ -23,9 +45,17 @@ class PlanetSector {
             vert.push(getPos(i, planet.surface.getHeight(i), planet.position));
         }
 
-        vert.push(getPos(end_angle, planet.surface.getHeight(end_angle) - 10000, planet.position));
-        vert.push(getPos(angle, planet.surface.getHeight(angle) - 10000, planet.position));
+        /**
+         * Finish off the polygon with a bit at the bottom
+         * Slightly below the lowest point on the planet's surface
+         */
+        let h1 = planet.surface.getHeight(end_angle);
+        let h2 = planet.surface.getHeight(angle);
 
+        vert.push(getPos(end_angle, h1 - getDif(h1, planet) - 100, planet.position));
+        vert.push(getPos(angle,  h2 - getDif(h2, planet) - 100, planet.position));
+
+        /* Position the body at the correct location */
         let pos = Matter.Vertices.centre(vert);
 
         this.body = Matter.Bodies.fromVertices(pos.x, pos.y, vert);

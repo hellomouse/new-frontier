@@ -49,6 +49,7 @@ class Rocket {
 
         this.position.x = avg_x / this.comp.bodies.length;
         this.position.y = avg_y / this.comp.bodies.length;
+        Matter.Body.setPosition(this.body, this.position);
     }
 
     update() {

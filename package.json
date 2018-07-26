@@ -19,5 +19,7 @@
   "devDependencies": {
     "electron": "^1.8.4"
   },
-  "dependencies": {}
+  "dependencies": {
+    "@mohayonao/perlin-noise": "^0.2.0"
+  }
 }

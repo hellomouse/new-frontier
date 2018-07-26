@@ -5,7 +5,6 @@ const conversion = require('../conversion.js');
 const gameUtil = require('../../util.js');
 const perlin = new (require('@mohayonao/perlin-noise'))();
 
-console.log(perlin)
 
 /**
  * terrainGenerator - Terrain generator for earth
@@ -29,6 +28,34 @@ function terrainGenerator(angle, planet) {
          return planet.radius
             + conversion.meterToPixel(40) * perlin.noise(10000 * angle);
      }
+
+     /* Grassland biome:
+      * Flat biome, slightly rough, high friction */
+
+     /* Desert biome:
+      * Very flag biome, rough, land is relatively smooth */
+
+
+
+
+    //TODO more realistic mountain generation
+    //Moutains should follow a general low -> high -> low shape, and perlin
+    //nois is mere randomizer
+    //make mountain follow a sin curve or something
+
+    /* Mountain biome:
+     * Very rough and high terrain, somewhat high friction */
+    if (gameUtil.math.isAngleBetween(angle, 132, 143) || gameUtil.math.isAngleBetween(angle, 312, 328)) {
+        return planet.radius
+            + conversion.meterToPixel(1000) * perlin.noise(10000 * angle);
+    }
+
+    /* Small mountain biome:
+    * Transitional biome, same as mountain but with lower mountains */
+    if (gameUtil.math.isAngleBetween(angle, 130, 145) || gameUtil.math.isAngleBetween(angle, 310, 330)) {
+        return planet.radius
+            + conversion.meterToPixel(300) * perlin.noise(10000 * angle);
+    }
 
     return planet.radius;
 }

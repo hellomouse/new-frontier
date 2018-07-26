@@ -1,3 +1,8 @@
+/**
+ * Unlike the other planet sector, this one is purely graphical.
+ * These sectors are a bit larger than the collision hitboxes
+ */
+
 'use strict';
 
 const config = require('../game/config.js');
@@ -17,6 +22,18 @@ function getPos(angle, radius, center) {
         x: center.x + Math.cos(angle) * radius,
         y: center.y + Math.sin(angle) * radius
     };
+}
+
+/**
+ * getDif - Get the difference between
+ * height and the planet's lowest height
+ *
+ * @param  {number} height Height at point
+ * @param  {Planet} planet Planet to check
+ * @return {number}        Height difference
+ */
+function getDif(height, planet) {
+    return height - planet.min_radius;
 }
 
 /**
@@ -44,6 +61,9 @@ class PlanetSector {
          * Finish off the polygon with a bit at the bottom
          * Slightly below the lowest point on the planet's surface
          */
+        let h1 = planet.surface.getHeight(end_angle);
+        let h2 = planet.surface.getHeight(angle);
+
         vert.push(getPos(end_angle, lowest - 100, planet.position));
         vert.push(getPos(angle,  lowest - 100, planet.position));
 

@@ -4,7 +4,7 @@ module.exports = {
     // Build grid
     build_grid_size: 50,
     planet_sector_size: 0.523599 / 40960, // Size of a sector in rad
-    planet_sector_inc: 0.000001,     // Increment for precision of each sector
+    planet_sector_inc: 0.00001,     // Increment for precision of each sector
 
     // Physics
     G_CONSTANT: 2000,

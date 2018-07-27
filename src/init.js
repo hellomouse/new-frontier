@@ -37,8 +37,8 @@ let blocks = [
 ];
 
 let earth = new Earth(0, 0);
-earth.position.y = earth.radius * Math.sin(48 / 180 * Math.PI) + 3000;
-earth.position.x = earth.radius * Math.cos(48 / 180 * Math.PI);
+earth.position.y = earth.radius * Math.sin(50 / 180 * Math.PI) + 3000;
+earth.position.x = earth.radius * Math.cos(50 / 180 * Math.PI);
 let rocket = new Rocket(blocks, Matter);
 
 

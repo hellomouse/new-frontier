@@ -40,7 +40,8 @@ class Planet {
             ocean_level: 0,
             ocean_type: 'water',
 
-            getHeight: angle => this.radius + Math.sin(angle * 10) * 1000
+            getHeight: angle => this.radius + Math.sin(angle * 10) * 1000,
+            getBiome: angle => 'null biome'
         };
 
         this.sectors = {};
@@ -116,7 +117,7 @@ class Planet {
     }
 
     addToStage(PIXI, stage) {
-        let sprite = new PIXI.Sprite.fromImage(this.image);
+        /* let sprite = new PIXI.Sprite.fromImage(this.image);
 
         sprite.width = this.min_radius * 1.988;
         sprite.height = this.min_radius * 1.988;
@@ -125,7 +126,7 @@ class Planet {
         sprite.x = this.position.x;
         sprite.y = this.position.y;
 
-        stage.addChild(sprite);
+        stage.addChild(sprite); */
     }
 
     applyGravity(rocket) {

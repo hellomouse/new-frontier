@@ -6,6 +6,28 @@ const gameUtil = require('../../util.js');
 const perlin = new (require('@mohayonao/perlin-noise'))();
 
 
+function getBiome(angle) {
+    /* Polar biome:
+     * Flat icy terrain, low friction */
+    if (gameUtil.math.isAngleBetween(angle, 80, 100) || gameUtil.math.isAngleBetween(angle, 260, 280)) {
+        return 'polar';
+    }
+
+    /* Tundra biome:
+     * Rough, rocky / frozen surface. Somewhat low friction, still rough */
+    if (gameUtil.math.isAngleBetween(angle, 70, 110) || gameUtil.math.isAngleBetween(angle, 250, 290)) {
+        return 'tundra';
+    }
+
+    /* Mountain biome:
+     * Very rough and high terrain, somewhat high friction */
+    if (gameUtil.math.isAngleBetween(angle, 130, 145) || gameUtil.math.isAngleBetween(angle, 310, 330)) {
+        return 'mountain';
+    }
+    return 'flat';
+}
+
+
 /**
  * terrainGenerator - Terrain generator for earth
  * Generate a terrain given an angle
@@ -14,20 +36,27 @@ const perlin = new (require('@mohayonao/perlin-noise'))();
  * @return {number}       Height at point
  */
 function terrainGenerator(angle, planet) {
-    angle = -angle;  // Sector angles are reversed
+    angle = -angle;  // Sector angles are reversed for some reason
+    let biome = getBiome(angle);
 
-    /* Polar biome:
-     * Flat icy terrain, low friction */
-    if (gameUtil.math.isAngleBetween(angle, 80, 100) || gameUtil.math.isAngleBetween(angle, 260, 280)) {
-        return planet.radius + conversion.meterToPixel(100);
+    switch(biome) {
+        case 'polar': return planet.radius + conversion.meterToPixel(100);
+        case 'tundra': return planet.radius + conversion.meterToPixel(40) * perlin.noise(10000 * angle);
+        case 'mountain': {
+            /* Subtracter to force the sin curve to be 0 at the edges of the mountain */
+            let dtheta = gameUtil.math.isAngleBetween(angle, 130, 145) ?
+                130 / 180 * Math.PI : 310 / 180 * Math.PI;
+            /* Multiplier to shift the frequency of sin curve to be at edges of mountain */
+            let multiplier = gameUtil.math.isAngleBetween(angle, 130, 145) ?
+                360 / 7.5 : 360 / 10;
+            let sin_h = Math.sin(multiplier * (angle - dtheta));
+
+            return planet.radius
+                + conversion.meterToPixel(6000) * sin_h
+                + conversion.meterToPixel(500) * perlin.noise(10000 * angle) * sin_h;
+        }
+        default: return planet.radius;
     }
-
-    /* Tundra biome:
-     * Rough, rocky / frozen surface. Somewhat low friction, still rough */
-     if (gameUtil.math.isAngleBetween(angle, 70, 110) || gameUtil.math.isAngleBetween(angle, 250, 290)) {
-         return planet.radius
-            + conversion.meterToPixel(40) * perlin.noise(10000 * angle);
-     }
 
      /* Grassland biome:
       * Flat biome, slightly rough, high friction */
@@ -35,27 +64,6 @@ function terrainGenerator(angle, planet) {
      /* Desert biome:
       * Very flag biome, rough, land is relatively smooth */
 
-
-
-
-    //TODO more realistic mountain generation
-    //Moutains should follow a general low -> high -> low shape, and perlin
-    //nois is mere randomizer
-    //make mountain follow a sin curve or something
-
-    /* Mountain biome:
-     * Very rough and high terrain, somewhat high friction */
-    if (gameUtil.math.isAngleBetween(angle, 132, 143) || gameUtil.math.isAngleBetween(angle, 312, 328)) {
-        return planet.radius
-            + conversion.meterToPixel(1000) * perlin.noise(10000 * angle);
-    }
-
-    /* Small mountain biome:
-    * Transitional biome, same as mountain but with lower mountains */
-    if (gameUtil.math.isAngleBetween(angle, 130, 145) || gameUtil.math.isAngleBetween(angle, 310, 330)) {
-        return planet.radius
-            + conversion.meterToPixel(300) * perlin.noise(10000 * angle);
-    }
 
     return planet.radius;
 }
@@ -92,7 +100,8 @@ class Earth extends Planet {
             ocean_level: conversion.meterToPixel(12742 * 1000),
             ocean_type: 'water',
 
-            getHeight: angle => terrainGenerator(angle, this)
+            getHeight: angle => terrainGenerator(angle, this),
+            getBiome: angle => getBiome(angle)
         };
 
         this.sectors = {};

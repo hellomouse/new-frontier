@@ -49,7 +49,6 @@ class PlanetSectorGraphic {
 
         for (let i = angle; i <= end_angle; i += config.planet_graphic_sector_inc) {
             let h = planet.surface.getHeight(i);
-
             if (h < lowest) {
                 lowest = h;
             }
@@ -68,7 +67,7 @@ class PlanetSectorGraphic {
         vert.push(getPos(angle,  h2 - getDif(h2, planet) - 10000, planet.position));
 
         /* Create a texture and append to stage */
-        let texture = PIXI.Texture.fromImage('../assets/parts/fuel-tank.png');
+        let texture = PIXI.Texture.fromImage('../assets/biomes/' + planet.surface.getBiome(-angle) + '.png');
         let tilingSprite = new PIXI.extras.TilingSprite(texture, 100000, 10000000);
         let pos = Matter.Vertices.centre(vert);
 

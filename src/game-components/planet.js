@@ -81,7 +81,7 @@ class Planet {
         }
 
         // Add graphical sectors
-        for (let i=-1; i<=1; i++) {
+        for (let i=-3; i<=3; i++) {
             let angle2 = Math.floor(angle / config.planet_graphic_sector_size + i) * config.planet_graphic_sector_size;
 
             // Sector already exists
@@ -101,7 +101,7 @@ class Planet {
                     delete this.sectors[a];
                 }
 
-                if (Math.abs(angle - a) > config.planet_graphic_sector_size * 5) {
+                if (Math.abs(angle - a) > config.planet_graphic_sector_size * 7) {
                     sim.stage.removeChild(this.texture_sectors[a].body);
                     delete this.texture_sectors[a];
                 }

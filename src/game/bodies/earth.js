@@ -46,10 +46,9 @@ function terrainGenerator(angle, planet) {
             /* Subtracter to force the sin curve to be 0 at the edges of the mountain */
             let dtheta = gameUtil.math.isAngleBetween(angle, 130, 145) ?
                 130 / 180 * Math.PI : 310 / 180 * Math.PI;
-            /* Multiplier to shift the frequency of sin curve to be at edges of mountain */
-            let multiplier = gameUtil.math.isAngleBetween(angle, 130, 145) ?
-                360 / 7.5 : 360 / 10;
-            let sin_h = Math.sin(multiplier * (angle - dtheta));
+            /* Larger = more peaks */
+            let multiplier = 50;
+            let sin_h = Math.abs(Math.sin(multiplier * (angle - dtheta)));
 
             return planet.radius
                 + conversion.meterToPixel(6000) * sin_h

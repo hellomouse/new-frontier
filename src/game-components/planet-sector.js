@@ -55,8 +55,12 @@ class PlanetSector {
 
         /* Position the body at the correct location */
         let pos = Matter.Vertices.centre(vert);
-
         this.body = Matter.Bodies.fromVertices(pos.x, pos.y, vert);
+
+        /* Set proper body properties */
+        let biome = config.biomes[planet.surface.getBiome(-angle)];
+        this.body.friction = biome.friction;
+        this.body.frictionStatic = biome.frictionStatic;
         this.body.label = 'Planet-sector-' + angle;
         Matter.Body.setStatic(this.body, true);
 

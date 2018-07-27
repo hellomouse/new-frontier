@@ -6,6 +6,25 @@ const gameUtil = require('../../util.js');
 const perlin = new (require('@mohayonao/perlin-noise'))();
 
 
+/**
+ * triangleWave - Return a triangle wave
+ * value (Period 2PI) given x
+ *
+ * @param  {number} x  Input
+ * @return {number}    Output
+ */
+function triangleWave(x) {
+    let TWO_PI = 2 * Math.PI;
+    return 2 * Math.abs(x / TWO_PI - Math.floor(x / TWO_PI + 0.5));
+}
+
+/**
+ * getBiome - Return a biome type given
+ * an angle
+ *
+ * @param  {number} angle  Angle
+ * @return {string}        Biome type
+ */
 function getBiome(angle) {
     /* Polar biome:
      * Flat icy terrain, low friction */
@@ -47,11 +66,11 @@ function terrainGenerator(angle, planet) {
             let dtheta = gameUtil.math.isAngleBetween(angle, 130, 145) ?
                 130 / 180 * Math.PI : 310 / 180 * Math.PI;
             /* Larger = more peaks */
-            let multiplier = 50;
-            let sin_h = Math.abs(Math.sin(multiplier * (angle - dtheta)));
+            let multiplier = 150;
+            let sin_h = Math.abs(triangleWave(multiplier * (angle - dtheta)));
 
             return planet.radius
-                + conversion.meterToPixel(6000) * sin_h
+                + conversion.meterToPixel(12000 * perlin.noise(100 * angle)) * sin_h
                 + conversion.meterToPixel(500) * perlin.noise(10000 * angle) * sin_h;
         }
         default: return planet.radius;

@@ -45,6 +45,7 @@ class Planet {
 
         this.sectors = {};
         this.texture_sectors = {};
+        this.sectors_to_delete = []; // Optimization for deleting matter.js sectors
 
         // Science and info
         this.desc = 'Default planet desc';
@@ -85,17 +86,31 @@ class Planet {
             // Sector already exists
             if (this.texture_sectors[angle2]) continue;
 
-            this.texture_sectors[angle2] = new PlanetSectorGraphic(angle2, this, stage_handler.getCurrentStage().stage);
+            this.texture_sectors[angle2] = new PlanetSectorGraphic(angle2, this, sim.stage);
         }
 
         /* Trim extra angles that are too far away */
         if (added) {
             for (let a of Object.keys(this.sectors)) {
-                //TODO aslso remove graphics
                 if (Math.abs(angle - a) > config.planet_sector_size * 5) {
-                    Matter.Composite.remove(sim.engine.world, this.sectors[a].body);
+                    // Matter.Composite.remove(sim.engine.world, this.sectors[a].body);
+                    Matter.Sleeping.set(this.sectors[a].body, true);
+                    this.sectors[a].body.collision
+                    this.sectors_to_delete.push(this.sectors[a].body);
                     delete this.sectors[a];
                 }
+
+                if (Math.abs(angle - a) > config.planet_graphic_sector_size * 5) {
+                    sim.stage.removeChild(this.texture_sectors[a].body);
+                    delete this.texture_sectors[a];
+                }
+            }
+        }
+
+        /* Delete matter.js bodies in one swoop */
+        if (this.sectors_to_delete.length > 30 || Math.random() < 0.05) {
+            for (let sector of this.sectors_to_delete) {
+                Matter.Composite.remove(sim.engine.world, sector);
             }
         }
     }

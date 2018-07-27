@@ -16,9 +16,7 @@ Create a simulation (calculations only)
     https://stackoverflow.com/questions/29429219/how-put-a-texture-on-pixi-js-polygon
 
 
-Optimize planets
-    split int osections or something
-    Only body needs to be optimized
+Speed up sector rendering by computing once for both graphics and planet
 
 
 If rocket is inside planet teleport it out

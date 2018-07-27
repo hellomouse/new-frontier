@@ -38,7 +38,10 @@ let blocks = [
 
 let earth = new Earth(0, 0);
 
-let a = 90;
+//130 = Mountain
+//90 = polar
+//100 = tundra
+let a = 100;
 a = 180 - a;
 earth.position.y = earth.radius * Math.sin(a / 180 * Math.PI) + 3000;
 earth.position.x = earth.radius * Math.cos(a / 180 * Math.PI);

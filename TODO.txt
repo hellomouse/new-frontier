@@ -15,7 +15,7 @@ Create a simulation (calculations only)
 
 
 TODO
-    try to use HTML in renderable scene instead of PIXI js scene
+    Rocket parts should share memory for DATA (static)
 
 
 

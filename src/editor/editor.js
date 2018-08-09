@@ -21,8 +21,8 @@ class Editor extends RenderableScene {
         super.init();
 
         // Create buttons
-        this.html = `
-
-        `;
+        this.html = EDITOR_HTML;
     }
 }
+
+module.exports = Editor;

@@ -23,11 +23,11 @@ class Map extends RenderableScene {
 
     /**
      * loadPlanetSprites - Fills this.planet_sprites using
-     * planet data from sim.planets. Use after all planets
-     * have been added to sim.planets
+     * planet data from scenes.sim.planets. Use after all planets
+     * have been added to scenes.sim.planets
      */
     loadPlanetSprites() {
-        for (let planet of sim.planets) {
+        for (let planet of scenes.sim.planets) {
             let sprite = new PIXI.Sprite.fromImage(planet.map_image);
             sprite.width = planet.radius / DEFAULT_MAP_ZOOM;
             sprite.height = planet.radius / DEFAULT_MAP_ZOOM;

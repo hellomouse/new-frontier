@@ -15,8 +15,6 @@ let appPath = remote.app.getAppPath();
 
 /* Require some modules */
 const Scene = require(path.resolve(appPath, './src/scene.js'));
-const Simulation = require(path.resolve(appPath, './src/simulation'));
-const MapView = require(path.resolve(appPath, './src/simulation/map.js'));
 const StageHandler = require(path.resolve(appPath, './src/ui/stage-handler.js'));
 
 
@@ -24,9 +22,6 @@ const config = require(path.resolve(appPath, './src/game/config.js'));
 
 const Earth = require(path.resolve(appPath, './src/game/bodies/earth.js'));
 const PhysicalSprite = require(path.resolve(appPath, './src/components/physical-sprite.js'));
-
-const AllParts = require(path.resolve(appPath, './src/game/rocket-parts/all-parts.js'));
-
 
 const Rocket = require(path.resolve(appPath, './src/game/rocket.js'));
 const Thruster = require(path.resolve(appPath, './src/game/rocket-parts/thruster/thruster-normal.js'));
@@ -64,10 +59,14 @@ let stage, renderer;
 
 /* Physics engine for matter.js */
 let engine = Engine.create();
-
-let sim = new Simulation();
-let map = new MapView();
 let stage_handler;
+
+// Load scenes
+const scenes = {
+    sim: new (require(path.resolve(appPath, './src/simulation')))(),
+    map: new (require(path.resolve(appPath, './src/simulation/map.js')))(),
+    editor: new (require(path.resolve(appPath, './src/editor/editor.js')))()
+};
 
 require(path.resolve(appPath, './src/controls.js')); // Load in controls
 
@@ -86,20 +85,20 @@ function init() {
 
     // map.init();
 
-    sim.scene = current_scene;
+    scenes.sim.scene = current_scene;
 
-    stage_handler.stages['map'] = map;
-    stage_handler.stages['sim'] = sim;
+    stage_handler.stages['map'] = scenes.map;
+    stage_handler.stages['sim'] = scenes.sim;
 
     // sim.init();
 
-    map.init();
+    scenes.map.init();
 
     rocket.control = true;
-    sim.addRocket(rocket);
-    sim.addPlanet(earth);
+    scenes.sim.addRocket(rocket);
+    scenes.sim.addPlanet(earth);
 
-    map.loadPlanetSprites();
+    scenes.map.loadPlanetSprites();
 
     // Load stage and begin
     stage_handler.init();

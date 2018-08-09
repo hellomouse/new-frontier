@@ -3,6 +3,7 @@
 const RenderableScene = require('../ui/renderable-scene.js');
 const gameUtil = require('../util.js');
 const config = require('../game/config.js');
+const Camera = require('../ui/camera.js');
 
 const EDITOR_HTML = require('./editor-html.js');
 
@@ -15,6 +16,9 @@ class Editor extends RenderableScene {
 
         // Scene and other
         this.scene = null;
+        this.camera = new Camera();
+
+        // Actions/build
         this.current_select_build = null;
         this.current_action = 'place';   // place, rotate, or move
     }
@@ -26,10 +30,14 @@ class Editor extends RenderableScene {
         this.html = EDITOR_HTML;
     }
 
+    update() {
+        this.camera.focusOn({x: 0, y: 0});
+        this.camera.updateScene(this.stage, this.renderer);
+    }
+
     onClick(e) {
         let x = e.clientX;
         let y = e.clientY;
-        
     }
 }
 

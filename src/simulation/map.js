@@ -46,7 +46,7 @@ class Map extends RenderableScene {
         this.camera.focusOn(this.focus);
         this.camera.updateScene(this.stage, this.renderer);
 
-        for (let planet of sim.planets) {
+        for (let planet of scenes.sim.planets) {
             planet.map_sprite.x = planet.position.x / DEFAULT_MAP_ZOOM;
             planet.map_sprite.y = planet.position.y / DEFAULT_MAP_ZOOM;
         }

@@ -41,13 +41,17 @@ function getDif(height, planet) {
  * (As large bodies horribly lag the game)
  */
 class PlanetSectorGraphic {
-    constructor(angle, planet, stage, options) {
+    constructor(angle, planet, stage, options,
+            sector_size=config.planet_graphic_sector_size, sector_inc=config.planet_graphic_sector_inc) {
+        this.planet_graphic_sector_size = sector_size;
+        this.planet_graphic_sector_inc = sector_inc;
+
         // Create the body itself
         let vert = [];
-        let end_angle = angle + config.planet_graphic_sector_size + config.planet_graphic_sector_inc;
+        let end_angle = angle + this.planet_graphic_sector_size + this.planet_graphic_sector_inc;
         let lowest = Infinity;
 
-        for (let i = angle; i <= end_angle; i += config.planet_graphic_sector_inc) {
+        for (let i = angle; i <= end_angle; i += this.planet_graphic_sector_inc) {
             let h = planet.surface.getHeight(i);
             if (h < lowest) {
                 lowest = h;

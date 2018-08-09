@@ -25,7 +25,8 @@ class ThrusterNormal extends Thruster {
                 },
                 volume: 80.21 * 2,  //TODO fix
                 density: 52.98,  //TODO fix
-                description: 'A high thrust, low efficiency engine. Normally used in the lower stages of a rocket.'
+                description: 'A high thrust, low efficiency engine. Normally used in the lower stages of a rocket.',
+                category: 'Thruster'
             },
             4000);
 

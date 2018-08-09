@@ -39,6 +39,10 @@ module.exports = {
 
     // Game
     MIN_SCROLL: 0.005,
-    MAX_SCROLL: 2.5,
-    SCROLL_SPEED: 1.1
+    MAX_SCROLL: 50,
+    SCROLL_SPEED: 1.1,
+
+    // Editor
+    EDITOR_X_SIZE: 30,
+    EDITOR_Y_SIZE: 100
 };

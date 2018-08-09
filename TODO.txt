@@ -1,9 +1,7 @@
 Fix rotation along the center
 
 Optimized zoom
-    At some point just stop rendering
-        Perhaps only render close up zoom
-            Avoids rendering planets except in map view
+    SIMPLIFY POLYGONS
 
 Create a simulation (calculations only)
     and renderers
@@ -16,7 +14,15 @@ Create a simulation (calculations only)
     https://stackoverflow.com/questions/29429219/how-put-a-texture-on-pixi-js-polygon
 
 
+TODO
+    try to use HTML in renderable scene instead of PIXI js scene
+
+
+
 Speed up sector rendering by computing once for both graphics and planet
+
+
+SImpify polgon calculations based on camera zoom!!
 
 
 If rocket is inside planet teleport it out
@@ -53,9 +59,6 @@ Also, there is a shortcut: "event.getLocalPosition(stage)" works just fine.
 
 
 Controls
-    Scroll = zoom
-        camera.scale = <whatever>
-        set between 0.05 and 1.9
     Left/right control rocket (later)
 
 
@@ -72,7 +75,6 @@ Apply forces
     drag
     gravity
 
-rotate camera to align down with planet
 
 Properly set masses and densities from the rocket parts
 Remove fuel only from attached fuel tanks

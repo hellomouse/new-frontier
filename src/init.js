@@ -25,6 +25,9 @@ const config = require(path.resolve(appPath, './src/game/config.js'));
 const Earth = require(path.resolve(appPath, './src/game/bodies/earth.js'));
 const PhysicalSprite = require(path.resolve(appPath, './src/components/physical-sprite.js'));
 
+const AllParts = require(path.resolve(appPath, './src/game/rocket-parts/all-parts.js'));
+
+
 const Rocket = require(path.resolve(appPath, './src/game/rocket.js'));
 const Thruster = require(path.resolve(appPath, './src/game/rocket-parts/thruster/thruster-normal.js'));
 const FuelTank = require(path.resolve(appPath, './src/game/rocket-parts/fuel/fuel-tank-normal.js'));
@@ -41,7 +44,7 @@ let earth = new Earth(0, 0);
 //130 = Mountain
 //90 = polar
 //100 = tundra
-let a = 100;
+let a = 90;
 a = 180 - a;
 earth.position.y = earth.radius * Math.sin(a / 180 * Math.PI) + 3000;
 earth.position.x = earth.radius * Math.cos(a / 180 * Math.PI);
@@ -97,7 +100,10 @@ function init() {
     sim.addPlanet(earth);
 
     map.loadPlanetSprites();
+
+    // Load stage and begin
     stage_handler.init();
+    stage_handler.switchStage('sim');
     stage_handler.startRender();
 }
 

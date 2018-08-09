@@ -11,6 +11,7 @@ window.addEventListener('wheel', function(e) {
         if (stage.camera.scale * scaleDelta > config.MAX_SCROLL || stage.camera.scale * scaleDelta < config.MIN_SCROLL) {
             return;
         }
-        stage.camera.scale = +(stage.camera.scale * scaleDelta).toFixed(4);
+        stage.camera.scale = +(stage.camera.scale * scaleDelta).toFixed(20);
+        stage.onScroll(e);
     }
 });

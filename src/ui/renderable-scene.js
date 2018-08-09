@@ -7,6 +7,7 @@ class RenderableScene {
     constructor() {
         this.stage = null;
         this.ui = null;
+        this.html = '';
     }
 
     /**
@@ -25,6 +26,32 @@ class RenderableScene {
     resetAll(){
         this.stage = new PIXI.Container();
         this.ui = new PIXI.Container();
+    }
+
+    /**
+     * load - Additional loading that may need to
+     * occur for the scene when switched to.
+     * Override this method if needed
+     */
+    load() {
+        document.getElementById('ui-overlay').innerHTML = this.html;
+    }
+
+    /**
+     * unload - Called when the scene is unloaded.
+     * Override this method if needed
+     */
+    unload() {
+        // Empty, override
+    }
+
+    /**
+     * onScroll - Runs on the mousescroll event
+     *
+     * @param  {Event} e Event
+     */
+    onScroll(e) {
+        // Empty, override
     }
 }
 

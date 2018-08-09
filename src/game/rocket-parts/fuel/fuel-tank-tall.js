@@ -25,10 +25,11 @@ class FuelTankTall extends FuelTank {
                 },
                 volume: 80.21 * 4,
                 density: 52.98,  // Including fuel
-                description: 'A fuel tank carrying liquid fuel and oxygen. Explosive.'
+                description: 'A fuel tank carrying liquid fuel and oxygen. Explosive.',
+                category: 'Fuel'
             },
             8000);  // Fuel mass
-            
+
         this.id = 'Tall Fuel Tank';
     }
 }

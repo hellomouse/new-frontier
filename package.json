@@ -20,6 +20,7 @@
     "electron": "^1.8.4"
   },
   "dependencies": {
-    "@mohayonao/perlin-noise": "^0.2.0"
+    "@mohayonao/perlin-noise": "^0.2.0",
+    "node-dir": "^0.1.17"
   }
 }

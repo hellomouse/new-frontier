@@ -59,13 +59,13 @@ class Planet {
     }
 
     /**
-     * getSector - Given a position, updates this.sectors
+     * updateSector - Given a position, updates this.sectors
      * and add it to the world
      *
-     * @param  {Vector} position Position of rocket, in {x, y} coordinates
+     * @param  {number} angle    Angle of rocket to planet center (rad)
+     * @param  {Simulation} sim  Sim object
      */
-    updateSector(position, sim) {
-        let angle = Math.atan2(position.y - this.position.y, position.x - this.position.x); // gameUtil.math.fastAtan(ratio);
+    updateSector(angle, sim) {
         let added = false;
 
         // Round angle to lowest multiple of a PLANET_SECTOR_SIZE
@@ -80,16 +80,6 @@ class Planet {
             added = true;
         }
 
-        // Add graphical sectors
-        for (let i=-3; i<=3; i++) {
-            let angle2 = Math.floor(angle / config.planet_graphic_sector_size + i) * config.planet_graphic_sector_size;
-
-            // Sector already exists
-            if (this.texture_sectors[angle2]) continue;
-
-            this.texture_sectors[angle2] = new PlanetSectorGraphic(angle2, this, sim.stage);
-        }
-
         /* Trim extra angles that are too far away */
         if (added) {
             for (let a of Object.keys(this.sectors)) {
@@ -100,11 +90,6 @@ class Planet {
                     this.sectors_to_delete.push(this.sectors[a].body);
                     delete this.sectors[a];
                 }
-
-                if (Math.abs(angle - a) > config.planet_graphic_sector_size * 7) {
-                    sim.stage.removeChild(this.texture_sectors[a].body);
-                    delete this.texture_sectors[a];
-                }
             }
         }
 
@@ -112,6 +97,33 @@ class Planet {
         if (this.sectors_to_delete.length > 30 || Math.random() < 0.05) {
             for (let sector of this.sectors_to_delete) {
                 Matter.Composite.remove(sim.engine.world, sector);
+            }
+        }
+    }
+
+    updateGraphicSector(angle, sim, graphic_sector_scale) {
+        let added = false;
+
+        for (let i=-3; i<=3; i++) {
+            let angle2 = Math.floor(angle / config.planet_graphic_sector_size + i * graphic_sector_scale)
+                * config.planet_graphic_sector_size;
+
+            // Sector already exists
+            if (this.texture_sectors[angle2]) continue;
+
+            this.texture_sectors[angle2] = new PlanetSectorGraphic(angle2, this, sim.stage, {},
+                config.planet_graphic_sector_size * graphic_sector_scale,
+                config.planet_graphic_sector_inc * graphic_sector_scale
+            );
+        }
+
+        /* Trim extra angles that are too far away */
+        if (added) {
+            for (let a of Object.keys(this.texture_sectors)) {
+                if (Math.abs(angle - a) > config.planet_graphic_sector_size * 7 * graphic_sector_scale) {
+                    sim.stage.removeChild(this.texture_sectors[a].body);
+                    delete this.texture_sectors[a];
+                }
             }
         }
     }

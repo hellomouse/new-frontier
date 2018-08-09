@@ -5,6 +5,7 @@ class Rocket {
         this.parts = parts;
         this.control = false;  // Can it be controlled?
         this.position = {};
+        this.angle_to_planet = 0;
 
         this.comp = Matter.Composite.create({});
 
@@ -50,6 +51,10 @@ class Rocket {
         this.position.x = avg_x / this.comp.bodies.length;
         this.position.y = avg_y / this.comp.bodies.length;
         Matter.Body.setPosition(this.body, this.position);
+    }
+
+    updateAngleToPlanet(planet) {
+        this.angle_to_planet = Math.atan2(this.position.y - planet.position.y, this.position.x - planet.position.x); // gameUtil.math.fastAtan(ratio);
     }
 
     update() {

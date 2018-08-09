@@ -43,7 +43,8 @@ class RocketPart extends PhysicalSprite {
          *     },
          *     volume: <number>,  Volume in m^3
          *     density: <number>, Density in kg/m^3
-         *     description: <string>
+         *     description: <string>,
+         *     category: <string>
          * }
          */
         this.data = data;

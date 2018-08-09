@@ -86,9 +86,7 @@ function init() {
     // map.init();
 
     scenes.sim.scene = current_scene;
-
-    stage_handler.stages['map'] = scenes.map;
-    stage_handler.stages['sim'] = scenes.sim;
+    stage_handler.stages = scenes;
 
     // sim.init();
 
@@ -102,7 +100,7 @@ function init() {
 
     // Load stage and begin
     stage_handler.init();
-    stage_handler.switchStage('sim');
+    stage_handler.switchStage('editor');
     stage_handler.startRender();
 }
 

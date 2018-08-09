@@ -13,8 +13,10 @@ class Editor extends RenderableScene {
         // Make a 2D array, access like grid[y][x]
         this.grid = Array.from(Array(config.EDITOR_Y_SIZE), () => new Array(config.EDITOR_X_SIZE));
 
-        // Game
+        // Scene and other
         this.scene = null;
+        this.current_select_build = null;
+        this.current_action = 'place';   // place, rotate, or move
     }
 
     init() {
@@ -22,6 +24,12 @@ class Editor extends RenderableScene {
 
         // Create buttons
         this.html = EDITOR_HTML;
+    }
+
+    onClick(e) {
+        let x = e.clientX;
+        let y = e.clientY;
+        
     }
 }
 

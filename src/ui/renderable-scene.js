@@ -46,11 +46,26 @@ class RenderableScene {
     }
 
     /**
+     * update - Update - called each frame
+     * Override if needed
+     */
+    update() {
+        // Empty, override
+    }
+
+    /**
      * onScroll - Runs on the mousescroll event
-     *
      * @param  {Event} e Event
      */
     onScroll(e) {
+        // Empty, override
+    }
+
+    /**
+     * onClick - Runs on the mouseclick event
+     * @param  {Event} e Event
+     */
+    onClick(e) {
         // Empty, override
     }
 }

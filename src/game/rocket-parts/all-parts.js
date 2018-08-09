@@ -7,6 +7,8 @@ const CATEGORIES = [
     'Thruster'
 ];
 
+let parts_data = [];
+
 /**
  * const isBlacklist - Is a path in
  * the blacklist (aka not a rocket-part)
@@ -34,9 +36,16 @@ ALL_PARTS.forEach(x => {
     if (!CATEGORIES.includes(t.data.category)) {
         console.warn(t.id + ' does not belong in any valid category! (Category: ' + t.data.category + ')');
     }
+
+    parts_data.push({
+        data: t.data,
+        id: t.id,
+        image_path: t.image_path
+    });
 });
 
 module.exports = {
     parts: ALL_PARTS,
-    categories: CATEGORIES
+    categories: CATEGORIES,
+    parts_data: parts_data
 };

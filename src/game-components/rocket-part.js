@@ -22,6 +22,7 @@ class RocketPart extends PhysicalSprite {
         let body = Matter.Bodies.rectangle(x, y, width, height);
         super(image_path, width, height, body);
 
+        this.image_path = image_path;
         this.skip_add_body = true;
 
         /* Data that should be overrided by another

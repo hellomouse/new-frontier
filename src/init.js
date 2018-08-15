@@ -14,7 +14,7 @@ remote.app.setAppPath(process.cwd());
 let appPath = remote.app.getAppPath();
 
 /* Require some modules */
-const Scene = require(path.resolve(appPath, './src/scene.js'));
+const Scene = require(path.resolve(appPath, './src/game-components/physical-scene.js'));
 const StageHandler = require(path.resolve(appPath, './src/ui/stage-handler.js'));
 
 

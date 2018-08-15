@@ -3,8 +3,18 @@
 const dir = require('node-dir');
 
 const CATEGORIES = [
+    'Command',
     'Fuel',
-    'Thruster'
+    'Thruster',
+    'Structural',
+    'Coupling',
+    'Payload',
+    'Aerodynamics',
+    'Thermal',
+    'Electrical',
+    'Communication',
+    'Utility',
+    'Habitat'
 ];
 
 let parts_data = [];

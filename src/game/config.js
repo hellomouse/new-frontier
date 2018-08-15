@@ -11,28 +11,7 @@ module.exports = {
     planet_graphic_sector_inc: 0.00001,
 
     // Biomes
-    biomes: {  // TODO move to another file
-        'polar': {
-            temperature: -40 + 273.15,
-            friction: 0.01,
-            frictionStatic: 0.05
-        },
-        'flat': {
-            temperature: 15 + 273.15,
-            friction: 0.1,
-            frictionStatic: 0.5
-        },
-        'tundra': {
-            temperature: -20 + 273.15,
-            friction: 0.06,
-            frictionStatic: 0.4
-        },
-        'mountain': {
-            temperature: 3 + 273.15,
-            firction: 0.15,
-            frictionStatic: 0.6
-        }
-    },
+    biomes: require('./biomes.js'),
 
     // Physics
     G_CONSTANT: 2000,
@@ -44,5 +23,8 @@ module.exports = {
 
     // Editor
     EDITOR_X_SIZE: 30,
-    EDITOR_Y_SIZE: 100
+    EDITOR_Y_SIZE: 100,
+
+    // File
+    IMG_PATH: '../assets/img/'
 };

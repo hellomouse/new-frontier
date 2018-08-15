@@ -1,6 +1,8 @@
 'use strict';
 
-const Planet = require('../../game-components/planet.js');
+const Planet = require('../../game-components/bodies/planet.js');
+const config = require('../config.js');
+
 const conversion = require('../conversion.js');
 const gameUtil = require('../../util.js');
 const perlin = new (require('@mohayonao/perlin-noise'))();
@@ -122,15 +124,13 @@ class Earth extends Planet {
             getBiome: angle => getBiome(angle)
         };
 
-        this.sectors = {};
-
         // Science and info
         this.desc = ''
             + ''
             + ''
 
         // Map stuff
-        this.image = '../assets/planets/default.png';
+        this.image = config.IMG_PATH + 'planets/default.png';
         this.map_sprite = null; // Created in map.js
         this.min_radius = this.radius - conversion.meterToPixel(100); // Smallest possible height of the planet
     }

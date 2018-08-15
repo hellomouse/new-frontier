@@ -25,7 +25,7 @@ class FuelTankNormal extends FuelTank {
      */
     constructor(x, y) {
         super(
-            '../assets/parts/fuel-tank.png',
+            config.IMG_PATH + 'parts/fuel-tank/fuel-tank.png',
             config.build_grid_size,
             config.build_grid_size,
             x, y,

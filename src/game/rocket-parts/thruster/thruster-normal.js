@@ -11,7 +11,7 @@ class ThrusterNormal extends Thruster {
      */
     constructor(x, y) {
         super(
-            '../assets/parts/thruster-normal.png',
+            config.IMG_PATH + 'parts/thruster/thruster-normal.png',
             config.build_grid_size,
             config.build_grid_size,
             x, y,

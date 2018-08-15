@@ -1,12 +1,12 @@
 'use strict';
 
 /**
- * A scene contains the current world,
+ * A PhysicalScene contains the current world,
  * including all sprites present
  */
-class Scene {
+class PhysicalScene {
     /**
-     * constructor - Construct a new scene
+     * constructor - Construct a new PhysicalScene
      *
      * @param  {array} physical_sprites Array of physical sprites
      * @param  {array} sprites          Array of sprites
@@ -22,8 +22,8 @@ class Scene {
     }
 
     /**
-    * load - Loads a scene into existence.
-    * Also renders the scene, and enables physics.
+    * load - Loads a PhysicalScene into existence.
+    * Also renders the PhysicalScene, and enables physics.
     *
      * @param  {PIXI.Container} stage           Stage to draw everything on
      * @param  {Matter.World} world             World to add physical objects to
@@ -58,7 +58,7 @@ class Scene {
     }
 
     /**
-     * update - Updates the current scene. Runs
+     * update - Updates the current PhysicalScene. Runs
      * once per game loop. Anything that needs updating
      * will be run.
      */
@@ -74,4 +74,4 @@ class Scene {
 }
 
 
-module.exports = Scene;
+module.exports = PhysicalScene;

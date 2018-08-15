@@ -2,7 +2,7 @@
 This document outlines the general file structure of the project. You should follow here if you need to find or add something. **If you create a new folder or change the file structure please edit this file!**
 
 ## assets
----
+
 This folder contains game assets (images, sounds, etc...) If you wish to modify or add an image, just see the existing images and use them as a template. It should be structured as follows:
 
 ### dev
@@ -26,11 +26,11 @@ All music files go here
 All sound effect files go here
 
 ## docs
----
+
 Contains a bunch of markdown files and images that document the game
 
 ## public
----
+
 Because the game is basically displayed as a canvas in an electron instance, this is the "website" part that is rendered.
 
 ### css
@@ -43,7 +43,7 @@ Contains all the files for `PIXI.js` and `Matter.js`
 Main game. See `index.html` for comments regarding classes and structure.
 
 ## src
----
+
 Contains the main source of the game. Non-test javascript game code should go here.
 
 `init.js` Core game logic
@@ -106,7 +106,7 @@ module.exports = {
 ##### command, fuel, thruster, etc...
 These folders contain each part class, and files are automatically imported when the game is launched. Folder name should match part category list in `/src/game/rocket-parts/all_parts.js`
 
----
+
 ### game-components
 Classes that are used as base classes/non-obvious uses (such as graphics).
 `planet-sector-graphic.js` Graphical sector
@@ -114,15 +114,15 @@ Classes that are used as base classes/non-obvious uses (such as graphics).
 `rocket-part.js` All rocket parts inherit this
 `physical-scene.js` A scene that contains PhysicalSprites and Matter.js bodies
 
-#### bodies 
+#### bodies
 Classes for different types of celestial bodies
 `planet.js`  Planet class (Every planet inherits this)
 
----
+
 ### simulation
 Currently only contains `index.js` and `map.js`, 2 scenes displayed in the "simulation" portion of the game
 
----
+
 ### ui
 User interface classes
 

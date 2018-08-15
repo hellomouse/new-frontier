@@ -1,8 +1,10 @@
 'use strict';
 
+/* Required */
 const Planet = require('../../game-components/bodies/planet.js');
 const config = require('../config.js');
 
+/* Util */
 const conversion = require('../conversion.js');
 const gameUtil = require('../../util.js');
 const perlin = new (require('@mohayonao/perlin-noise'))();

@@ -14,10 +14,6 @@ Create a simulation (calculations only)
     https://stackoverflow.com/questions/29429219/how-put-a-texture-on-pixi-js-polygon
 
 
-TODO
-    Rocket parts should share memory for DATA (static)
-
-
 
 Speed up sector rendering by computing once for both graphics and planet
 

@@ -76,10 +76,7 @@ See the tutorial for creating rocket parts in `/docs`
 
 ```javascript
 module.exports = {
-    /* An array of all rocket parts. Since rocket parts are "classes",
-       each part is constructed. For example, if you have a part called
-       Thruster, the parts array will contain new Thruster()
-    */
+    /* An array of all rocket parts. Contains only the classes. */
     parts: ALL_PARTS,  
 
     /*
@@ -96,7 +93,13 @@ module.exports = {
         image_path: t.image_path  // Path to image of the part
     }
     */
-    parts_data: parts_data
+    parts_data: parts_data,
+
+    /* Same as parts, but an object indexed by id */
+    index: all_parts_index,
+
+    /* Same as parts_data, but an object indexed by id */
+    index_data: all_parts_index_data
 };
 ```
 

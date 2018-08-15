@@ -1,10 +1,10 @@
 'use strict';
 
-const config = require('../game/config.js');
-const gameUtil = require('../util.js');
+const config = require('../../game/config.js');
+const gameUtil = require('../../util.js');
 
-const PlanetSector = require('./planet-sector.js');
-const PlanetSectorGraphic = require('./planet-sector-graphic.js');
+const PlanetSector = require('../planet-sector.js');
+const PlanetSectorGraphic = require('../planet-sector-graphic.js');
 
 /**
  * This file acts like a template for a planet/moon. Extend

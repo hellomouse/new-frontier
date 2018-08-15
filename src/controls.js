@@ -1,6 +1,6 @@
 'use strict';
 
-const CAMERA_STAGES = ['sim', 'map'];
+const CAMERA_STAGES = ['sim', 'map', 'editor'];
 
 /* Mouse wheel, zoom camera */
 window.addEventListener('wheel', function(e) {

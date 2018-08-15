@@ -2,7 +2,8 @@
 
 module.exports = {
     // Build grid
-    build_grid_size: 50,
+    build_grid_size: 52,
+    build_grid_smallest: 52 / 4,
 
     // Planets
     planet_sector_size: 0.523599 / 40960, // Size of a sector in rad

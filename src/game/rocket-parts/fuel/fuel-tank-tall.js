@@ -3,6 +3,20 @@
 const FuelTank = require('../base-classes/fuel-tank.js');
 const config = require('../../config.js');
 
+const DATA = {
+    mass: 2000 * 4 + 2250 * 4,  // Mass includes fuel mass
+    drag: {             // Assuming 3.71 m diameter
+        top: 10.8,
+        left: 27.5 * 4,
+        right: 27.5 * 4,
+        bottom: 10.8
+    },
+    volume: 80.21 * 4,
+    density: 52.98,  // Including fuel
+    description: 'A fuel tank carrying liquid fuel and oxygen. Explosive.',
+    category: 'Fuel'
+};
+
 class FuelTankTall extends FuelTank {
     /**
      * constructor - Construct a FuelTankSmall
@@ -14,20 +28,7 @@ class FuelTankTall extends FuelTank {
             config.IMG_PATH + 'parts/fuel-tank/fuel-tank.png',
             config.build_grid_size,
             config.build_grid_size * 2,
-            x, y,
-            {
-                mass: 2000 * 4 + 2250 * 4,  // Mass includes fuel mass
-                drag: {             // Assuming 3.71 m diameter
-                    top: 10.8,
-                    left: 27.5 * 4,
-                    right: 27.5 * 4,
-                    bottom: 10.8
-                },
-                volume: 80.21 * 4,
-                density: 52.98,  // Including fuel
-                description: 'A fuel tank carrying liquid fuel and oxygen. Explosive.',
-                category: 'Fuel'
-            },
+            x, y, DATA,
             8000);  // Fuel mass
 
         this.id = 'Tall Fuel Tank';

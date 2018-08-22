@@ -36,4 +36,15 @@ module.exports = `
         allParts.parts_data.map(x => `<img style='float: left; width: 50px; height: 50px'
             src='${x.image_path}' onclick='editorFunctions.changeEditorBuild("${x.id}");'>`).join('')
     }</div>
+
+    <div style="
+        width: 500px;
+        height: 50px;
+        position: absolute;
+        top: 0;
+        right: 0;
+        text-align: right;
+    ">
+        <button>LAUNCH</button>
+    </div>
 `;

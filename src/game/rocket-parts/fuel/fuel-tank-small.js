@@ -14,7 +14,8 @@ const DATA = {
     volume: 80.21,
     density: 52.98,  // Including fuel
     description: 'A fuel tank carrying liquid fuel and oxygen. Explosive.',
-    category: 'Fuel'
+    category: 'Fuel',
+    min_snap_multiplier_y: 0.5
 };
 
 class FuelTankSmall extends FuelTank {
@@ -28,10 +29,8 @@ class FuelTankSmall extends FuelTank {
             config.IMG_PATH + 'parts/fuel-tank/fuel-tank.png',
             config.build_grid_size,
             config.build_grid_size / 2,
-            x, y, DATA,
-            2000);  // Fuel mass
-
-        this.id = 'Small Fuel Tank';
+            x, y, DATA, 'Small Fuel Tank',
+            2000);
     }
 }
 

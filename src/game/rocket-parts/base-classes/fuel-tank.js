@@ -15,12 +15,13 @@ class FuelTank extends RocketPart {
      * @param  {number} x          X pos
      * @param  {number} y          Y pos
      * @param  {object} data       Data, see below for desc and format
+     * @param  {string} id         Unique ID name for the part
      * @param  {number} fuel       Fuel capacity, in kg of fuel
      */
-    constructor(image_path, width, height, x, y, data, fuel) {
+    constructor(image_path, width, height, x, y, data, id, fuel) {
         /* Blocks are the same size as the image they're from
          * and are static. Non-static blocks should be an entitySprite */
-        super(image_path, width, height, x, y, data);
+        super(image_path, width, height, x, y, data, id);
         this.fuel = fuel;
 
         // This class should not be constructed directly

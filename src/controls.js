@@ -7,9 +7,9 @@ window.addEventListener('wheel', function(e) {
     let stage = stage_handler.stages[stage_handler.current_stage];
 
     if (CAMERA_STAGES.includes(stage_handler.current_stage)) {
-        let scaleDelta = e.wheelDelta > 0 ? config.SCROLL_SPEED : 1 / config.SCROLL_SPEED;
+        let scaleDelta = e.wheelDelta > 0 ? stage.camera.scroll_speed : 1 / stage.camera.scroll_speed;
 
-        if (stage.camera.scale * scaleDelta > config.MAX_SCROLL || stage.camera.scale * scaleDelta < config.MIN_SCROLL) {
+        if (stage.camera.scale * scaleDelta > stage.camera.max_scroll || stage.camera.scale * scaleDelta < stage.camera.min_scroll) {
             return;
         }
         stage.camera.scale = +(stage.camera.scale * scaleDelta).toFixed(20);

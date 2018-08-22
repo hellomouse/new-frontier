@@ -12,4 +12,4 @@ module.exports = {
 
     kgToMatter: kg => kg / CONVERSIONS.KG_TO_MATTER,
     matterToKg: m => m * CONVERSIONS.KG_TO_MATTER,
-}
+};

@@ -30,9 +30,8 @@ class FuelTankNormal extends FuelTank {
             config.build_grid_size,
             x, y,
             DATA,
-            4000);  // Fuel mass
-
-        this.id = 'Normal Fuel Tank';
+            'Normal Fuel Tank',
+            4000);
     }
 }
 

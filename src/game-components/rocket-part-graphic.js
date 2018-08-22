@@ -23,7 +23,7 @@ class RocketPartGraphic {
         this.sprite.width = this.data.width;
         this.sprite.height = this.data.height;
 
-        this.sprite.anchor.set(0.5, 0.5);
+        // this.sprite.anchor.set(0.5, 0.5);
         this.sprite.x = x;
         this.sprite.y = y;
     }

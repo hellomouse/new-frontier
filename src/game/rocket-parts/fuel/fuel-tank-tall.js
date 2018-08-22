@@ -28,10 +28,8 @@ class FuelTankTall extends FuelTank {
             config.IMG_PATH + 'parts/fuel-tank/fuel-tank.png',
             config.build_grid_size,
             config.build_grid_size * 2,
-            x, y, DATA,
-            8000);  // Fuel mass
-
-        this.id = 'Tall Fuel Tank';
+            x, y, DATA, 'Tall Fuel Tank',
+            8000);
     }
 }
 

@@ -15,13 +15,14 @@ class Thruster extends RocketPart {
      * @param  {number} x          X pos
      * @param  {number} y          Y pos
      * @param  {object} data       Data, see below for desc and format
+     * @param  {string} id         Unique ID name for the part
      * @param  {number} thrust     Thrust power
      * @param  {number} burn_rate  Burn rate (kg/frame)
      */
-    constructor(image_path, width, height, x, y, data, thrust, burn_rate) {
+    constructor(image_path, width, height, x, y, data, id, thrust, burn_rate) {
         /* Blocks are the same size as the image they're from
          * and are static. Non-static blocks should be an entitySprite */
-        super(image_path, width, height, x, y, data);
+        super(image_path, width, height, x, y, data, id);
         this.thurst = thrust;
         this.burn_rate = burn_rate;
 

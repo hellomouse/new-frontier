@@ -1,4 +1,4 @@
-Fix rotation along the center
+Default biome texture
 
 Optimized zoom
     SIMPLIFY POLYGONS
@@ -27,8 +27,6 @@ Load more chunks at once?
 
 Rotate camera when in planet's atmosphere to face downwards
 
-Add another stage overlay called UI or something
-    draw actual UI
 
 Relativity so ships cannot exceed lightspeed
 

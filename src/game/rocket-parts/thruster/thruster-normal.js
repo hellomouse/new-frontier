@@ -28,10 +28,8 @@ class ThrusterNormal extends Thruster {
             config.IMG_PATH + 'parts/thruster/thruster-normal.png',
             config.build_grid_size,
             config.build_grid_size,
-            x, y, DATA,
+            x, y, DATA, 'Liquid Fuel Engine',
             4000);
-
-        this.id = 'Liquid Fuel Engine';
     }
 }
 

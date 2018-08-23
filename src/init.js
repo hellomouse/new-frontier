@@ -27,12 +27,13 @@ const Rocket = require(path.resolve(appPath, './src/game/rocket.js'));
 const Thruster = require(path.resolve(appPath, './src/game/rocket-parts/thruster/thruster-normal.js'));
 const FuelTank = require(path.resolve(appPath, './src/game/rocket-parts/fuel/fuel-tank-normal.js'));
 
+/*
 let blocks = [
     new FuelTank(90, 400),
     new FuelTank(90, 350),
     new FuelTank(90, 300),
     //new Thruster(90, 450)
-];
+];*/
 
 let earth = new Earth(0, 0);
 
@@ -43,7 +44,7 @@ let a = 90;
 a = 180 - a;
 earth.position.y = earth.radius * Math.sin(a / 180 * Math.PI) + 3000;
 earth.position.x = earth.radius * Math.cos(a / 180 * Math.PI);
-let rocket = new Rocket(blocks, Matter);
+// let rocket = new Rocket(blocks, Matter);
 
 
 // const camera = new Camera();
@@ -75,7 +76,7 @@ function init() {
     stage_handler = new StageHandler();
 
     let current_scene = new Scene(
-        blocks,
+        [],
         [],
         [],
         [],
@@ -92,8 +93,8 @@ function init() {
 
     scenes.map.init();
 
-    rocket.control = true;
-    scenes.sim.addRocket(rocket);
+    // rocket.control = true;
+    // scenes.sim.addRocket(rocket);
     scenes.sim.addPlanet(earth);
 
     scenes.map.loadPlanetSprites();

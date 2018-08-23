@@ -36,6 +36,10 @@ class StageHandler {
         return this.stages[this.current_stage];
     }
 
+    getStageByName(name) {
+        return this.stages[name];
+    }
+
     switchStage(name) {
         this.current_stage = name;
         this.getCurrentStage().load();

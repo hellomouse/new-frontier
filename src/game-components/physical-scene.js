@@ -22,9 +22,9 @@ class PhysicalScene {
     }
 
     /**
-    * load - Loads a PhysicalScene into existence.
-    * Also renders the PhysicalScene, and enables physics.
-    *
+     * load - Loads a PhysicalScene into existence.
+     * Also renders the PhysicalScene, and enables physics.
+     *
      * @param  {PIXI.Container} stage           Stage to draw everything on
      * @param  {Matter.World} world             World to add physical objects to
      * @param  {Matter.Engine.Create()} engine  Matter.js engine
@@ -33,28 +33,33 @@ class PhysicalScene {
     load(stage, world, engine) {
         //init.resetAll();  // Clear the game renderer and physics engine
 
-        let bodies = [];  // Physical bodies to add to engine
-
         // Add physical sprites
-        for(let physical_sprite of this.physical_sprites) {
-            stage.addChild(physical_sprite.sprite);
-            if (!physical_sprite.skip_add_body) {
-                bodies.push(physical_sprite.body);
-            }
-        }
+        this.addPhysicalSprites(stage, this.physical_sprites);
 
         // Add non-physical sprites
         for(let sprite of this.sprites) {
             stage.addChild(sprite.sprite);
         }
 
-        // Add matterjs bodies
-        for(let body of this.bodies) {
-            bodies.push(body);
-        }
-
         // Add all physical objects
-        world.add(engine.world, bodies);
+        world.add(engine.world, this.bodies);
+    }
+
+    /**
+     * addPhysicalSprites - Adds more physical sprites
+     * to the current scene.
+     *
+     * @param  {PIXI.Container} stage   Stage to draw everything on
+     * @param  {array} physical_sprites Array of physical sprites
+     */
+    addPhysicalSprites(stage, sprites) {
+        for (let physical_sprite of sprites) {
+            stage.addChild(physical_sprite.sprite);
+            if (!physical_sprite.skip_add_body) {
+                this.bodies.push(physical_sprite.body);
+            }
+        }
+        this.physical_sprites = this.physical_sprites.concat(sprites);
     }
 
     /**

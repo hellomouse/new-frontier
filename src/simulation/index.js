@@ -52,6 +52,7 @@ class Simulation extends RenderableScene {
         // Add to this.scene for tracking
         this.scene.bodies.push(rocket.body);
         this.scene.updatable.push(rocket);
+        this.scene.addPhysicalSprites(this.stage, rocket.parts);
 
         // Add body to the world
         World.add(this.engine.world, rocket.body);
@@ -67,6 +68,7 @@ class Simulation extends RenderableScene {
      */
     init() {
         super.init();
+        this.html = require('./sim-html.js');
 
         this.engine.world.gravity.y = 0;                    // Disable universial downward gravity
         this.scene.load(this.stage, World, this.engine);   // Load the current scene (Add all objects)

@@ -3,7 +3,7 @@
 const RocketPart = require('../../../game-components/rocket-part.js');
 
 /**
- * A FuelTank
+ * A Thruster
  */
 class Thruster extends RocketPart {
     /**
@@ -23,7 +23,7 @@ class Thruster extends RocketPart {
         /* Blocks are the same size as the image they're from
          * and are static. Non-static blocks should be an entitySprite */
         super(image_path, width, height, x, y, data, id);
-        this.thurst = thrust;
+        this.thrust = thrust;
         this.burn_rate = burn_rate;
 
         // This class should not be constructed directly
@@ -37,9 +37,24 @@ class Thruster extends RocketPart {
      * Update method. this.rocket is set
      * in the Rocket class
      */
-    update() {
+    update(multiplier=1) {
         super.update();
-        this.rocket.applyForceToAll({x: 0, y: -0.005});
+        
+        /**
+         * Angle of 0 = rocket is facing upwards. Thrust components
+         * is determiend by the following forumla:
+         *
+         * x = -sin(angle) * thrust
+         * y = -cos(angle) * thrust
+         */
+        let angle = this.rocket.body.angle;
+        Matter.Body.applyForce(
+            this.rocket.body,
+            this.body.position,
+            {
+                x: this.thrust * multiplier * Math.sin(angle),
+                y: -this.thrust * multiplier * Math.cos(angle)
+            });
     }
 }
 

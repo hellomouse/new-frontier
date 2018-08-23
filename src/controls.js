@@ -17,6 +17,7 @@ window.addEventListener('wheel', function(e) {
     stage.onScroll(e);
 });
 
+/* Click events */
 window.addEventListener('click', function(e) {
     let stage = stage_handler.stages[stage_handler.current_stage];
     stage.onClick(e);

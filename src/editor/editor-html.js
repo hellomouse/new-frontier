@@ -14,6 +14,17 @@ global.editorFunctions.changeEditorBuild = function(id) {
     scenes.editor.current_select_build = id;
 }
 
+global.editorFunctions.spawnCurrentRocketAtLaunchPad = function() {
+    let rocket = stage_handler.getCurrentStage().constructRocket();
+
+    rocket.control = true;
+    scenes.sim.addRocket(rocket);
+
+    console.log(rocket)
+
+    stage_handler.switchStage('sim');
+}
+
 /* Load the actual html */
 module.exports = `
     <div style="
@@ -45,6 +56,6 @@ module.exports = `
         right: 0;
         text-align: right;
     ">
-        <button>LAUNCH</button>
+        <button onclick="editorFunctions.spawnCurrentRocketAtLaunchPad()">LAUNCH</button>
     </div>
 `;

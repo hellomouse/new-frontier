@@ -23,6 +23,7 @@ class RocketPart extends PhysicalSprite {
         let body = Matter.Bodies.rectangle(x, y, width, height);
         super(image_path, width, height, body);
 
+        this.sprite.anchor.set(0, 0);
         this.image_path = image_path;
         this.skip_add_body = true;
 

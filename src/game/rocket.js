@@ -1,16 +1,47 @@
 'use strict';
 
+const Thruster = require('./rocket-parts/base-classes/thruster.js');
+
+/**
+ * A Rocket (Covers probes, debris, etc...)
+ */
 class Rocket {
-    constructor(parts, Matter) {
+    /**
+     * constructor - Construct a new
+     * Rocket object
+     *
+     * @param  {array} parts Array of rocket parts
+     */
+    constructor(parts) {
         this.parts = parts;
-        this.control = false;  // Can it be controlled?
         this.position = {};
         this.angle_to_planet = 0;
+
+        /* Directly modifiable */
+        this.control = false;  // Is it currently being controlled?
+        this.control_settings = {
+            thrust: 0, // Thrust, between 0 and 1
+            stages: [], // Index 0 = bottom stage
+            heading: 'null' // Used for flight control SAS
+        };
+        /**
+         * Types of rocket are:
+         * - Ship: A manned rocket ship
+         * - Probe: An unmanned ship
+         * - Rover
+         * - Satellite
+         * - Relay
+         * - Debris
+         * - Space station
+         * - Base
+         */
+        this.type = 'rocket';
 
         this.comp = Matter.Composite.create({});
 
         for (let part of this.parts) {
             part.rocket = this;
+            part.skip_add_body = true;
             Matter.Composite.add(this.comp, part.body);
         }
 
@@ -22,6 +53,35 @@ class Rocket {
     }
 
     /**
+     * recover - Deletes the rocket and refunds
+     * any fuel/parts/money/crew, and adds science
+     * and other data obtained.
+     */
+    recover() {
+        // TODO do the stuff above
+        this.destroy();
+    }
+
+    /**
+     * destroy - Destroys the rocket, killing
+     * all crew without recovery.
+     */
+    destroy() {
+        //TODO work this out
+    }
+
+    /**
+     * reposition - Respositions the rocket
+     * to center at the given coordinates
+     *
+     * @param  {number} x X coord
+     * @param  {number} y Y coord
+     */
+    reposition(x, y) {
+        Matter.Body.setPosition(this.body, {x: x, y: y});
+    }
+
+    /**
      * applyForceToAll - Applies a force vector
      * to all bodies in the rocket.
      *
@@ -29,16 +89,25 @@ class Rocket {
      */
     applyForceToAll(vector) {
         Matter.Body.applyForce(this.body, this.body.position, vector);
-        /* for (let body of this.comp.bodies) {
-            Matter.Body.applyForce(body, body.position, vector);
-        } */
     }
 
+    /**
+     * getPos - Returns the current position
+     * as a vector ({x: <number>, y: <number>})
+     *
+     * @return {object}  Current position
+     */
     getPos() {
         this.updateCenterPos();
         return this.position;
     }
 
+    /**
+     * updateCenterPos - Recalculates center position
+     * based on location of comp bodies
+     *
+     * @return {type}  description
+     */
     updateCenterPos() {
         let avg_x = 0;
         let avg_y = 0;
@@ -58,9 +127,12 @@ class Rocket {
     }
 
     update() {
-        // Make sure rotation is consistent
-        for (let body of this.comp.bodies) {
-            body.angle = this.body.angle;
+        for (let part of this.parts) {
+            /* Make sure rotation is correct */
+            part.body.angle = this.body.angle;
+
+            /* Thrusters apply thrust */
+            if (part instanceof Thruster) part.update(this.control_settings.thrust);
         }
     }
 }

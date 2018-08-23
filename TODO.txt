@@ -14,6 +14,11 @@ Create a simulation (calculations only)
     https://stackoverflow.com/questions/29429219/how-put-a-texture-on-pixi-js-polygon
 
 
+//TODO ERROR
+decomp.Polygon is not a constructor ERROR!!
+
+Fix weird sliding bug on the ice - rocket slides left
+
 
 Speed up sector rendering by computing once for both graphics and planet
 
@@ -91,3 +96,53 @@ science instruments
 orbital decay
 fake lagrange points
 re-entry heat
+
+Future update ideas
+    Magnetics update
+        Mag sail
+        magnetospheres
+        magnetic field detector
+        aurouras
+        solar sails
+        railguns
+        antimatter
+            container
+            collector (antimatter contained in magnetic fields of planets)
+            engine (antimatter triggered fission reactor)
+
+    Nuclear update
+        Nuclear engines / reactors
+        Radiation shielding (since craft come with it built in only really applicable for reactors)
+        Solar radiation/radiation belts
+        Fusion/fission thrusters
+            Fusion thruster
+            Nuclear lightbulb
+            Nuclear bomb solar sail
+        Nuclear bombs :D
+        Radiation beam lasers
+        Traveling wave reactor
+        Cosmic ray sensor
+
+    Science update
+        Soil scoop (robotic)
+        Weather stations
+        Lots of more telescoeps on different wavelengths
+        cameras
+        sesmic reader
+        labatories
+
+    Interstellar exploration update (big update)
+        resources
+            Water drill
+            Atmospheric scoop
+            habitats: greenhouses, waste recycling, co2 scrubbers
+            supercapciator - large battery
+
+        engines
+            methane engines (mine methane is easier)
+            water engines
+            ion engines, fusion engines, antimatter engines
+        ship
+            bigger radiators
+        planets
+            lots of new star systems to explore

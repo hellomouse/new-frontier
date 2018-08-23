@@ -132,6 +132,20 @@ class Editor extends RenderableScene {
 
         this.current_build.push({ x: x, y: y, name: this.current_select_build, data: part_data });
     }
+
+    /**
+     * constructRocket - Construct a new Rocket object
+     * that can be added to the sim
+     *
+     * @return {Rocket}  Rocket built in the editor
+     */
+    constructRocket() {
+        let parts = this.current_build.map(part => new allParts.index[part.name](part.x, part.y));
+        let rocket = new Rocket(parts, Matter);
+
+        rocket.reposition(90, -100); // TODO update to launch pad coords
+        return rocket;
+    }
 }
 
 module.exports = Editor;

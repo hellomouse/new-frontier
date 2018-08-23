@@ -65,14 +65,14 @@ class PlanetSector {
         Matter.Body.setStatic(this.body, true);
 
         // Debugging
-        /* let graphics = new PIXI.Graphics();
+        /*let graphics = new PIXI.Graphics();
 
         for (let i=1;i<vert.length;i++) {
             graphics.lineStyle(20, 0xffffff)
                .moveTo(vert[i-1].x, vert[i-1].y)
                .lineTo(vert[i].x, vert[i].y);
         }
-        sim.stage.addChild(graphics); */
+        stage_handler.getStageByName('sim').stage.addChild(graphics);*/
     }
 }
 

@@ -29,7 +29,7 @@ class ThrusterNormal extends Thruster {
             config.build_grid_size,
             config.build_grid_size,
             x, y, DATA, 'Liquid Fuel Engine',
-            4000);
+            0.01, 0.1);
     }
 }
 

@@ -17,6 +17,8 @@ Create a simulation (calculations only)
 //TODO ERROR
 decomp.Polygon is not a constructor ERROR!!
 
+thrust from bottom of thruster and not corner
+
 Fix weird sliding bug on the ice - rocket slides left
 
 

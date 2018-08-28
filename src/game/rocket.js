@@ -50,6 +50,8 @@ class Rocket {
         Matter.Events.on(this.comp, 'afterAdd', this.updateCenterPos);
         Matter.Events.on(this.comp, 'afterRemove', this.updateCenterPos);
         this.updateCenterPos();
+
+        this.boundary_graphic = null;
     }
 
     /**
@@ -134,6 +136,23 @@ class Rocket {
             /* Thrusters apply thrust */
             if (part instanceof Thruster) part.update(this.control_settings.thrust);
         }
+
+        // DEBUG
+        if (this.boundary_graphic) {
+            stage_handler.getStageByName('sim').stage.removeChild(this.boundary_graphic);
+        }
+
+        this.boundary_graphic = new PIXI.Graphics();
+        let vert = this.body.vertices;
+
+        for (let i=1;i<this.body.vertices.length;i++) {
+            this.boundary_graphic.lineStyle(10, 0xff0000)
+               .moveTo(vert[i-1].x, vert[i-1].y)
+               .lineTo(vert[i].x, vert[i].y);
+        }
+
+        stage_handler.getStageByName('sim').stage.addChild(this.boundary_graphic);
+
     }
 }
 

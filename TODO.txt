@@ -17,12 +17,26 @@ Create a simulation (calculations only)
 
 
 Editor draw the select box if drag
+    Editor neater grid
+    Editor select part category
+    editor view part desc
+    editor right click to edit part
+    editor move part
+    editor rotate part
+    editor auto-rotate part
+    editor engineering report
+    editor no-control report
+    editor actions
+    editor crew tab
+    editor save, load managment of ships
+
+Correct rotation of parts in a rocket!
 
 
 
 thrust from bottom of thruster and not corner
 
-Fix weird sliding bug on the ice - rocket slides left
+Matter js verticies not diagional collision box
 
 
 Speed up sector rendering by computing once for both graphics and planet

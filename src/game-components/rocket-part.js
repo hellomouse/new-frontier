@@ -27,6 +27,12 @@ class RocketPart extends PhysicalSprite {
         this.image_path = image_path;
         this.skip_add_body = true;
 
+        /* Center the body fix */
+        body.position.x -= width / 2;
+        body.position.y -= height / 2;
+        body.positionPrev.x -= width / 2;
+        body.positionPrev.y -= height / 2;
+
         /* Data that should be overrided by another
          * class that extends this class */
         this.id = id;

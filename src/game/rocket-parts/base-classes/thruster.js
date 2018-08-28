@@ -39,7 +39,7 @@ class Thruster extends RocketPart {
      */
     update(multiplier=1) {
         super.update();
-        
+
         /**
          * Angle of 0 = rocket is facing upwards. Thrust components
          * is determiend by the following forumla:

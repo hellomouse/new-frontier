@@ -1,5 +1,7 @@
 Default biome texture
 
+Biome class
+
 Optimized zoom
     SIMPLIFY POLYGONS
 
@@ -14,8 +16,9 @@ Create a simulation (calculations only)
     https://stackoverflow.com/questions/29429219/how-put-a-texture-on-pixi-js-polygon
 
 
-//TODO ERROR
-decomp.Polygon is not a constructor ERROR!!
+Editor draw the select box if drag
+
+
 
 thrust from bottom of thruster and not corner
 

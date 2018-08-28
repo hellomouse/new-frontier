@@ -23,9 +23,26 @@ class RocketPartGraphic {
         this.sprite.width = this.data.width;
         this.sprite.height = this.data.height;
 
+        this.x = x;
+        this.y = y;
+
         // this.sprite.anchor.set(0.5, 0.5);
         this.sprite.x = x;
         this.sprite.y = y;
+    }
+
+    /**
+     * select - Display the part as selected
+     */
+    select() {
+        this.sprite.tint = 0xFF0000;
+    }
+
+    /**
+     * unselect - Display part as unselected
+     */
+    unselect() {
+        this.sprite.tint = 0xFFFFFF;
     }
 }
 

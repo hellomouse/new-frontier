@@ -62,10 +62,27 @@ class RenderableScene {
     }
 
     /**
-     * onClick - Runs on the mouseclick event
+     * onLeftClick - Runs on the mouseup event (left)
      * @param  {Event} e Event
      */
-    onClick(e) {
+    onLeftClick(e) {
+        // Empty, override
+    }
+
+    /**
+     * onRightClick - Runs on the mouseup event (right)
+     * @param  {Event} e Event
+     */
+    onRightClick(e) {
+        // Empty, override
+    }
+
+    /**
+     * onKeyDown - Runs on the keydown event
+     * @param  {Event} e      Event
+     * @param  {string} name  Key name
+     */
+    onKeyDown(e, name) {
         // Empty, override
     }
 }

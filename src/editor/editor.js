@@ -32,7 +32,6 @@ class Editor extends RenderableScene {
         this.camera_focus = {x: 0, y: 0};
 
         this.current_build = [];
-        this.current_build_graphics = [];
         this.selected_parts = [];
     }
 
@@ -209,7 +208,7 @@ class Editor extends RenderableScene {
         let x_bounds = [x1, x2].sort((a, b) => a - b);
         let y_bounds = [y1, y2].sort((a, b) => a - b);
 
-        for (let part of this.current_build_graphics) {
+        for (let part of this.current_build) {
             if (
                     part.x >= x_bounds[0] && part.x <= x_bounds[1] &&
                     part.y >= y_bounds[0] && part.y <= y_bounds[1]
@@ -228,12 +227,12 @@ class Editor extends RenderableScene {
         for (let part of this.selected_parts) {
             /* Delete parts from stage, graphics array and part array */
             this.stage.removeChild(part.sprite);
-            delete this.current_build_graphics[this.current_build_graphics.indexOf(part)];
-            this.current_build = this.current_build.filter(p => p.x !== part.x || p.y !== p.y || p.name !== part.id);
+            delete this.current_build[this.current_build.indexOf(part)];
+            //this.current_build = this.current_build.filter(p => p.x !== part.x || p.y !== p.y || p.name !== part.id);
         }
 
         this.selected_parts = [];
-        this.current_build_graphics = this.current_build_graphics.filter(x => x !== undefined);
+        this.current_build = this.current_build.filter(x => x !== undefined);
     }
 
     /**
@@ -272,9 +271,9 @@ class Editor extends RenderableScene {
 
         let obj = new RocketPartGraphic(this.current_select_build, x, y);
 
-        this.current_build_graphics.push(obj);
+        this.current_build.push(obj);
         this.stage.addChild(obj.sprite);
-        this.current_build.push({ x: x, y: y, name: this.current_select_build, data: part_data });
+        //this.current_build.push({ x: x, y: y, name: this.current_select_build, data: part_data });
 
         return true;
     }
@@ -289,7 +288,7 @@ class Editor extends RenderableScene {
      * @return {RocketPartGraphic}   Part
      */
     getPartAt(x, y) {
-        for (let part of this.current_build_graphics) {
+        for (let part of this.current_build) {
             /* Occupies identical location */
             if (x === part.x && y === part.y) return part;
 
@@ -309,7 +308,15 @@ class Editor extends RenderableScene {
      * @return {Rocket}  Rocket built in the editor
      */
     constructRocket() {
-        let parts = this.current_build.map(part => new allParts.index[part.name](part.x, part.y));
+        let parts = this.current_build.map(part => {
+            let x = part.x;
+            let y = part.y;
+
+            x += part.sprite.width / 2;
+            y += part.sprite.height / 2;
+
+            return new allParts.index[part.id](x, y);
+        });
         let rocket = new Rocket(parts, Matter);
 
         rocket.reposition(90, -100); // TODO update to launch pad coords

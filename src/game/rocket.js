@@ -24,6 +24,7 @@ class Rocket {
             stages: [], // Index 0 = bottom stage
             heading: 'null' // Used for flight control SAS
         };
+
         /**
          * Types of rocket are:
          * - Ship: A manned rocket ship
@@ -37,19 +38,27 @@ class Rocket {
          */
         this.type = 'rocket';
 
-        this.comp = Matter.Composite.create({});
+        // TODO NEATIFY
+        let min_x = this.parts[0].x;
+        let max_x = this.parts[0].x;
+        let min_y = this.parts[0].y;
+        let max_y = this.parts[0].y;
 
         for (let part of this.parts) {
             part.rocket = this;
             part.skip_add_body = true;
-            Matter.Composite.add(this.comp, part.body);
+
+            if (part.x < min_x) min_x = part.x;
+            if (part.x + part.sprite.width > max_x) max_x = part.x + part.sprite.width;
+            if (part.y < min_y) min_y = part.y;
+            if (part.y + part.sprite.height > max_y) max_y = part.y + part.sprite.height;
         }
 
-        this.body = Matter.Body.create({parts: this.parts.map(x => x.body)});
+        this.width = max_x - min_x;
+        this.height = max_y - min_y;
 
-        Matter.Events.on(this.comp, 'afterAdd', this.updateCenterPos);
-        Matter.Events.on(this.comp, 'afterRemove', this.updateCenterPos);
-        this.updateCenterPos();
+        this.body = Matter.Body.create({});
+        Matter.Body.setParts(this.body, this.parts.map(x => x.body));
 
         this.boundary_graphic = null;
     }
@@ -111,17 +120,7 @@ class Rocket {
      * @return {type}  description
      */
     updateCenterPos() {
-        let avg_x = 0;
-        let avg_y = 0;
-
-        for (let body of this.comp.bodies) {
-            avg_x += body.position.x;
-            avg_y += body.position.y;
-        }
-
-        this.position.x = avg_x / this.comp.bodies.length;
-        this.position.y = avg_y / this.comp.bodies.length;
-        Matter.Body.setPosition(this.body, this.position);
+        this.position = this.body.position;
     }
 
     updateAngleToPlanet(planet) {
@@ -129,6 +128,7 @@ class Rocket {
     }
 
     update() {
+
         for (let part of this.parts) {
             /* Make sure rotation is correct */
             part.body.angle = this.body.angle;
@@ -146,7 +146,7 @@ class Rocket {
         let vert = this.body.vertices;
 
         for (let i=1;i<this.body.vertices.length;i++) {
-            this.boundary_graphic.lineStyle(10, 0xff0000)
+            this.boundary_graphic.lineStyle(2, 0xff0000)
                .moveTo(vert[i-1].x, vert[i-1].y)
                .lineTo(vert[i].x, vert[i].y);
         }

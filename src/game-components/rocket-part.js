@@ -1,6 +1,7 @@
 'use strict';
 
 const PhysicalSprite = require('../components/physical-sprite.js');
+const config = require('../game/config.js');
 
 /**
  * A RocketPart
@@ -23,15 +24,8 @@ class RocketPart extends PhysicalSprite {
         let body = Matter.Bodies.rectangle(x, y, width, height);
         super(image_path, width, height, body);
 
-        this.sprite.anchor.set(0, 0);
         this.image_path = image_path;
         this.skip_add_body = true;
-
-        /* Center the body fix */
-        body.position.x -= width / 2;
-        body.position.y -= height / 2;
-        body.positionPrev.x -= width / 2;
-        body.positionPrev.y -= height / 2;
 
         /* Data that should be overrided by another
          * class that extends this class */
@@ -72,6 +66,8 @@ class RocketPart extends PhysicalSprite {
          */
         this.data = data;
         this.checkForMissingData();
+
+        this.boundary_graphic = null;
     }
 
     /**
@@ -103,6 +99,31 @@ class RocketPart extends PhysicalSprite {
         if (this.data.can_overlap === undefined) {
             this.data.can_overlap = false;
         }
+    }
+
+    /**
+     * update - Overriden update
+     * @override
+     */
+    update() {
+        super.update();
+
+        // DEBUG
+        if (this.boundary_graphic) {
+            stage_handler.getStageByName('sim').stage.removeChild(this.boundary_graphic);
+        }
+
+        this.boundary_graphic = new PIXI.Graphics();
+        let vert = this.body.vertices;
+
+        for (let i=1;i<this.body.vertices.length;i++) {
+            this.boundary_graphic.lineStyle(2, 0xff00ff)
+               .moveTo(vert[i-1].x, vert[i-1].y)
+               .lineTo(vert[i].x, vert[i].y);
+        }
+
+        stage_handler.getStageByName('sim').stage.addChild(this.boundary_graphic);
+
     }
 }
 

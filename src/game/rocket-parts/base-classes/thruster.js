@@ -31,6 +31,9 @@ class Thruster extends RocketPart {
         if (new.target === Thruster) {
             throw new TypeError('Cannot construct Abstract instances directly - Thruster is abstract');
         }
+
+        // Debug
+        this.debug_graphics = null;
     }
 
     /**
@@ -47,14 +50,35 @@ class Thruster extends RocketPart {
          * x = -sin(angle) * thrust
          * y = -cos(angle) * thrust
          */
-        let angle = this.rocket.body.angle;
-        Matter.Body.applyForce(
-            this.rocket.body,
-            this.body.position,
-            {
-                x: this.thrust * multiplier * Math.sin(angle),
-                y: -this.thrust * multiplier * Math.cos(angle)
-            });
+        let angle = -this.rocket.body.angle;
+        let fx = -this.thrust * multiplier * Math.sin(angle);
+        let fy = -this.thrust * multiplier * Math.cos(angle);
+
+
+        let new_pos = {
+            x: Matter.Vertices.centre(this.body.vertices).x,
+            y: Matter.Vertices.centre(this.body.vertices).y
+        };
+
+        if (fx !== 0 || fy !== 0) {
+            Matter.Body.applyForce(
+                this.rocket.body,
+                new_pos, { x: fx, y: fy });
+        }
+
+        // DEBUG
+        if (this.debug_graphics) {
+            stage_handler.getStageByName('sim').stage.removeChild(this.debug_graphics);
+        }
+
+        this.debug_graphics = new PIXI.Graphics();
+        this.debug_graphics.lineStyle(30, 0xff0000)
+           .moveTo(new_pos.x, new_pos.y)
+           .lineTo( Math.floor(new_pos.x - fx * 100000), Math.floor(new_pos.y - fy * 100000));
+
+        this.debug_graphics.beginFill(0xFFFFFF, 1).lineStyle(1, 0xFFFFFF).drawCircle(new_pos.x, new_pos.y, 5)
+        this.debug_graphics.beginFill(0xFFFF00, 1).lineStyle(1, 0xFFFF00).drawCircle(Math.floor(new_pos.x - fx * 10000000000), Math.floor(new_pos.y - fy * 10000000000), 5)
+        stage_handler.getStageByName('sim').stage.addChild(this.debug_graphics);
     }
 }
 

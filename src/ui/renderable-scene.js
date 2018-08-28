@@ -78,6 +78,14 @@ class RenderableScene {
     }
 
     /**
+     * onRightClick - Runs on the mousedown event
+     * @param  {Event} e Event
+     */
+    onMousemove(e) {
+        // Empty, override
+    }
+
+    /**
      * onKeyDown - Runs on the keydown event
      * @param  {Event} e      Event
      * @param  {string} name  Key name

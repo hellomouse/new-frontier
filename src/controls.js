@@ -9,7 +9,10 @@ let control_state = {
     mouse: {
         last_mousedown: [-1, -1],
         last_mouseup: [-1, -1],
-        dragging: false
+        dragging: false,
+        x: 0,
+        y: 0,
+        pos_event: null
     },
     keyboard: {}
 };
@@ -53,6 +56,15 @@ window.addEventListener('mousedown', function(e) {
         if (Math.abs(x - e.clientX) > 5 || Math.abs(y - e.clientY) > 5)
             control_state.mouse.dragging = true;
     });
+});
+
+window.addEventListener('mousemove', function(e) {
+    control_state.mouse.x = e.clientX;
+    control_state.mouse.y = e.clientY;
+    control_state.mouse.pos_event = e;
+
+    let stage = stage_handler.stages[stage_handler.current_stage];
+    stage.onMousemove(e);
 });
 
 window.addEventListener('mouseup', function(e) {

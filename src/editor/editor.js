@@ -24,7 +24,7 @@ class Editor extends RenderableScene {
 
         // Scene and other
         this.scene = null;
-        this.camera = new Camera(0.3, 50, 1);
+        this.camera = new Camera(0.3, 4, 1);
 
         // Actions/build
         this.current_select_build = null;
@@ -163,6 +163,51 @@ class Editor extends RenderableScene {
     }
 
 
+    /**
+     * onMousemove - Runs on mousemove
+     * @param  {Event} e      Event
+     * @override
+     */
+    onMousemove(e) {
+        this.updatedSelectedIcon(e);
+    }
+
+    /**
+     * onScroll - On scroll event
+     * @param  {Event} e      Event
+     * @override
+     */
+    onScroll(e) {
+        this.updatedSelectedIcon(e);
+    }
+
+    /**
+     * updatedSelectedIcon - Update the current
+     * little mouse icon that displays the part
+     * that is selected
+     *
+     * @param  {Event} e      Event
+     */
+    updatedSelectedIcon(e) {
+        let icon = document.getElementById('follow-mouse-editor-icon');
+
+        if (!this.current_select_build) {
+            icon.style.display = 'none';
+            return;
+        }
+
+        let x = e.clientX;
+        let y = e.clientY;
+        let data = allParts.index_data[this.current_select_build];
+
+        icon.style.left = x + 'px';
+        icon.style.top = y + 'px';
+        icon.src = data.image_path;
+
+        icon.style.width = data.width * this.camera.scale + 'px';
+        icon.style.height = data.height * this.camera.scale + 'px';
+        icon.style.display = 'inline';
+    }
 
     /**
      * unselectAll - Unselects all currently
@@ -309,6 +354,8 @@ class Editor extends RenderableScene {
      */
     constructRocket() {
         let parts = this.current_build.map(part => {
+            /* Adjust from corner coordinates to
+             * centered coordinates */
             let x = part.x;
             let y = part.y;
 

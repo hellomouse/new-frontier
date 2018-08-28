@@ -12,3 +12,13 @@ body {
     top: 0;
     left: 0;
 }
+
+.brighten-on-hover {
+    transition: filter 0.2s;
+    filter: brightness(100%);
+}
+.brighten-on-hover:hover {
+     transition: filter 0.2s;
+     filter: brightness(120%);
+}
+.cursor-on-hover:hover { cursor: pointer; }

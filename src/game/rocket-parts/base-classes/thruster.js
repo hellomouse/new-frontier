@@ -54,12 +54,11 @@ class Thruster extends RocketPart {
         let fx = -this.thrust * multiplier * Math.sin(angle);
         let fy = -this.thrust * multiplier * Math.cos(angle);
         
-        
         let center_x = Matter.Vertices.centre(this.body.vertices).x; // The center of the part
         let center_y = Matter.Vertices.centre(this.body.vertices).y; // The center of the part
         
-        let thrust_x = center_x + (Math.sin(angle)*this.sprite.width*0.5); // x + (sin(angle)*width)/2
-        let thrust_y = center_y + (Math.cos(angle)*this.sprite.height*0.5); //y + (cos(angle)*height)/2
+        let thrust_x = center_x + (Math.sin(angle) * this.sprite.width * 0.5); // x + (sin(angle) * width) / 2
+        let thrust_y = center_y + (Math.cos(angle) * this.sprite.height * 0.5); //y + (cos(angle)  *height) / 2
         
         let new_pos = { // The position of the force.
             x: thrust_x,

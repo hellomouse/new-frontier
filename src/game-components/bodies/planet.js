@@ -142,13 +142,17 @@ class Planet {
     }
 
     applyGravity(rocket) {
-        let x1 = this.position.x;
-        let y1 = this.position.y;
-        let x2 = rocket.position.x;
-        let y2 = rocket.position.y;
+        let x = this.position.x;
+        let y = this.position.y;
+        let x_rocket = rocket.position.x;
+        let y_rocket = rocket.position.y;
 
-        let f_mag = config.G_CONSTANT * this.mass * rocket.body.mass / ((x1 - x2) ** 2 + (y1 - y2) ** 2);
-        let angle = Math.atan2(y1 - y2, x1 - x2);
+		let x_distance = x-x_rocket;
+		let y_distance = y-y_rocket;
+		let distance_mag_square = x_distance ** 2 + y_distance ** 2;
+		
+        let f_mag = (config.G_CONSTANT * this.mass * rocket.body.mass) / distance_mag_square; // F due to gravity = (g)(mass1)(mass2)/(distance between**2)
+        let angle = Math.atan2(y_distance, x_distance);
 
         let vector = {x: f_mag * Math.cos(angle), y: f_mag * Math.sin(angle)};
         Matter.Body.applyForce(rocket.body, rocket.position, vector);

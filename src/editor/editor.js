@@ -56,12 +56,12 @@ class Editor extends RenderableScene {
 
         /* DEBUG */
         for (let x = -config.build_grid_size * 20; x < 1000; x += config.build_grid_size) {
-            lines.lineStyle(3, 0xffffff)
+            lines.lineStyle(1, 0xffffff)
                    .moveTo(x, -1000)
                    .lineTo(x, 1000);
         }
         for (let y = -config.build_grid_size * 20; y < 1000; y += config.build_grid_size) {
-            lines.lineStyle(3, 0xffffff)
+            lines.lineStyle(1, 0xffffff)
                    .moveTo(-1000, y)
                    .lineTo(1000, y);
         }
@@ -150,12 +150,6 @@ class Editor extends RenderableScene {
         /* Success placing part!
          * Deselect everything */
         else this.unselectAll();
-
-
-
-        //TODO
-        // Parts can be draggable
-        // enable free move when selected (only 1 part?)
     }
 
     /**
@@ -299,13 +293,11 @@ class Editor extends RenderableScene {
 
         if (part) {
             /* If CTRL is held down add part to selection */
-            if (!control_state.keyboard.Control) {
-                this.unselectAll();
-            }
+            if (!control_state.keyboard.Control) this.unselectAll();
 
             this.selected_parts.push(part);
             part.select();
-        } else {
+        } else { /* Clicking on empty space = deselect */
             this.unselectAll();
         }
     }

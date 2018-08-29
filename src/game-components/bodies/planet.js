@@ -69,7 +69,7 @@ class Planet {
         let added = false;
 
         // Round angle to lowest multiple of a PLANET_SECTOR_SIZE
-        for (let i=-1; i<=1; i++) {
+        for (let i=-config.planet_sector_amount / 2; i<=config.planet_sector_amount/2; i++) {
             let angle2 = Math.floor(angle / config.planet_sector_size + i) * config.planet_sector_size;
 
             // Sector already exists
@@ -83,7 +83,7 @@ class Planet {
         /* Trim extra angles that are too far away */
         if (added) {
             for (let a of Object.keys(this.sectors)) {
-                if (Math.abs(angle - a) > config.planet_sector_size * 5) {
+                if (Math.abs(angle - a) > config.planet_sector_size * config.planet_sector_amount) {
                     // Matter.Composite.remove(sim.engine.world, this.sectors[a].body);
                     Matter.Sleeping.set(this.sectors[a].body, true);
                     this.sectors[a].body.collision

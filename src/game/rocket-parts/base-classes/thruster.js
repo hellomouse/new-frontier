@@ -53,7 +53,7 @@ class Thruster extends RocketPart {
         let angle = -this.rocket.body.angle;
         let fx = -this.thrust * multiplier * Math.sin(angle);
         let fy = -this.thrust * multiplier * Math.cos(angle);
-        
+
         let center_x = Matter.Vertices.centre(this.body.vertices).x; // The center of the part
         let center_y = Matter.Vertices.centre(this.body.vertices).y; // The center of the part
         

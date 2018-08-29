@@ -33,6 +33,14 @@ class Editor extends RenderableScene {
 
         this.current_build = [];
         this.selected_parts = [];
+
+        /* Width of left side of editor (selectors)
+         * Since HTML is not yet loaded will be loaded on click */
+        this.left_part_width = null;
+        this.top_part_height = null;
+
+        /* Select rectangle graphic */
+        this.select_rectangle_graphic = null;
     }
 
     /**
@@ -48,12 +56,12 @@ class Editor extends RenderableScene {
 
         /* DEBUG */
         for (let x = -config.build_grid_size * 20; x < 1000; x += config.build_grid_size) {
-            lines.lineStyle(3, 0xffffff)
+            lines.lineStyle(1, 0xffffff)
                    .moveTo(x, -1000)
                    .lineTo(x, 1000);
         }
         for (let y = -config.build_grid_size * 20; y < 1000; y += config.build_grid_size) {
-            lines.lineStyle(3, 0xffffff)
+            lines.lineStyle(1, 0xffffff)
                    .moveTo(-1000, y)
                    .lineTo(1000, y);
         }
@@ -79,11 +87,23 @@ class Editor extends RenderableScene {
         let x = e.clientX;
         let y = e.clientY;
 
+        /* Add variables if doesn't exist */
+        if (!this.left_part_width) {
+            this.left_part_width = +document.getElementById('editor-left-1').style.width.replace('px', '') +
+            +document.getElementById('parts').style.width.replace('px', '');
+        }
+        if (!this.top_part_height) {
+            this.top_part_height = +document.getElementById('editor-top').style.height.replace('px', '');
+        }
+
         /* X coordinate is on the left side of the screen
          * (User is selecting parts and not placing down parts)
          * Or Y coordinate is top 50 px */
-        if (x < 350) return;  // See editor-html.js, add the width of the 2 divs
-        if (y < 50) return;
+        if (x < this.left_part_width || y < this.top_part_height) {  // See editor-html.js, add the width of the 2 divs
+            this.unselectCurrentBuild();
+            this.unselectAll();
+            return;
+        }
 
         // Transform x and y coordinates to stage coordinates
         let pos = this.stage.toLocal(new PIXI.Point(x, y));
@@ -117,22 +137,19 @@ class Editor extends RenderableScene {
 
             if (!control_state.keyboard.Control) this.unselectAll();
 
+            /* Remove the rectangle graphic */
+            this.removeRectangleGraphic();
             this.selectPartsBoundingBox(initial_pos.x, initial_pos.y, x, y);
             return;
         }
 
         /* Failed to place part, try selecting part
          * Start by finding a part at location */
-        if (!this.addPart(x, y)) this.selectPart(x, y);
+        if (!this.addPart(x, y) && !this.current_select_build) this.selectPart(x, y);
 
         /* Success placing part!
          * Deselect everything */
         else this.unselectAll();
-
-
-        //TODO
-        // Parts can be draggable
-        // enable free move when selected (only 1 part?)
     }
 
     /**
@@ -169,7 +186,32 @@ class Editor extends RenderableScene {
      * @override
      */
     onMousemove(e) {
-        this.updatedSelectedIcon(e);
+        if (!e) return; // Outside of screen
+        this.updatedSelectedIcon(e);  // Updated selected icon
+
+        /* Draw the select rectangle that shows the selection */
+        if (!control_state.mouse.isdown) {
+            this.removeRectangleGraphic();
+            return;
+        }
+
+        let lmdown = control_state.mouse.last_mousedown;
+        let coords = this.stage.toLocal(new PIXI.Point(e.clientX, e.clientY));
+        let initial_pos = this.stage.toLocal(new PIXI.Point(lmdown[0], lmdown[1]));
+
+        let w = initial_pos.x - coords.x;
+        let h = initial_pos.y - coords.y;
+
+        /* Actual drawing */
+        if (this.select_rectangle_graphic) stage_handler.getStageByName('editor').stage.removeChild(this.select_rectangle_graphic);
+        this.select_rectangle_graphic = new PIXI.Graphics();
+
+        this.select_rectangle_graphic.beginFill(0x00FF00);
+        this.select_rectangle_graphic.lineStyle(1, 0x00FF00);
+        this.select_rectangle_graphic.drawRect(initial_pos.x, initial_pos.y, -w, -h)
+        this.select_rectangle_graphic.alpha = 0.3;
+
+        stage_handler.getStageByName('editor').stage.addChild(this.select_rectangle_graphic);
     }
 
     /**
@@ -189,6 +231,8 @@ class Editor extends RenderableScene {
      * @param  {Event} e      Event
      */
     updatedSelectedIcon(e) {
+        if (!e) return;
+
         let icon = document.getElementById('follow-mouse-editor-icon');
 
         if (!this.current_select_build) {
@@ -221,6 +265,23 @@ class Editor extends RenderableScene {
     }
 
     /**
+     * unselectCurrentBuild - Unselects the current
+     * part selected to place
+     */
+    unselectCurrentBuild() {
+        this.current_select_build = null;
+        this.updatedSelectedIcon(control_state.mouse.pos_event);
+    }
+
+    /**
+     * removeRectangleGraphic - Removes select rect graphic
+     */
+    removeRectangleGraphic() {
+        stage_handler.getStageByName('editor').stage.removeChild(this.select_rectangle_graphic);
+        this.select_rectangle_graphic = null;
+    }
+
+    /**
      * selectPart - Select a part at
      * coordinates
      *
@@ -232,12 +293,12 @@ class Editor extends RenderableScene {
 
         if (part) {
             /* If CTRL is held down add part to selection */
-            if (!control_state.keyboard.Control) {
-                this.unselectAll();
-            }
+            if (!control_state.keyboard.Control) this.unselectAll();
 
             this.selected_parts.push(part);
             part.select();
+        } else { /* Clickong on empty space = deselect */
+            this.unselectAll();
         }
     }
 
@@ -254,10 +315,8 @@ class Editor extends RenderableScene {
         let y_bounds = [y1, y2].sort((a, b) => a - b);
 
         for (let part of this.current_build) {
-            if (
-                    part.x >= x_bounds[0] && part.x <= x_bounds[1] &&
-                    part.y >= y_bounds[0] && part.y <= y_bounds[1]
-                ) {
+            if (gameUtil.math.rectIntersect(x_bounds[0], y_bounds[0], x_bounds[1], y_bounds[1],
+                    part.x, part.y, part.x + part.data.width, part.y + part.data.height)) {
                 this.selected_parts.push(part);
                 part.select();
             }
@@ -282,11 +341,11 @@ class Editor extends RenderableScene {
 
     /**
      * addPart - Add the currently selected part
-     * at given position
+     * at given position.
      *
      * @param  {number} x X pos
      * @param  {number} y Y pos
-     * @return {boolean}  Did it place the part successfully?
+     * @return {boolean}  Did it place
      */
     addPart(x, y) {
         if (!this.current_select_build) return false;  // Nothing selected
@@ -318,7 +377,6 @@ class Editor extends RenderableScene {
 
         this.current_build.push(obj);
         this.stage.addChild(obj.sprite);
-        //this.current_build.push({ x: x, y: y, name: this.current_select_build, data: part_data });
 
         return true;
     }

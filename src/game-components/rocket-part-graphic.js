@@ -35,7 +35,7 @@ class RocketPartGraphic {
      * select - Display the part as selected
      */
     select() {
-        this.sprite.tint = 0xFF0000;
+        this.sprite.tint = 0x00FF00;
     }
 
     /**

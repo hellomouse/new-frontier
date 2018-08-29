@@ -12,7 +12,8 @@ let control_state = {
         dragging: false,
         x: 0,
         y: 0,
-        pos_event: null
+        pos_event: null,
+        isdown: false
     },
     keyboard: {}
 };
@@ -51,6 +52,7 @@ window.addEventListener('mousedown', function(e) {
 
     control_state.mouse.dragging = false;
     control_state.mouse.last_mousedown = [x, y];
+    control_state.mouse.isdown = true;
 
     window.addEventListener('mousemove', function(e) {
         if (Math.abs(x - e.clientX) > 5 || Math.abs(y - e.clientY) > 5)
@@ -69,7 +71,9 @@ window.addEventListener('mousemove', function(e) {
 
 window.addEventListener('mouseup', function(e) {
     let stage = stage_handler.stages[stage_handler.current_stage];
+
     control_state.mouse.last_mouseup = [e.clientX, e.clientY];
+    control_state.mouse.isdown = false;
 
     switch(e.button) {
         case 0: {

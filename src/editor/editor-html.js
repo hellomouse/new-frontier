@@ -5,6 +5,7 @@ const config = require('../game/config.js');
 const control_state = require('../controls.js');
 
 const CATEGORY_ICON_SIZE = 40;
+const PART_ICON_SIZE = 40;
 
 /* Some specific HTML functions that needed to be injected
  * into the global namespace */
@@ -39,7 +40,8 @@ module.exports = `
         left: 0;
         background-color: #111;
         padding-top: ${CATEGORY_ICON_SIZE * 0.075}px;
-    ">${
+    " class="noselect"
+    id="editor-left-1">${
         allParts.categories.map(x => `<img
             width=${CATEGORY_ICON_SIZE * 0.85}px
             height=${CATEGORY_ICON_SIZE * 0.85}px
@@ -60,9 +62,26 @@ module.exports = `
         top: 0;
         left: ${CATEGORY_ICON_SIZE}px;
         background-color: rgba(0, 0, 0, 0.9);
-    ">${
-        allParts.parts_data.map(x => `<img style='float: left; width: 50px; height: 50px'
-            src='${x.image_path}' id="part-button-${x.id}" onclick='editorFunctions.changeEditorBuild("${x.id}", this);'>`).join('')
+    " class="noselect"
+    >${
+        allParts.parts_data.map(x => {
+            let x_ratio = x.width / Math.max(x.width, x.height);
+            let y_ratio = x.height / Math.max(x.width, x.height);
+
+            return `<img style="
+                float: left;
+                width: ${x_ratio * PART_ICON_SIZE }px;
+                height: ${y_ratio * PART_ICON_SIZE }px;
+                padding:
+                        ${PART_ICON_SIZE / 2  - y_ratio * PART_ICON_SIZE / 2}px
+                        ${PART_ICON_SIZE / 2 - x_ratio * PART_ICON_SIZE / 2}px
+                        ${PART_ICON_SIZE / 2 - y_ratio * PART_ICON_SIZE / 2}px
+                        ${PART_ICON_SIZE / 2 - x_ratio * PART_ICON_SIZE / 2 }px;
+                margin: 2.5px;
+                border: 1px solid gray;
+            "
+            src='${x.image_path}' id="part-button-${x.id}" onclick='editorFunctions.changeEditorBuild("${x.id}", this);'>`;
+        }).join('')
     }</div>
 
     <img id="follow-mouse-editor-icon" style="
@@ -74,7 +93,7 @@ module.exports = `
             left: 0;
             display: none;
             pointer-events: none;
-        "
+        " class="noselect"
         src="">
 
     <div style="
@@ -84,7 +103,8 @@ module.exports = `
         top: 0;
         right: 0;
         text-align: right;
-    ">
+    " class="noselect"
+    id="editor-top">
         <button onclick="editorFunctions.spawnCurrentRocketAtLaunchPad()">LAUNCH</button>
     </div>
 `;

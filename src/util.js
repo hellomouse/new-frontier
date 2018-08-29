@@ -103,6 +103,24 @@ module.exports = {
          */
         isAngleBetween(x, a, b) {
             return this.isBetween(this.radToDeg(x), a, b);
+        },
+
+        /**
+         * rectIntersect - Do 2 rectangles intersect
+         * each other?
+         *
+         * @param  {number} x1 Top left corner rect 1 x
+         * @param  {number} y1 Top left corner rect 1 y
+         * @param  {number} x2 Bottom right corner rect 1 x
+         * @param  {number} y2 Bottom right corner rect 1 y
+         * @param  {number} x3 Top left corner rect 2 x
+         * @param  {number} y3 Top left corner rect 2 y
+         * @param  {number} x4 Bottom right corner rect 2 x
+         * @param  {number} y4 Bottom right corner rect 2 y
+         * @return {boolean}   Intersects?
+         */
+        rectIntersect(x1, y1, x2, y2, x3, y3, x4, y4) {
+            return !(x3 > x2 || x4 < x1 || y3 > y2 || y4 < y1);
         }
     }
 };

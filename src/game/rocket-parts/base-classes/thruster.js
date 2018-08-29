@@ -54,7 +54,6 @@ class Thruster extends RocketPart {
         let fx = -this.thrust * multiplier * Math.sin(angle);
         let fy = -this.thrust * multiplier * Math.cos(angle);
 
-
         let new_pos = {
             x: Matter.Vertices.centre(this.body.vertices).x,
             y: Matter.Vertices.centre(this.body.vertices).y

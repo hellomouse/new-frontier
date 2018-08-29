@@ -36,8 +36,6 @@ Editor draw the select box if drag
 
 Seperate parts ine editor into seperate rockets (not connected)
 
-thrust from bottom of thruster and not corner
-
 Fix sprite rotation
 
 Matter js verticies not diagional collision box

@@ -7,7 +7,7 @@ const RocketPart = require('../../../game-components/rocket-part.js');
  */
 class Thruster extends RocketPart {
     /**
-     * constructor - FuelTank
+     * constructor - Thruster
      *
      * @param  {string} image_path Path to image
      * @param  {number} width      Width of part

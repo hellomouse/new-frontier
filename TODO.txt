@@ -19,6 +19,9 @@ Create a simulation (calculations only)
 Editor draw the select box if drag
     Editor neater grid
     Editor select part category
+
+    rework the 'currently selected div - it should work with multiple parts too'
+
     editor view part desc
     editor right click to edit part
     editor move part

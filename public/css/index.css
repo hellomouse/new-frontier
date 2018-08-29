@@ -13,6 +13,10 @@ body {
     left: 0;
 }
 
+.noselect {
+    user-select: none; 
+}
+
 .brighten-on-hover {
     transition: filter 0.2s;
     filter: brightness(100%);
@@ -21,4 +25,4 @@ body {
      transition: filter 0.2s;
      filter: brightness(120%);
 }
-.cursor-on-hover:hover { cursor: pointer; }
+.cursor-on-hover:hover {cursor: pointer; }

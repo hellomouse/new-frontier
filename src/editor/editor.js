@@ -8,6 +8,7 @@ const control_state = require('../controls.js');
 
 const allParts = require('../game/rocket-parts/all-parts.js');
 const RocketPartGraphic = require('../game-components/rocket-part-graphic.js');
+const Rocket = require('../game/rocket.js');
 
 const EDITOR_HTML = require('./editor-html.js');
 

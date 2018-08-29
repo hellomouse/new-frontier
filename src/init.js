@@ -5,6 +5,7 @@
 
 const PIXI = require('pixi.js');
 const path = require('path');
+
 /* Textures won't get blurry on scale (no float-coordinates) */
 PIXI.settings.SCALE_MODE = PIXI.SCALE_MODES.NEAREST;
 
@@ -44,30 +45,28 @@ earth.position.x = earth.radius * Math.cos(a / 180 * Math.PI);
 // const camera = new Camera();
 
 /* Alias for matter.js */
-let Engine = Matter.Engine,
-    World = Matter.World,
-    Bodies = Matter.Bodies;
+
 
 /* ----- Setup ------ */
 /* Stage and renderer for pixi.js */
 let stage, renderer;
 
 /* Physics engine for matter.js */
-let engine = Engine.create();
+let engine = Matter.Engine.create();
 let stage_handler;
 
 // Load scenes
-const scenes = {
-    sim: new (require(path.resolve(appPath, './src/simulation')))(),
-    map: new (require(path.resolve(appPath, './src/simulation/map.js')))(),
-    editor: new (require(path.resolve(appPath, './src/editor/editor.js')))()
+global.scenes = {
+    sim: new (require('./simulation'))(),
+    map: new (require('./simulation/map.js'))(),
+    editor: new (require('./editor/editor.js'))()
 };
 
-require(path.resolve(appPath, './src/controls.js')); // Load in controls
+require('./controls.js'); // Load in controls
 
 
-function init() {
-    stage_handler = new StageHandler();
+global.init = function() {
+    global.stage_handler = new StageHandler();
 
     let current_scene = new Scene(
         [],
@@ -81,7 +80,7 @@ function init() {
     // map.init();
 
     scenes.sim.scene = current_scene;
-    stage_handler.stages = scenes;
+    global.stage_handler.stages = scenes;
 
     // sim.init();
 
@@ -94,9 +93,9 @@ function init() {
     scenes.map.loadPlanetSprites();
 
     // Load stage and begin
-    stage_handler.init();
-    stage_handler.switchStage('editor');
-    stage_handler.startRender();
+    global.stage_handler.init();
+    global.stage_handler.switchStage('editor');
+    global.stage_handler.startRender();
 }
 
 module.exports = {

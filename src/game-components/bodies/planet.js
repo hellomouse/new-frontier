@@ -76,7 +76,7 @@ class Planet {
             if (this.sectors[angle2]) continue;
 
             this.sectors[angle2] = new PlanetSector(angle2, this);
-            World.add(sim.engine.world, this.sectors[angle2].body);
+            Matter.World.add(sim.engine.world, this.sectors[angle2].body);
             added = true;
         }
 

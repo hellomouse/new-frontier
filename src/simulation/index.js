@@ -20,7 +20,7 @@ class Simulation extends RenderableScene {
         this.rockets = [];
 
         // Game
-        this.engine = Engine.create();;
+        this.engine = Matter.Engine.create();;
         this.scene = null;
         this.active_rocket = null;
 
@@ -55,7 +55,7 @@ class Simulation extends RenderableScene {
         this.scene.addPhysicalSprites(this.stage, rocket.parts);
 
         // Add body to the world
-        World.add(this.engine.world, rocket.body);
+        Matter.World.add(this.engine.world, rocket.body);
 
         // Add to internal array
         this.rockets.push(rocket);
@@ -71,11 +71,11 @@ class Simulation extends RenderableScene {
         this.html = require('./sim-html.js');
 
         this.engine.world.gravity.y = 0;                    // Disable universial downward gravity
-        this.scene.load(this.stage, World, this.engine);   // Load the current scene (Add all objects)
-        World.add(this.engine.world, []);                        // Init the current world
+        this.scene.load(this.stage, Matter.World, this.engine);   // Load the current scene (Add all objects)
+        Matter.World.add(this.engine.world, []);                        // Init the current world
 
         // Start the scene
-        Engine.run(this.engine);
+        Matter.Engine.run(this.engine);
 
         // Add all the planets
         for (let planet of this.planets) {
@@ -170,7 +170,7 @@ class Simulation extends RenderableScene {
         //    World.clear();
 
         super.resetAll();
-        this.engine = Engine.create();
+        this.engine = Matter.Engine.create();
     }
 
     /**

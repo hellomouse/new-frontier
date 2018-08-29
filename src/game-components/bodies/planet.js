@@ -147,9 +147,9 @@ class Planet {
         let x_rocket = rocket.position.x;
         let y_rocket = rocket.position.y;
 
-		let x_distance = x-x_rocket;
-		let y_distance = y-y_rocket;
-		let distance_mag_square = x_distance ** 2 + y_distance ** 2;
+        let x_distance = x-x_rocket;
+        let y_distance = y-y_rocket;
+        let distance_mag_square = x_distance ** 2 + y_distance ** 2;
 		
         let f_mag = (config.G_CONSTANT * this.mass * rocket.body.mass) / distance_mag_square; // F due to gravity = (g)(mass1)(mass2)/(distance between**2)
         let angle = Math.atan2(y_distance, x_distance);

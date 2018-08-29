@@ -63,6 +63,13 @@ class Rocket {
         this.boundary_graphic = null;
     }
 
+    // Controls
+    set_thrust(thrust=1) {
+
+        return this.control_settings.thrust = thrust <= 0 ? 0 : thrust >= 1 ? 1 : thrust;
+
+    }
+
     /**
      * recover - Deletes the rocket and refunds
      * any fuel/parts/money/crew, and adds science

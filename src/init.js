@@ -3,29 +3,23 @@
 
 'use strict';
 
+const PIXI = require('pixi.js');
+const path = require('path');
 /* Textures won't get blurry on scale (no float-coordinates) */
 PIXI.settings.SCALE_MODE = PIXI.SCALE_MODES.NEAREST;
 
-/* For relative require */
-let {remote} = require('electron');
-let path = require('path');
-
-remote.app.setAppPath(process.cwd());
-let appPath = remote.app.getAppPath();
-
 /* Require some modules */
-const Scene = require(path.resolve(appPath, './src/game-components/physical-scene.js'));
-const StageHandler = require(path.resolve(appPath, './src/ui/stage-handler.js'));
+const Scene = require('./game-components/physical-scene.js');
+const StageHandler = require('./ui/stage-handler.js');
 
+const config = require('./game/config.js');
 
-const config = require(path.resolve(appPath, './src/game/config.js'));
+const Earth = require('./game/bodies/earth.js');
+const PhysicalSprite = require('./components/physical-sprite.js');
 
-const Earth = require(path.resolve(appPath, './src/game/bodies/earth.js'));
-const PhysicalSprite = require(path.resolve(appPath, './src/components/physical-sprite.js'));
-
-const Rocket = require(path.resolve(appPath, './src/game/rocket.js'));
-const Thruster = require(path.resolve(appPath, './src/game/rocket-parts/thruster/thruster-normal.js'));
-const FuelTank = require(path.resolve(appPath, './src/game/rocket-parts/fuel/fuel-tank-normal.js'));
+const Rocket = require('./game/rocket.js');
+const Thruster = require('./game/rocket-parts/thruster/thruster-normal.js');
+const FuelTank = require('./game/rocket-parts/fuel/fuel-tank-normal.js');
 
 /*
 let blocks = [
@@ -104,10 +98,6 @@ function init() {
     stage_handler.switchStage('editor');
     stage_handler.startRender();
 }
-
-
-
-
 
 module.exports = {
 

@@ -17,7 +17,8 @@
   "author": "Bowserinator",
   "license": "MIT",
   "devDependencies": {
-    "electron": "^1.8.4"
+    "electron": "^1.8.4",
+    "eslint-config-google": "^0.9.1"
   },
   "dependencies": {
     "@mohayonao/perlin-noise": "^0.2.0",

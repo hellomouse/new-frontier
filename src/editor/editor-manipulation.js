@@ -178,6 +178,17 @@ module.exports = {
         /* No parts to rotate */
         if (editor.selected_parts.length === 0) return;
 
+        // // TODO:
+        // Since we only rotate in 90 deg increments
+        // recode this
+
+        while (angle < 0) angle += Math.PI * 2;
+        while (angle > Math.PI * 2) angle -= Math.PI * 2;
+        while (angle >= Math.PI) {
+            angle -= Math.PI / 2;
+            this.rotateSelection(editor, Math.PI / 2);
+        }
+
         /* Center is the calculated rotation center
          * largest_snap is the largest x and y grid size a part
          * in the selection has.
@@ -236,9 +247,13 @@ module.exports = {
             let y = Math.sin(angle) * (px - center.x) + Math.cos(angle) * (py - center.y) + center.y;
 
             ({x, y} = this.snapCoordToGrid(x, y, largest_snap.x, largest_snap.y, true));
+
             part.moveTo(x, y);
             part.sprite.rotation += angle;
         }
+
+        //TODO collision check after rotate
+        // Fix rotating out of bounds
     },
 
     /**

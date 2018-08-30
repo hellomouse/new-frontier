@@ -18,11 +18,11 @@
   "license": "MIT",
   "devDependencies": {
     "electron": "^1.8.4",
+    "eslint": "^5.4.0",
     "eslint-config-google": "^0.9.1"
   },
   "dependencies": {
     "@mohayonao/perlin-noise": "^0.2.0",
-    "eslint": "^5.4.0",
     "keyboard-key": "^1.0.2",
     "node-dir": "^0.1.17",
     "pixi.js": "^4.6.2"

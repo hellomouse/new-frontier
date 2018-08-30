@@ -1,11 +1,14 @@
 'use strict';
 
+/* Util and other required */
 const RenderableScene = require('../ui/renderable-scene.js');
 const gameUtil = require('../util.js');
 const config = require('../game/config.js');
 const Camera = require('../ui/camera.js');
 const control_state = require('../controls.js');
+const editor_man = require('./editor-manipulation.js');
 
+/* Parts imports */
 const allParts = require('../game/rocket-parts/all-parts.js');
 const RocketPartGraphic = require('../game-components/rocket-part-graphic.js');
 const Rocket = require('../game/rocket.js');
@@ -101,8 +104,8 @@ class Editor extends RenderableScene {
          * (User is selecting parts and not placing down parts)
          * Or Y coordinate is top 50 px */
         if (x < this.left_part_width || y < this.top_part_height) {  // See editor-html.js, add the width of the 2 divs
-            this.unselectCurrentBuild();
-            this.unselectAll();
+            editor_man.unselectCurrentBuild(this);
+            editor_man.unselectAll(this);
             return;
         }
 
@@ -136,21 +139,21 @@ class Editor extends RenderableScene {
                     control_state.mouse.last_mousedown[1]
                 ));
 
-            if (!control_state.keyboard.Control) this.unselectAll();
+            if (!control_state.keyboard.Control) editor_man.unselectAll(this);
 
             /* Remove the rectangle graphic */
             this.removeRectangleGraphic();
-            this.selectPartsBoundingBox(initial_pos.x, initial_pos.y, x, y);
+            editor_man.selectPartsBoundingBox(this,initial_pos.x, initial_pos.y, x, y);
             return;
         }
 
         /* Failed to place part, try selecting part
          * Start by finding a part at location */
-        if (!this.addPart(x, y) && !this.current_select_build) this.selectPart(x, y);
+        if (!editor_man.addPart(this, x, y) && !this.current_select_build) editor_man.selectPart(this, x, y);
 
         /* Success placing part!
          * Deselect everything */
-        else this.unselectAll();
+        else editor_man.unselectAll(this);
     }
 
     /**
@@ -175,9 +178,14 @@ class Editor extends RenderableScene {
      * @override
      */
     onKeyDown(e, name) {
-        if (name === 'Backspace' || name === 'Delete') {
-            this.deleteSelection();
-        }
+        /* Delete selection */
+        if (name === 'Backspace' || name === 'Delete')
+            editor_man.deleteSelection(this);
+        /* Rotate left */
+        else if (name === 'q')
+            editor_man.rotateSelection(this, Math.PI / 2);
+        else if (name === 'e')
+            editor_man.rotateSelection(this, -Math.PI / 2);
     }
 
 
@@ -255,154 +263,11 @@ class Editor extends RenderableScene {
     }
 
     /**
-     * unselectAll - Unselects all currently
-     * selected parts.
-     */
-    unselectAll() {
-        for (let part of this.selected_parts) {
-            part.unselect();
-        }
-        this.selected_parts = [];
-    }
-
-    /**
-     * unselectCurrentBuild - Unselects the current
-     * part selected to place
-     */
-    unselectCurrentBuild() {
-        this.current_select_build = null;
-        this.updatedSelectedIcon(control_state.mouse.pos_event);
-    }
-
-    /**
      * removeRectangleGraphic - Removes select rect graphic
      */
     removeRectangleGraphic() {
         stage_handler.getStageByName('editor').stage.removeChild(this.select_rectangle_graphic);
         this.select_rectangle_graphic = null;
-    }
-
-    /**
-     * selectPart - Select a part at
-     * coordinates
-     *
-     * @param  {number} x    X pos
-     * @param  {number} y    Y pos
-     */
-    selectPart(x, y) {
-        let part = this.getPartAt(x, y);
-
-        if (part) {
-            /* If CTRL is held down add part to selection */
-            if (!control_state.keyboard.Control) this.unselectAll();
-
-            this.selected_parts.push(part);
-            part.select();
-        } else { /* Clicking on empty space = deselect */
-            this.unselectAll();
-        }
-    }
-
-    /**
-     * selectPartsBoundingBox - Select all parts in a bounding box
-     *
-     * @param  {number} x1           Corner 1 X pos
-     * @param  {number} y1           Corner 1 Y pos
-     * @param  {number} x1           Corner 2 X pos
-     * @param  {number} y1           Corner 2 Y pos
-     */
-    selectPartsBoundingBox(x1, y1, x2, y2) {
-        let x_bounds = [x1, x2].sort((a, b) => a - b);
-        let y_bounds = [y1, y2].sort((a, b) => a - b);
-
-        for (let part of this.current_build) {
-            if (gameUtil.math.rectIntersect(x_bounds[0], y_bounds[0], x_bounds[1], y_bounds[1],
-                    part.x, part.y, part.x + part.data.width, part.y + part.data.height)) {
-                this.selected_parts.push(part);
-                part.select();
-            }
-        }
-    }
-
-    /**
-     * deleteSelection - Deletes current
-     * selection of parts
-     */
-    deleteSelection() {
-        for (let part of this.selected_parts) {
-            /* Delete parts from stage, graphics array and part array */
-            this.stage.removeChild(part.sprite);
-            delete this.current_build[this.current_build.indexOf(part)];
-            //this.current_build = this.current_build.filter(p => p.x !== part.x || p.y !== p.y || p.name !== part.id);
-        }
-
-        this.selected_parts = [];
-        this.current_build = this.current_build.filter(x => x !== undefined);
-    }
-
-    /**
-     * addPart - Add the currently selected part
-     * at given position.
-     *
-     * @param  {number} x X pos
-     * @param  {number} y Y pos
-     * @return {boolean}  Did it place
-     */
-    addPart(x, y) {
-        if (!this.current_select_build) return false;  // Nothing selected
-
-        let part_data = allParts.index_data[this.current_select_build];
-
-        // Snap to smallest grid size
-        let smallest_x = part_data.data.min_snap_multiplier_x * config.build_grid_size;
-        let smallest_y = part_data.data.min_snap_multiplier_y * config.build_grid_size;
-
-        x = Math.floor(x / smallest_x) * smallest_x;
-        y = Math.floor(y / smallest_y) * smallest_y;
-
-        // Can the part be allowed to overlap at that point?
-        if (!part_data.data.can_overlap) {
-            for (let part of this.current_build) {
-                /* Occupies identical location */
-                if (x === part.x && y === part.y) return false;
-
-                /* Intersection between another part */
-                if (x < part.x + part.data.width &&
-                    part.x < x + part_data.width &&
-                    y < part.y + part.data.height &&
-                    part.y < y + part_data.height) return false;
-            }
-        }
-
-        let obj = new RocketPartGraphic(this.current_select_build, x, y);
-
-        this.current_build.push(obj);
-        this.stage.addChild(obj.sprite);
-
-        return true;
-    }
-
-    /**
-     * getPartAt - Obtain the current rocket
-     * part at coordinates.
-     * ONLY SELECTS UNSELECTED PARTS
-     *
-     * @param  {number} x            X pos
-     * @param  {number} y            Y pos
-     * @return {RocketPartGraphic}   Part
-     */
-    getPartAt(x, y) {
-        for (let part of this.current_build) {
-            /* Occupies identical location */
-            if (x === part.x && y === part.y) return part;
-
-            /* Intersection between another part */
-            if (x < part.x + part.data.width &&
-                x > part.x &&
-                y < part.y + part.data.height &&
-                y > part.y) return part;
-        }
-        return null;
     }
 
     /**
@@ -415,13 +280,13 @@ class Editor extends RenderableScene {
         let parts = this.current_build.map(part => {
             /* Adjust from corner coordinates to
              * centered coordinates */
-            let x = part.x;
-            let y = part.y;
+            let x = part.x + part.sprite.width / 2;
+            let y = part.y + part.sprite.height / 2;
+            let returned = new allParts.index[part.id](x, y);
 
-            x += part.sprite.width / 2;
-            y += part.sprite.height / 2;
+            returned.setSpriteRotation(part.sprite.rotation);
 
-            return new allParts.index[part.id](x, y);
+            return returned;
         });
         let rocket = new Rocket(parts, Matter);
 

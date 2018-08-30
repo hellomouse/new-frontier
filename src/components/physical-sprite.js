@@ -22,6 +22,16 @@ class PhysicalSprite extends ImageSprite {
         super(image_path, width, height);
         this.body = body;
         this.skip_add_body = false; // Should it skip adding the body (Ie it's part of a compound object)
+        this.sprite_rotation = 0; // Initial rotation
+    }
+
+    /**
+     * setSpriteRotation - Set rotation
+     * @param {number} angle  Angle of new rotation
+     */
+    setSpriteRotation(angle) {
+        this.sprite_rotation = angle;
+        Matter.Body.rotate(this.body, angle);
     }
 
     /**

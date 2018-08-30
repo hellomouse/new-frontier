@@ -44,6 +44,19 @@ class RocketPartGraphic {
     unselect() {
         this.sprite.tint = 0xFFFFFF;
     }
+
+    /**
+     * moveTo - Moves to new location
+     *
+     * @param  {number} x X pos
+     * @param  {number} y Y pos
+     */
+    moveTo(x, y) {
+        this.x = x;
+        this.y = y;
+        this.sprite.x = x;
+        this.sprite.y = y;
+    }
 }
 
 module.exports = RocketPartGraphic;

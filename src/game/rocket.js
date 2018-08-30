@@ -131,7 +131,7 @@ class Rocket {
 
         for (let part of this.parts) {
             /* Make sure rotation is correct */
-            part.body.angle = this.body.angle;
+            part.body.angle = this.body.angle + part.sprite_rotation;
 
             /* Thrusters apply thrust */
             if (part instanceof Thruster) part.update(this.control_settings.thrust);

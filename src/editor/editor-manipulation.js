@@ -52,16 +52,16 @@ module.exports = {
      * @param  {number} y      Y pos
      */
     selectPart: function (editor, x, y) {
-        let part = this.getPartAt(x, y);
+        let part = this.getPartAt(editor, x, y);
 
         if (part) {
             /* If CTRL is held down add part to selection */
-            if (!control_state.keyboard.Control) this.unselectAll();
+            if (!control_state.keyboard.Control) this.unselectAll(editor);
 
             editor.selected_parts.push(part);
             part.select();
         } else { /* Clicking on empty space = deselect */
-            this.unselectAll();
+            this.unselectAll(editor);
         }
     },
 
@@ -117,14 +117,9 @@ module.exports = {
     addPart: function(editor, x, y) {
         if (!editor.current_select_build) return false;  // Nothing selected
 
-        let part_data = allParts.index_data[editor.current_select_build];
-
         // Snap to smallest grid size
-        let smallest_x = part_data.data.min_snap_multiplier_x * config.build_grid_size;
-        let smallest_y = part_data.data.min_snap_multiplier_y * config.build_grid_size;
-
-        x = Math.floor(x / smallest_x) * smallest_x;
-        y = Math.floor(y / smallest_y) * smallest_y;
+        let part_data = allParts.index_data[editor.current_select_build];
+        ({x, y} = this.snapCoordToGrid(x, y, part_data.data.min_snap_multiplier_x, part_data.data.min_snap_multiplier_y));
 
         // Can the part be allowed to overlap at that point?
         if (!part_data.data.can_overlap) {
@@ -153,7 +148,7 @@ module.exports = {
      * part at coordinates.
      * ONLY SELECTS UNSELECTED PARTS
      *
-     * @param {Edtior} editor        Level editor
+     * @param  {Edtior} editor       Level editor
      * @param  {number} x            X pos
      * @param  {number} y            Y pos
      * @return {RocketPartGraphic}   Part
@@ -180,46 +175,90 @@ module.exports = {
      * @param  {number} angle  Rotation in RAD
      */
     rotateSelection: function (editor, angle) {
+        /* No parts to rotate */
         if (editor.selected_parts.length === 0) return;
 
+        /* Center is the calculated rotation center
+         * largest_snap is the largest x and y grid size a part
+         * in the selection has.
+         *
+         * w_range is the lowest and highest x values
+         * h_range is the lowest and highest y values */
         let center = {x: 0, y: 0};
-        let h_range = [999999999, -9999999999999];
-        let w_range = [9999999999, -999999999];
         let largest_snap = {x: 0, y: 0};
+        let w_range = [gameUtil.large, -gameUtil.large];
+        let h_range = [gameUtil.large, -gameUtil.large];
 
-        editor.selected_parts.forEach((a) => {
-            center.x += a.x;
-            center.y += a.y;
+        editor.selected_parts.forEach((part) => {
+            center.x += part.x;
+            center.y += part.y;
 
+            /* If only 1 part is selected, rotate around EXACT center.
+             * For multiple parts, rotate around the approx. center
+             * (Calculated from the CORNER of the sprites) as
+             * using exact center causes bugs */
+            if (editor.selected_parts.length === 1) {
+                center.x += part.sprite.width * Math.cos(part.sprite.rotation);
+                center.y += part.sprite.height * Math.sin(part.sprite.rotation);
+            }
+
+            /* Obtain the max, min values for above variables */
             if (center.x < w_range[0]) w_range[0] = center.x;
             if (center.x > w_range[1]) w_range[1] = center.x;
             if (center.y < h_range[0]) h_range[0] = center.y;
             if (center.y > h_range[1]) h_range[1] = center.y;
 
-            if (a.data.data.min_snap_multiplier_x > largest_snap.x)
-                largest_snap.x = a.data.data.min_snap_multiplier_x;
-            if (a.data.data.min_snap_multiplier_y > largest_snap.y)
-                largest_snap.y = a.data.data.min_snap_multiplier_y;
+            if (part.data.data.min_snap_multiplier_x > largest_snap.x)
+                largest_snap.x = part.data.data.min_snap_multiplier_x;
+            if (part.data.data.min_snap_multiplier_y > largest_snap.y)
+                largest_snap.y = part.data.data.min_snap_multiplier_y;
         });
-        center.x /= editor.selected_parts.length;
-        center.y /= editor.selected_parts.length;
 
+        /* Center is average coordinates */
+        center.x = Math.round(center.x / editor.selected_parts.length);
+        center.y = Math.round(center.y / editor.selected_parts.length);
+
+        /* Radius is max X or Y difference */
         let r = Math.max(h_range[1] - h_range[0], w_range[1] - w_range[0]);
 
         /* Rotate each part around the center,
          * then rotate the part itself */
         for (let part of editor.selected_parts) {
-            let smallest_x = largest_snap.x * config.build_grid_size;
-            let smallest_y = largest_snap.x * config.build_grid_size;
+            let [px, py] = [part.x, part.y];
 
-            let x = Math.cos(angle) * (part.x - center.x) - Math.sin(angle) * (part.y - center.y) + center.x;
-            let y = Math.sin(angle) * (part.x - center.x) + Math.cos(angle) * (part.y - center.y) + center.y;
+            /* Correction factor, same as above */
+            if (editor.selected_parts.length === 1) {
+                px += part.sprite.width * Math.cos(part.sprite.rotation);
+                py += part.sprite.height * Math.sin(part.sprite.rotation);
+            }
 
-            x = Math.floor(x / smallest_x) * smallest_x;
-            y = Math.floor(y / smallest_y) * smallest_y;
+            let x = Math.cos(angle) * (px - center.x) - Math.sin(angle) * (py - center.y) + center.x;
+            let y = Math.sin(angle) * (px - center.x) + Math.cos(angle) * (py - center.y) + center.y;
 
+            ({x, y} = this.snapCoordToGrid(x, y, largest_snap.x, largest_snap.y, true));
             part.moveTo(x, y);
             part.sprite.rotation += angle;
         }
+    },
+
+    /**
+     * snapCoordToGrid - Snaps a coordinate to the
+     * nearest grid coordinate.
+     *
+     * @param  {number} x      X coord
+     * @param  {number} y      Y coord
+     * @param  {number} snap_x Snap x multiplier (ie 1 = whole grid)
+     * @param  {number} snap_y Snap y multiplier (ie 1 = whole grid)
+     * @param  {boolean} round Round to nearest grid instead of flooring
+     * @return {object}        {x: <number>, y: <number>} New coord
+     */
+    snapCoordToGrid(x, y, snap_x, snap_y, round=false) {
+        let smallest_x = snap_x * config.build_grid_size;
+        let smallest_y = snap_y * config.build_grid_size;
+        let f = round ? Math.round : Math.floor;
+
+        x = f(x / smallest_x) * smallest_x;
+        y = f(y / smallest_y) * smallest_y;
+        return {x: x, y: y};
     }
 };

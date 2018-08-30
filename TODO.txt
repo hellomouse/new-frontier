@@ -25,10 +25,14 @@ Editor draw the select box if drag
     editor view part desc
     editor right click to edit part
     editor move part
-    editor rotate part
+
+    editor rotate part - add rotate button?
+    rotate part while placing
+
     editor auto-rotate part
     editor engineering report
     editor no-control report
+    editor control list
     editor actions
     editor crew tab
     editor save, load managment of ships

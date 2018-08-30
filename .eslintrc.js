@@ -6,18 +6,12 @@ module.exports = {
   parserOptions: {
     ecmaVersion: 8,
     sourceType: "module",
-    ecmaFeatures: {
-      experimentalObjectRestSpread: true
-    }
   },
   env: {
     browser: true,
     es6: true,
     node: true
   },
-  plugins: [
-    'react'
-  ],
   rules: {
     'comma-dangle': 'off',
     'arrow-parens': ['error', 'as-needed'],

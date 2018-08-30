@@ -1,6 +1,6 @@
 'use strict';
 
-module.exports = { 
+module.exports = {
     'polar': {
         temperature: -40 + 273.15,
         friction: 0.01,

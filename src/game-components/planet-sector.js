@@ -51,7 +51,7 @@ class PlanetSector {
             planet.surface.getHeight(end_angle + config.planet_sector_inc)
         );
         vert.push(getPos(end_angle, lowest - 100, planet.position));
-        vert.push(getPos(angle,  lowest - 100, planet.position));
+        vert.push(getPos(angle, lowest - 100, planet.position));
 
         /* Position the body at the correct location */
         let pos = Matter.Vertices.centre(vert);
@@ -67,9 +67,9 @@ class PlanetSector {
         // Debugging
         let graphics = new PIXI.Graphics();
 
-        for (let i=1;i<vert.length;i++) {
+        for (let i = 1; i < vert.length; i++) {
             graphics.lineStyle(20, 0xffffff)
-               .moveTo(vert[i-1].x, vert[i-1].y)
+               .moveTo(vert[i - 1].x, vert[i - 1].y)
                .lineTo(vert[i].x, vert[i].y);
         }
         stage_handler.getStageByName('sim').stage.addChild(graphics);

@@ -55,8 +55,9 @@ window.addEventListener('mousedown', function(e) {
     control_state.mouse.isdown = true;
 
     window.addEventListener('mousemove', function(e) {
-        if (Math.abs(x - e.clientX) > 5 || Math.abs(y - e.clientY) > 5)
-            control_state.mouse.dragging = true;
+        if (Math.abs(x - e.clientX) > 5 || Math.abs(y - e.clientY) > 5) {
+control_state.mouse.dragging = true;
+}
     });
 });
 
@@ -75,7 +76,7 @@ window.addEventListener('mouseup', function(e) {
     control_state.mouse.last_mouseup = [e.clientX, e.clientY];
     control_state.mouse.isdown = false;
 
-    switch(e.button) {
+    switch (e.button) {
         case 0: {
             stage.onLeftClick(e);
             break;

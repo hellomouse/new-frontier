@@ -18,7 +18,7 @@ class Rocket {
         this.angle_to_planet = 0;
 
         /* Directly modifiable */
-        this.control = false;  // Is it currently being controlled?
+        this.control = false; // Is it currently being controlled?
         this.control_settings = {
             thrust: 0, // Thrust, between 0 and 1
             stages: [], // Index 0 = bottom stage
@@ -78,7 +78,7 @@ class Rocket {
      * all crew without recovery.
      */
     destroy() {
-        //TODO work this out
+        // TODO work this out
     }
 
     /**
@@ -89,7 +89,7 @@ class Rocket {
      * @param  {number} y Y coord
      */
     reposition(x, y) {
-        Matter.Body.setPosition(this.body, {x: x, y: y});
+        Matter.Body.setPosition(this.body, { x: x, y: y });
     }
 
     /**
@@ -128,7 +128,6 @@ class Rocket {
     }
 
     update() {
-
         for (let part of this.parts) {
             /* Make sure rotation is correct */
             part.body.angle = this.body.angle;
@@ -145,14 +144,13 @@ class Rocket {
         this.boundary_graphic = new PIXI.Graphics();
         let vert = this.body.vertices;
 
-        for (let i=1;i<this.body.vertices.length;i++) {
+        for (let i = 1; i < this.body.vertices.length; i++) {
             this.boundary_graphic.lineStyle(2, 0xff0000)
-               .moveTo(vert[i-1].x, vert[i-1].y)
+               .moveTo(vert[i - 1].x, vert[i - 1].y)
                .lineTo(vert[i].x, vert[i].y);
         }
 
         stage_handler.getStageByName('sim').stage.addChild(this.boundary_graphic);
-
     }
 }
 

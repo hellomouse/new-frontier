@@ -4,15 +4,15 @@ const FuelTank = require('../base-classes/fuel-tank.js');
 const config = require('../../config.js');
 
 const DATA = {
-    mass: 2000 * 4 + 2250 * 4,  // Mass includes fuel mass
-    drag: {             // Assuming 3.71 m diameter
+    mass: 2000 * 4 + 2250 * 4, // Mass includes fuel mass
+    drag: { // Assuming 3.71 m diameter
         top: 10.8,
         left: 27.5 * 4,
         right: 27.5 * 4,
         bottom: 10.8
     },
     volume: 80.21 * 4,
-    density: 52.98,  // Including fuel
+    density: 52.98, // Including fuel
     description: 'A fuel tank carrying liquid fuel and oxygen. Explosive.',
     category: 'Fuel'
 };

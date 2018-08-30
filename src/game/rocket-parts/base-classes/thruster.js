@@ -40,7 +40,7 @@ class Thruster extends RocketPart {
      * Update method. this.rocket is set
      * in the Rocket class
      */
-    update(multiplier=1) {
+    update(multiplier = 1) {
         super.update();
 
         /**
@@ -56,14 +56,14 @@ class Thruster extends RocketPart {
 
         let center_x = Matter.Vertices.centre(this.body.vertices).x; // The center of the part
         let center_y = Matter.Vertices.centre(this.body.vertices).y; // The center of the part
-        
+
         let thrust_x = center_x + (Math.sin(angle) * this.sprite.height * 0.5); // x + (sin(angle) * height) / 2
-        let thrust_y = center_y + (Math.cos(angle) * this.sprite.height * 0.5); //y + (cos(angle)  * height) / 2
-        
+        let thrust_y = center_y + (Math.cos(angle) * this.sprite.height * 0.5); // y + (cos(angle)  * height) / 2
+
         let new_pos = { // The position of the force.
             x: thrust_x,
             y: thrust_y
-        }; 
+        };
 
         if (fx !== 0 || fy !== 0) {
             Matter.Body.applyForce(
@@ -81,8 +81,8 @@ class Thruster extends RocketPart {
            .moveTo(new_pos.x, new_pos.y)
            .lineTo( Math.floor(new_pos.x - fx * 100000), Math.floor(new_pos.y - fy * 100000));
 
-        this.debug_graphics.beginFill(0xFFFFFF, 1).lineStyle(1, 0xFFFFFF).drawCircle(new_pos.x, new_pos.y, 5)
-        this.debug_graphics.beginFill(0xFFFF00, 1).lineStyle(1, 0xFFFF00).drawCircle(Math.floor(new_pos.x - fx * 10000000000), Math.floor(new_pos.y - fy * 10000000000), 5)
+        this.debug_graphics.beginFill(0xFFFFFF, 1).lineStyle(1, 0xFFFFFF).drawCircle(new_pos.x, new_pos.y, 5);
+        this.debug_graphics.beginFill(0xFFFF00, 1).lineStyle(1, 0xFFFF00).drawCircle(Math.floor(new_pos.x - fx * 10000000000), Math.floor(new_pos.y - fy * 10000000000), 5);
         stage_handler.getStageByName('sim').stage.addChild(this.debug_graphics);
     }
 }

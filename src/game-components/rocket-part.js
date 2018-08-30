@@ -79,13 +79,13 @@ class RocketPart extends PhysicalSprite {
         /* Data is missing (undefined or null) */
         for (let prop of ['mass', 'drag', 'volume', 'density', 'description', 'category']) {
             if (this.data[prop] === undefined || this.data[prop] === null) {
-                throw {name : 'MissingDataException', message : prop + ' is missing in this.data for ' + this.id};
+                throw { name: 'MissingDataException', message: prop + ' is missing in this.data for ' + this.id };
             }
         }
         if (!this.data.drag.top || !this.data.drag.left || !this.data.drag.right || !this.data.drag.bottom) {
             throw {
-                name : 'MissingDataException',
-                message : 'Drag is missing properties (top, left, right, bottom) in this.data for ' + this.id
+                name: 'MissingDataException',
+                message: 'Drag is missing properties (top, left, right, bottom) in this.data for ' + this.id
             };
         }
 
@@ -116,14 +116,13 @@ class RocketPart extends PhysicalSprite {
         this.boundary_graphic = new PIXI.Graphics();
         let vert = this.body.vertices;
 
-        for (let i=1;i<this.body.vertices.length;i++) {
+        for (let i = 1; i < this.body.vertices.length; i++) {
             this.boundary_graphic.lineStyle(2, 0xff00ff)
-               .moveTo(vert[i-1].x, vert[i-1].y)
+               .moveTo(vert[i - 1].x, vert[i - 1].y)
                .lineTo(vert[i].x, vert[i].y);
         }
 
         stage_handler.getStageByName('sim').stage.addChild(this.boundary_graphic);
-
     }
 }
 

@@ -31,13 +31,13 @@ class PhysicalScene {
      * @return {None}
      */
     load(stage, world, engine) {
-        //init.resetAll();  // Clear the game renderer and physics engine
+        // init.resetAll();  // Clear the game renderer and physics engine
 
         // Add physical sprites
         this.addPhysicalSprites(stage, this.physical_sprites);
 
         // Add non-physical sprites
-        for(let sprite of this.sprites) {
+        for (let sprite of this.sprites) {
             stage.addChild(sprite.sprite);
         }
 

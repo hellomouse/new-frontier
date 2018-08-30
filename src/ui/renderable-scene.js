@@ -23,7 +23,7 @@ class RenderableScene {
      * resetAll - Resets the stage
      * and renderer to default values.
      */
-    resetAll(){
+    resetAll() {
         this.stage = new PIXI.Container();
         this.ui = new PIXI.Container();
     }

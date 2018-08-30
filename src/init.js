@@ -32,9 +32,9 @@ let blocks = [
 
 let earth = new Earth(0, 0);
 
-//130 = Mountain
-//90 = polar
-//100 = tundra
+// 130 = Mountain
+// 90 = polar
+// 100 = tundra
 let a = 90;
 a = 180 - a;
 earth.position.y = earth.radius * Math.sin(a / 180 * Math.PI) + 3000;
@@ -49,7 +49,7 @@ earth.position.x = earth.radius * Math.cos(a / 180 * Math.PI);
 
 /* ----- Setup ------ */
 /* Stage and renderer for pixi.js */
-let stage, renderer;
+let stage; let renderer;
 
 /* Physics engine for matter.js */
 let engine = Matter.Engine.create();
@@ -96,7 +96,7 @@ global.init = function() {
     global.stage_handler.init();
     global.stage_handler.switchStage('editor');
     global.stage_handler.startRender();
-}
+};
 
 module.exports = {
 

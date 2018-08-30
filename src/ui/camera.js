@@ -14,7 +14,7 @@ class Camera {
      * @param  {number} start_zoom=0.2   Initial zoom (scale)
      * @param  {number} scroll_speed=1.1 Scroll speed (multiplier)
      */
-    constructor(min_zoom=0.005, max_zoom=50, start_zoom=0.2, scroll_speed=1.1) {
+    constructor(min_zoom = 0.005, max_zoom = 50, start_zoom = 0.2, scroll_speed = 1.1) {
         this.x = 0;
         this.y = 0;
         this.scale = start_zoom;

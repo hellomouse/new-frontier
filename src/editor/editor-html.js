@@ -17,7 +17,7 @@ global.editorFunctions = global.editorFunctions ? global.editorFunctions : {};
 global.editorFunctions.changeEditorBuild = function(id, button) {
     scenes.editor.current_select_build = scenes.editor.current_select_build === id ? null : id;
     scenes.editor.updatedSelectedIcon(control_state.mouse.pos_event);
-}
+};
 
 global.editorFunctions.spawnCurrentRocketAtLaunchPad = function() {
     let rocket = stage_handler.getCurrentStage().constructRocket();
@@ -25,10 +25,10 @@ global.editorFunctions.spawnCurrentRocketAtLaunchPad = function() {
     rocket.control = true;
     scenes.sim.addRocket(rocket);
 
-    console.log(rocket)
+    console.log(rocket);
 
     stage_handler.switchStage('sim');
-}
+};
 
 /* Load the actual html */
 module.exports = `
@@ -73,7 +73,7 @@ module.exports = `
                 width: ${x_ratio * PART_ICON_SIZE }px;
                 height: ${y_ratio * PART_ICON_SIZE }px;
                 padding:
-                        ${PART_ICON_SIZE / 2  - y_ratio * PART_ICON_SIZE / 2}px
+                        ${PART_ICON_SIZE / 2 - y_ratio * PART_ICON_SIZE / 2}px
                         ${PART_ICON_SIZE / 2 - x_ratio * PART_ICON_SIZE / 2}px
                         ${PART_ICON_SIZE / 2 - y_ratio * PART_ICON_SIZE / 2}px
                         ${PART_ICON_SIZE / 2 - x_ratio * PART_ICON_SIZE / 2 }px;

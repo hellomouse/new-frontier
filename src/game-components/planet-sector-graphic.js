@@ -42,7 +42,7 @@ function getDif(height, planet) {
  */
 class PlanetSectorGraphic {
     constructor(angle, planet, stage, options,
-            sector_size=config.planet_graphic_sector_size, sector_inc=config.planet_graphic_sector_inc) {
+            sector_size = config.planet_graphic_sector_size, sector_inc = config.planet_graphic_sector_inc) {
         this.planet_graphic_sector_size = sector_size;
         this.planet_graphic_sector_inc = sector_inc;
 
@@ -68,7 +68,7 @@ class PlanetSectorGraphic {
         let h2 = planet.surface.getHeight(angle);
 
         vert.push(getPos(end_angle, h1 - getDif(h1, planet) - 10000, planet.position));
-        vert.push(getPos(angle,  h2 - getDif(h2, planet) - 10000, planet.position));
+        vert.push(getPos(angle, h2 - getDif(h2, planet) - 10000, planet.position));
 
         /* Create a texture and append to stage */
 
@@ -88,7 +88,7 @@ class PlanetSectorGraphic {
         graphics.beginFill(0);
         graphics.moveTo(vert[0].x, vert[0].y);
 
-        for (let i=1; i<vert.length; i++) {
+        for (let i = 1; i < vert.length; i++) {
             graphics.lineTo(vert[i].x, vert[i].y);
         }
         graphics.lineTo(vert[0].x, vert[0].y);

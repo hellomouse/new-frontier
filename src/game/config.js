@@ -6,7 +6,7 @@ module.exports = {
 
     // Planets
     planet_sector_size: 0.523599 / 40960 * 10, // Size of a sector in rad
-    planet_sector_inc: 0.00001,     // Increment for precision of each sector
+    planet_sector_inc: 0.00001, // Increment for precision of each sector
     planet_graphic_sector_size: 0.523599 / 40960 * 200,
     planet_graphic_sector_inc: 0.00001,
     planet_sector_amount: 2,

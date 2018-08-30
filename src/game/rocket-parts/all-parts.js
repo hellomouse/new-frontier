@@ -44,7 +44,7 @@ const ALL_PARTS = dir
 
 // Alert any parts that contain invalid categories
 ALL_PARTS.forEach(x => {
-    let t = new x();  // x is class for a rocket part
+    let t = new x(); // x is class for a rocket part
 
     // Warnings
     if (!CATEGORIES.includes(t.data.category)) {

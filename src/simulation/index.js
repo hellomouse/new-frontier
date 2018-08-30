@@ -20,7 +20,7 @@ class Simulation extends RenderableScene {
         this.rockets = [];
 
         // Game
-        this.engine = Matter.Engine.create();;
+        this.engine = Matter.Engine.create();
         this.scene = null;
         this.active_rocket = null;
 
@@ -70,9 +70,9 @@ class Simulation extends RenderableScene {
         super.init();
         this.html = require('./sim-html.js');
 
-        this.engine.world.gravity.y = 0;                    // Disable universial downward gravity
-        this.scene.load(this.stage, Matter.World, this.engine);   // Load the current scene (Add all objects)
-        Matter.World.add(this.engine.world, []);                        // Init the current world
+        this.engine.world.gravity.y = 0; // Disable universial downward gravity
+        this.scene.load(this.stage, Matter.World, this.engine); // Load the current scene (Add all objects)
+        Matter.World.add(this.engine.world, []); // Init the current world
 
         // Start the scene
         Matter.Engine.run(this.engine);
@@ -99,7 +99,7 @@ class Simulation extends RenderableScene {
 
         // Sector uodate
         for (let planet of this.planets) {
-            //TODO maybe optimize with a cache of distances and stuff
+            // TODO maybe optimize with a cache of distances and stuff
 
             // 1.5 is a "close enough" to start adding the planet's land collision box
             if (gameUtil.math.fastDistance(planet.position, this.rockets[0].position) < planet.radius + 10000) {
@@ -121,8 +121,8 @@ class Simulation extends RenderableScene {
         // TODO optimize checks with a cache of planets the rocket is nearby
         this.updateAirFriction();
 
-        //this.renderer.render(this.stage);
-        //requestAnimationFrame(this.update.bind(this));
+        // this.renderer.render(this.stage);
+        // requestAnimationFrame(this.update.bind(this));
     }
 
     /**
@@ -164,7 +164,7 @@ class Simulation extends RenderableScene {
      * resetAll - Resets the World, engine, stage
      * and renderer to default values.
      */
-    resetAll(){
+    resetAll() {
         // Clear any previous worlds and renderers
         // if (World && engine)
         //    World.clear();

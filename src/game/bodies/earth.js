@@ -59,10 +59,10 @@ function getBiome(angle) {
  * @return {number}       Height at point
  */
 function terrainGenerator(angle, planet) {
-    angle = -angle;  // Sector angles are reversed for some reason
+    angle = -angle; // Sector angles are reversed for some reason
     let biome = getBiome(angle);
 
-    switch(biome) {
+    switch (biome) {
         case 'polar': return planet.radius + conversion.meterToPixel(100);
         case 'tundra': return planet.radius + conversion.meterToPixel(40) * perlin.noise(10000 * angle);
         case 'mountain': {
@@ -91,16 +91,15 @@ function terrainGenerator(angle, planet) {
 }
 
 
-
 class Earth extends Planet {
     constructor(x, y) {
         super(x, y);
 
-        this.orbital_e = 0;  // Eccentricity
+        this.orbital_e = 0; // Eccentricity
         this.orbital_distance = 0;
         this.rotation_speed = 0;
         this.sphere_of_influence = 0;
-        this.orbits = null;  // What does it orbit?
+        this.orbits = null; // What does it orbit?
 
         this.radius = conversion.meterToPixel(1274 * 1000);
         this.mass = conversion.kgToMatter(5.972e22);
@@ -129,7 +128,7 @@ class Earth extends Planet {
         // Science and info
         this.desc = ''
             + ''
-            + ''
+            + '';
 
         // Map stuff
         this.image = config.IMG_PATH + 'planets/default.png';
@@ -138,7 +137,7 @@ class Earth extends Planet {
     }
 
     update() {
-        //Pretend to be a physicalsprite
+        // Pretend to be a physicalsprite
     }
 }
 

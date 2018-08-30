@@ -12,13 +12,13 @@ const PlanetSectorGraphic = require('../planet-sector-graphic.js');
  */
 class Planet {
     constructor(x, y) {
-        this.position = {x: x, y: y};
+        this.position = { x: x, y: y };
 
-        this.orbital_e = 0;  // Eccentricity
+        this.orbital_e = 0; // Eccentricity
         this.orbital_distance = 0;
         this.rotation_speed = 0;
         this.sphere_of_influence = 0;
-        this.orbits = null;  // What does it orbit?
+        this.orbits = null; // What does it orbit?
 
         this.radius = 0;
         this.mass = 0;
@@ -69,7 +69,7 @@ class Planet {
         let added = false;
 
         // Round angle to lowest multiple of a PLANET_SECTOR_SIZE
-        for (let i=-config.planet_sector_amount / 2; i<=config.planet_sector_amount/2; i++) {
+        for (let i = -config.planet_sector_amount / 2; i <= config.planet_sector_amount / 2; i++) {
             let angle2 = Math.floor(angle / config.planet_sector_size + i) * config.planet_sector_size;
 
             // Sector already exists
@@ -86,7 +86,7 @@ class Planet {
                 if (Math.abs(angle - a) > config.planet_sector_size * config.planet_sector_amount) {
                     // Matter.Composite.remove(sim.engine.world, this.sectors[a].body);
                     Matter.Sleeping.set(this.sectors[a].body, true);
-                    this.sectors[a].body.collision
+                    this.sectors[a].body.collision;
                     this.sectors_to_delete.push(this.sectors[a].body);
                     delete this.sectors[a];
                 }
@@ -104,7 +104,7 @@ class Planet {
     updateGraphicSector(angle, sim, graphic_sector_scale) {
         let added = false;
 
-        for (let i=-3; i<=3; i++) {
+        for (let i = -3; i <= 3; i++) {
             let angle2 = Math.floor(angle / config.planet_graphic_sector_size + i * graphic_sector_scale)
                 * config.planet_graphic_sector_size;
 
@@ -147,14 +147,14 @@ class Planet {
         let x_rocket = rocket.position.x;
         let y_rocket = rocket.position.y;
 
-        let x_distance = x-x_rocket;
-        let y_distance = y-y_rocket;
+        let x_distance = x - x_rocket;
+        let y_distance = y - y_rocket;
         let distance_mag_square = x_distance ** 2 + y_distance ** 2;
-		
+
         let f_mag = (config.G_CONSTANT * this.mass * rocket.body.mass) / distance_mag_square; // F due to gravity = (g)(mass1)(mass2)/(distance between**2)
         let angle = Math.atan2(y_distance, x_distance);
 
-        let vector = {x: f_mag * Math.cos(angle), y: f_mag * Math.sin(angle)};
+        let vector = { x: f_mag * Math.cos(angle), y: f_mag * Math.sin(angle) };
         Matter.Body.applyForce(rocket.body, rocket.position, vector);
     }
 }

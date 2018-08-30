@@ -29,8 +29,8 @@ class Editor extends RenderableScene {
 
         // Actions/build
         this.current_select_build = null;
-        this.current_action = 'place';   // place, rotate, or move
-        this.camera_focus = {x: 0, y: 0};
+        this.current_action = 'place'; // place, rotate, or move
+        this.camera_focus = { x: 0, y: 0 };
 
         this.current_build = [];
         this.selected_parts = [];
@@ -100,7 +100,7 @@ class Editor extends RenderableScene {
         /* X coordinate is on the left side of the screen
          * (User is selecting parts and not placing down parts)
          * Or Y coordinate is top 50 px */
-        if (x < this.left_part_width || y < this.top_part_height) {  // See editor-html.js, add the width of the 2 divs
+        if (x < this.left_part_width || y < this.top_part_height) { // See editor-html.js, add the width of the 2 divs
             this.unselectCurrentBuild();
             this.unselectAll();
             return;
@@ -188,7 +188,7 @@ class Editor extends RenderableScene {
      */
     onMousemove(e) {
         if (!e) return; // Outside of screen
-        this.updatedSelectedIcon(e);  // Updated selected icon
+        this.updatedSelectedIcon(e); // Updated selected icon
 
         /* Draw the select rectangle that shows the selection */
         if (!control_state.mouse.isdown) {
@@ -209,7 +209,7 @@ class Editor extends RenderableScene {
 
         this.select_rectangle_graphic.beginFill(0x00FF00);
         this.select_rectangle_graphic.lineStyle(1, 0x00FF00);
-        this.select_rectangle_graphic.drawRect(initial_pos.x, initial_pos.y, -w, -h)
+        this.select_rectangle_graphic.drawRect(initial_pos.x, initial_pos.y, -w, -h);
         this.select_rectangle_graphic.alpha = 0.3;
 
         stage_handler.getStageByName('editor').stage.addChild(this.select_rectangle_graphic);
@@ -298,7 +298,7 @@ class Editor extends RenderableScene {
 
             this.selected_parts.push(part);
             part.select();
-        } else { /* Clicking on empty space = deselect */
+        } else {/* Clicking on empty space = deselect */
             this.unselectAll();
         }
     }
@@ -333,7 +333,7 @@ class Editor extends RenderableScene {
             /* Delete parts from stage, graphics array and part array */
             this.stage.removeChild(part.sprite);
             delete this.current_build[this.current_build.indexOf(part)];
-            //this.current_build = this.current_build.filter(p => p.x !== part.x || p.y !== p.y || p.name !== part.id);
+            // this.current_build = this.current_build.filter(p => p.x !== part.x || p.y !== p.y || p.name !== part.id);
         }
 
         this.selected_parts = [];
@@ -349,7 +349,7 @@ class Editor extends RenderableScene {
      * @return {boolean}  Did it place
      */
     addPart(x, y) {
-        if (!this.current_select_build) return false;  // Nothing selected
+        if (!this.current_select_build) return false; // Nothing selected
 
         let part_data = allParts.index_data[this.current_select_build];
 

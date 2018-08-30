@@ -183,9 +183,9 @@ class Editor extends RenderableScene {
             editor_man.deleteSelection(this);
         /* Rotate left */
         else if (name === 'q')
-            editor_man.rotateSelection(this, Math.PI / 2);
-        else if (name === 'e')
             editor_man.rotateSelection(this, -Math.PI / 2);
+        else if (name === 'e')
+            editor_man.rotateSelection(this, Math.PI / 2);
     }
 
 

@@ -12,6 +12,10 @@ module.exports = {
     es6: true,
     node: true
   },
+  globals: {
+    'PIXI': true,
+    'Matter': true
+  },
   rules: {
     'comma-dangle': 'off',
     'arrow-parens': ['error', 'as-needed'],

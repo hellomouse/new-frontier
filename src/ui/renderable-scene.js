@@ -1,5 +1,6 @@
 'use strict';
 
+/** It's a renderableScene */
 class RenderableScene {
     /**
      * constructor - Construct a renderableScene

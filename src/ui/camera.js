@@ -9,20 +9,20 @@ class Camera {
     /**
      * constructor - Camera class
      *
-     * @param  {number} min_zoom=0.005   Min zoom (scale)
-     * @param  {number} max_zoom=50      Max zoom (scale)
-     * @param  {number} start_zoom=0.2   Initial zoom (scale)
-     * @param  {number} scroll_speed=1.1 Scroll speed (multiplier)
+     * @param  {number} minZoom=0.005   Min zoom (scale)
+     * @param  {number} maxZoom=50      Max zoom (scale)
+     * @param  {number} startZoom=0.2   Initial zoom (scale)
+     * @param  {number} scrollSpeed=1.1 Scroll speed (multiplier)
      */
-    constructor(min_zoom = 0.005, max_zoom = 50, start_zoom = 0.2, scroll_speed = 1.1) {
+    constructor(minZoom = 0.005, maxZoom = 50, startZoom = 0.2, scrollSpeed = 1.1) {
         this.x = 0;
         this.y = 0;
-        this.scale = start_zoom;
+        this.scale = startZoom;
         this.filter = null;
 
-        this.min_scroll = min_zoom;
-        this.max_scroll = max_zoom;
-        this.scroll_speed = scroll_speed;
+        this.minScroll = minZoom;
+        this.maxScroll = maxZoom;
+        this.scrollSpeed = scrollSpeed;
     }
 
     /**

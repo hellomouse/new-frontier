@@ -5,15 +5,15 @@ const keyboardKey = require('keyboard-key');
 /* Stages with a camera */
 const CAMERA_STAGES = ['sim', 'map', 'editor'];
 
-let control_state = {
+let controlState = {
     mouse: {
-        last_mousedown: [-1, -1],
-        last_mouseup: [-1, -1],
+        lastMousedown: [-1, -1],
+        lastMouseup: [-1, -1],
         dragging: false,
         x: 0,
         y: 0,
-        pos_event: null,
-        isdown: false
+        posEvent: null,
+        isDown: false
     },
     keyboard: {}
 };
@@ -21,9 +21,9 @@ let control_state = {
 
 /* Mouse wheel, zoom camera */
 window.addEventListener('wheel', function(e) {
-    let stage = stage_handler.stages[stage_handler.current_stage];
+    let stage = stageHandler.stages[stageHandler.current_stage];
 
-    if (CAMERA_STAGES.includes(stage_handler.current_stage)) {
+    if (CAMERA_STAGES.includes(stageHandler.current_stage)) {
         let scaleDelta = e.wheelDelta > 0 ? stage.camera.scroll_speed : 1 / stage.camera.scroll_speed;
 
         if (stage.camera.scale * scaleDelta > stage.camera.max_scroll || stage.camera.scale * scaleDelta < stage.camera.min_scroll) {
@@ -37,44 +37,44 @@ window.addEventListener('wheel', function(e) {
 
 /* Keyboarding */
 window.addEventListener('keydown', e => {
-    let stage = stage_handler.stages[stage_handler.current_stage];
+    let stage = stageHandler.stages[stageHandler.current_stage];
     let name = keyboardKey.getKey(e);
 
     stage.onKeyDown(e, name);
-    control_state.keyboard[name] = true;
+    controlState.keyboard[name] = true;
 }, false);
-window.addEventListener('keyup', e => delete control_state.keyboard[keyboardKey.getKey(e)], false);
+window.addEventListener('keyup', e => delete controlState.keyboard[keyboardKey.getKey(e)], false);
 
 /* Mouse */
 window.addEventListener('mousedown', function(e) {
     let x = e.clientX;
     let y = e.clientY;
 
-    control_state.mouse.dragging = false;
-    control_state.mouse.last_mousedown = [x, y];
-    control_state.mouse.isdown = true;
+    controlState.mouse.dragging = false;
+    controlState.mouse.lastMousedown = [x, y];
+    controlState.mouse.isdowD = true;
 
     window.addEventListener('mousemove', function(e) {
         if (Math.abs(x - e.clientX) > 5 || Math.abs(y - e.clientY) > 5) {
-control_state.mouse.dragging = true;
+controlState.mouse.dragging = true;
 }
     });
 });
 
 window.addEventListener('mousemove', function(e) {
-    control_state.mouse.x = e.clientX;
-    control_state.mouse.y = e.clientY;
-    control_state.mouse.pos_event = e;
+    controlState.mouse.x = e.clientX;
+    controlState.mouse.y = e.clientY;
+    controlState.mouse.posEvent = e;
 
-    let stage = stage_handler.stages[stage_handler.current_stage];
+    let stage = stageHandler.stages[stageHandler.current_stage];
     stage.onMousemove(e);
 });
 
 window.addEventListener('mouseup', function(e) {
-    let stage = stage_handler.stages[stage_handler.current_stage];
+    let stage = stageHandler.stages[stageHandler.current_stage];
 
-    control_state.mouse.last_mouseup = [e.clientX, e.clientY];
-    control_state.mouse.isdown = false;
+    controlState.mouse.lastMouseup = [e.clientX, e.clientY];
+    controlState.mouse.isdowD = false;
 
     switch (e.button) {
         case 0: {
@@ -90,8 +90,8 @@ window.addEventListener('mouseup', function(e) {
         }
     }
 
-    control_state.mouse.dragging = false;
+    controlState.mouse.dragging = false;
 });
 
 
-module.exports = control_state;
+module.exports = controlState;

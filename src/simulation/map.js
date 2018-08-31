@@ -10,6 +10,7 @@ const gameUtil = require('../util.js');
 
 const DEFAULT_MAP_ZOOM = 100000; // Map is 1000x smaller than sim initially
 
+/** Represents a map in game */
 class Map extends RenderableScene {
     /**
      * constructor - Construct a new map

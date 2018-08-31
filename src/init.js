@@ -53,7 +53,7 @@ let stage; let renderer;
 
 /* Physics engine for matter.js */
 let engine = Matter.Engine.create();
-let stage_handler;
+let stageHandler;
 
 // Load scenes
 global.scenes = {
@@ -66,9 +66,9 @@ require('./controls.js'); // Load in controls
 
 
 global.init = function() {
-    global.stage_handler = new StageHandler();
+    global.stageHandler = new StageHandler();
 
-    let current_scene = new Scene(
+    let currentScene = new Scene(
         [],
         [],
         [],
@@ -79,8 +79,8 @@ global.init = function() {
 
     // map.init();
 
-    scenes.sim.scene = current_scene;
-    global.stage_handler.stages = scenes;
+    scenes.sim.scene = currentScene;
+    global.stageHandler.stages = scenes;
 
     // sim.init();
 
@@ -93,9 +93,9 @@ global.init = function() {
     scenes.map.loadPlanetSprites();
 
     // Load stage and begin
-    global.stage_handler.init();
-    global.stage_handler.switchStage('editor');
-    global.stage_handler.startRender();
+    global.stageHandler.init();
+    global.stageHandler.switchStage('editor');
+    global.stageHandler.startRender();
 };
 
 module.exports = {

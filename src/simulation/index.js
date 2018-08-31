@@ -9,8 +9,9 @@ const Camera = require('../ui/camera.js');
 const RenderableScene = require('../ui/renderable-scene.js');
 const gameUtil = require('../util.js');
 
-
+/** */
 class Simulation extends RenderableScene {
+    /** @constructor */
     constructor() {
         super();
         this.camera = new Camera();
@@ -193,14 +194,22 @@ class Simulation extends RenderableScene {
         return this.active_rocket;
     }
 
+    /**
+     * Mousewheel scroll event listener
+     * @param {object} e
+     */
     onScroll(e) {
 
     }
 
+    /** */
     toJSON() {
         // Nothing yet
     }
 
+    /**
+     * @param {object} json
+    */
     loadFromJSON(json) {
         // Nothing yet
     }

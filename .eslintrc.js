@@ -14,7 +14,9 @@ module.exports = {
   },
   globals: {
     'PIXI': true,
-    'Matter': true
+    'Matter': true,
+    'stageHandler': true,
+    'scenes': true
   },
   rules: {
     'comma-dangle': 'off',

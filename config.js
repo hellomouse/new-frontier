@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 
 module.exports = {
     windowOptions: {
@@ -6,11 +6,11 @@ module.exports = {
         height: 700,
         resizable: false,
 
-        title: "New Frontier",
+        title: 'New Frontier',
         icon: undefined,
 
         webPreferences: {
-            //devTools: false
+            // devTools: false
         }
     }
 };

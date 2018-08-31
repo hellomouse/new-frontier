@@ -15,11 +15,11 @@ class Rocket {
     constructor(parts) {
         this.parts = parts;
         this.position = {};
-        this.angle_to_planet = 0;
+        this.angleToPlanet = 0;
 
         /* Directly modifiable */
         this.control = false; // Is it currently being controlled?
-        this.control_settings = {
+        this.controlSettings = {
             thrust: 0, // Thrust, between 0 and 1
             stages: [], // Index 0 = bottom stage
             heading: 'null' // Used for flight control SAS
@@ -39,28 +39,28 @@ class Rocket {
         this.type = 'rocket';
 
         // TODO NEATIFY
-        let min_x = this.parts[0].x;
-        let max_x = this.parts[0].x;
-        let min_y = this.parts[0].y;
-        let max_y = this.parts[0].y;
+        let minX = this.parts[0].x;
+        let maxX = this.parts[0].x;
+        let minY = this.parts[0].y;
+        let maxY = this.parts[0].y;
 
         for (let part of this.parts) {
             part.rocket = this;
             part.skip_add_body = true;
 
-            if (part.x < min_x) min_x = part.x;
-            if (part.x + part.sprite.width > max_x) max_x = part.x + part.sprite.width;
-            if (part.y < min_y) min_y = part.y;
-            if (part.y + part.sprite.height > max_y) max_y = part.y + part.sprite.height;
+            if (part.x < minX) minX = part.x;
+            if (part.x + part.sprite.width > maxX) maxX = part.x + part.sprite.width;
+            if (part.y < minY) minY = part.y;
+            if (part.y + part.sprite.height > maxY) maxY = part.y + part.sprite.height;
         }
 
-        this.width = max_x - min_x;
-        this.height = max_y - min_y;
+        this.width = maxX - minX;
+        this.height = maxY - minY;
 
         this.body = Matter.Body.create({});
         Matter.Body.setParts(this.body, this.parts.map(x => x.body));
 
-        this.boundary_graphic = null;
+        this.boundaryGraphic = null;
     }
 
     /**
@@ -117,40 +117,46 @@ class Rocket {
      * updateCenterPos - Recalculates center position
      * based on location of comp bodies
      *
-     * @return {type}  description
      */
     updateCenterPos() {
         this.position = this.body.position;
     }
 
+    /**
+     * 
+     * @param {Object} planet
+     */
     updateAngleToPlanet(planet) {
-        this.angle_to_planet = Math.atan2(this.position.y - planet.position.y, this.position.x - planet.position.x); // gameUtil.math.fastAtan(ratio);
+        this.angleToPlanet = Math.atan2(this.position.y - planet.position.y, this.position.x - planet.position.x); // gameUtil.math.fastAtan(ratio);
     }
 
+    /**
+     * Updates rocket attributes every tick
+     */
     update() {
         for (let part of this.parts) {
             /* Make sure rotation is correct */
             part.body.angle = this.body.angle;
 
             /* Thrusters apply thrust */
-            if (part instanceof Thruster) part.update(this.control_settings.thrust);
+            if (part instanceof Thruster) part.update(this.controlSettings.thrust);
         }
 
         // DEBUG
-        if (this.boundary_graphic) {
-            stage_handler.getStageByName('sim').stage.removeChild(this.boundary_graphic);
+        if (this.boundaryGraphic) {
+            stageHandler.getStageByName('sim').stage.removeChild(this.boundaryGraphic);
         }
 
-        this.boundary_graphic = new PIXI.Graphics();
+        this.boundaryGraphic = new PIXI.Graphics();
         let vert = this.body.vertices;
 
         for (let i = 1; i < this.body.vertices.length; i++) {
-            this.boundary_graphic.lineStyle(2, 0xff0000)
+            this.boundaryGraphic.lineStyle(2, 0xff0000)
                .moveTo(vert[i - 1].x, vert[i - 1].y)
                .lineTo(vert[i].x, vert[i].y);
         }
 
-        stage_handler.getStageByName('sim').stage.addChild(this.boundary_graphic);
+        stageHandler.getStageByName('sim').stage.addChild(this.boundaryGraphic);
     }
 }
 

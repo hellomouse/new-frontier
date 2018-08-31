@@ -41,17 +41,26 @@ function getDif(height, planet) {
  * (As large bodies horribly lag the game)
  */
 class PlanetSectorGraphic {
+    /**
+     *
+     * @param {float} angle
+     * @param {object} planet
+     * @param {object} stage
+     * @param {object} options
+     * @param {int} sectorSize
+     * @param {*} sectorInc
+     */
     constructor(angle, planet, stage, options,
-            sector_size = config.planet_graphic_sector_size, sector_inc = config.planet_graphic_sector_inc) {
-        this.planet_graphic_sector_size = sector_size;
-        this.planet_graphic_sector_inc = sector_inc;
+            sectorSize = config.planetGraphicSectorSize, sectorInc = config.planetGraphicSectorInc) {
+        this.planetGraphicSectorSize = sectorSize;
+        this.planetGraphicSectorInc = sectorInc;
 
         // Create the body itself
         let vert = [];
-        let end_angle = angle + this.planet_graphic_sector_size + this.planet_graphic_sector_inc;
+        let endAngle = angle + this.planetGraphicSectorSize + this.planetGraphicSectorInc;
         let lowest = Infinity;
 
-        for (let i = angle; i <= end_angle; i += this.planet_graphic_sector_inc) {
+        for (let i = angle; i <= endAngle; i += this.planetGraphicSectorInc) {
             let h = planet.surface.getHeight(i);
             if (h < lowest) {
                 lowest = h;
@@ -64,10 +73,10 @@ class PlanetSectorGraphic {
          * Finish off the polygon with a bit at the bottom
          * Slightly below the lowest point on the planet's surface
          */
-        let h1 = planet.surface.getHeight(end_angle);
+        let h1 = planet.surface.getHeight(endAngle);
         let h2 = planet.surface.getHeight(angle);
 
-        vert.push(getPos(end_angle, h1 - getDif(h1, planet) - 10000, planet.position));
+        vert.push(getPos(endAngle, h1 - getDif(h1, planet) - 10000, planet.position));
         vert.push(getPos(angle, h2 - getDif(h2, planet) - 10000, planet.position));
 
         /* Create a texture and append to stage */

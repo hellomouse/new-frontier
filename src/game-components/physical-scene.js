@@ -6,16 +6,18 @@
  */
 class PhysicalScene {
     /**
-     * constructor - Construct a new PhysicalScene
+     * @constructor - Construct a new PhysicalScene
      *
-     * @param  {array} physical_sprites Array of physical sprites
-     * @param  {array} sprites          Array of sprites
-     * @param  {null} background        Currently unused
-     * @param  {null} name              Currently unused
+     * @param  {array} physicalSprites - Array of physical sprites
+     * @param  {array} sprites - Array of sprites
+     * @param  {array} bodies - Array of bodies
+     * @param  {array} updatable - Array of updatable objects
+     * @param  {*} background - Currently unused
+     * @param  {*} name - Currently unused
      */
-    constructor(physical_sprites, sprites, bodies, updatable, background, name) {
+    constructor(physicalSprites, sprites, bodies, updatable, background, name) {
         this.name = name;
-        this.physical_sprites = physical_sprites;
+        this.physicalSprites = physicalSprites;
         this.sprites = sprites;
         this.bodies = bodies;
         this.updatable = updatable;
@@ -28,13 +30,12 @@ class PhysicalScene {
      * @param  {PIXI.Container} stage           Stage to draw everything on
      * @param  {Matter.World} world             World to add physical objects to
      * @param  {Matter.Engine.Create()} engine  Matter.js engine
-     * @return {None}
      */
     load(stage, world, engine) {
         // init.resetAll();  // Clear the game renderer and physics engine
 
         // Add physical sprites
-        this.addPhysicalSprites(stage, this.physical_sprites);
+        this.addPhysicalSprites(stage, this.physicalSprites);
 
         // Add non-physical sprites
         for (let sprite of this.sprites) {
@@ -50,16 +51,16 @@ class PhysicalScene {
      * to the current scene.
      *
      * @param  {PIXI.Container} stage   Stage to draw everything on
-     * @param  {array} physical_sprites Array of physical sprites
+     * @param  {array} sprites Array of physical sprites
      */
     addPhysicalSprites(stage, sprites) {
-        for (let physical_sprite of sprites) {
-            stage.addChild(physical_sprite.sprite);
-            if (!physical_sprite.skip_add_body) {
-                this.bodies.push(physical_sprite.body);
+        for (let physicalSprite of sprites) {
+            stage.addChild(physicalSprite.sprite);
+            if (!physicalSprite.skip_add_body) {
+                this.bodies.push(physicalSprite.body);
             }
         }
-        this.physical_sprites = this.physical_sprites.concat(sprites);
+        this.physicalSprites = this.physicalSprites.concat(sprites);
     }
 
     /**
@@ -68,8 +69,8 @@ class PhysicalScene {
      * will be run.
      */
     update() {
-        for (let physical_sprite of this.physical_sprites) {
-            physical_sprite.update();
+        for (let physicalSprite of this.physicalSprites) {
+            physicalSprite.update();
         }
 
         for (let updatable of this.updatable) {

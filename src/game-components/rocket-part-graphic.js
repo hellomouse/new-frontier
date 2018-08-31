@@ -16,9 +16,9 @@ class RocketPartGraphic {
      */
     constructor(id, x, y) {
         this.id = id;
-        this.data = allParts.index_data[id];
+        this.data = allParts.indexData[id];
 
-        this.sprite = PIXI.Sprite.from(this.data.image_path);
+        this.sprite = PIXI.Sprite.from(this.data.imagePath);
 
         this.sprite.width = this.data.width;
         this.sprite.height = this.data.height;

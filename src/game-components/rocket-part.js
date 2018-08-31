@@ -10,7 +10,7 @@ class RocketPart extends PhysicalSprite {
     /**
      * constructor - RocketPart
      *
-     * @param  {string} image_path Path to image
+     * @param  {string} imagePath Path to image
      * @param  {number} width      Width of part
      * @param  {number} height     Height of part
      * @param  {number} x          X pos
@@ -18,14 +18,14 @@ class RocketPart extends PhysicalSprite {
      * @param  {object} data       Data, see below for desc and format
      * @param  {string} id         Unique ID name for the part
      */
-    constructor(image_path, width, height, x, y, data, id) {
+    constructor(imagePath, width, height, x, y, data, id) {
         /* Blocks are the same size as the image they're from
          * and are static. Non-static blocks should be an entitySprite */
         let body = Matter.Bodies.rectangle(x, y, width, height);
-        super(image_path, width, height, body);
+        super(imagePath, width, height, body);
 
-        this.image_path = image_path;
-        this.skip_add_body = true;
+        this.imagePath = imagePath;
+        this.skipAddBody = true;
 
         /* Data that should be overrided by another
          * class that extends this class */
@@ -67,7 +67,7 @@ class RocketPart extends PhysicalSprite {
         this.data = data;
         this.checkForMissingData();
 
-        this.boundary_graphic = null;
+        this.boundaryGraphic = null;
     }
 
     /**
@@ -109,20 +109,20 @@ class RocketPart extends PhysicalSprite {
         super.update();
 
         // DEBUG
-        if (this.boundary_graphic) {
-            stage_handler.getStageByName('sim').stage.removeChild(this.boundary_graphic);
+        if (this.boundaryGraphic) {
+            stageHandler.getStageByName('sim').stage.removeChild(this.boundaryGraphic);
         }
 
-        this.boundary_graphic = new PIXI.Graphics();
+        this.boundaryGraphic = new PIXI.Graphics();
         let vert = this.body.vertices;
 
         for (let i = 1; i < this.body.vertices.length; i++) {
-            this.boundary_graphic.lineStyle(2, 0xff00ff)
+            this.boundaryGraphic.lineStyle(2, 0xff00ff)
                .moveTo(vert[i - 1].x, vert[i - 1].y)
                .lineTo(vert[i].x, vert[i].y);
         }
 
-        stage_handler.getStageByName('sim').stage.addChild(this.boundary_graphic);
+        stageHandler.getStageByName('sim').stage.addChild(this.boundaryGraphic);
     }
 }
 

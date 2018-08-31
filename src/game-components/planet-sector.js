@@ -24,13 +24,18 @@ function getPos(angle, radius, center) {
  * (As large bodies horribly lag the game)
  */
 class PlanetSector {
+    /**
+     * @constructor
+     * @param {float} angle
+     * @param {object} planet
+     */
     constructor(angle, planet) {
         // Create the body itself
         let vert = [];
-        let end_angle = angle + config.planet_sector_size + config.planet_sector_inc;
+        let endAngle = angle + config.planetSectorSize + config.planetSectorInc;
         let lowest = Infinity;
 
-        for (let i = angle; i <= end_angle; i += config.planet_sector_inc) {
+        for (let i = angle; i <= endAngle; i += config.planetSectorInc) {
             let h = planet.surface.getHeight(i);
 
             if (h < lowest) {
@@ -47,10 +52,10 @@ class PlanetSector {
          */
         lowest = Math.min(
             lowest,
-            planet.surface.getHeight(angle - config.planet_sector_inc),
-            planet.surface.getHeight(end_angle + config.planet_sector_inc)
+            planet.surface.getHeight(angle - config.planetSectorInc),
+            planet.surface.getHeight(endAngle + config.planetSectorInc)
         );
-        vert.push(getPos(end_angle, lowest - 100, planet.position));
+        vert.push(getPos(endAngle, lowest - 100, planet.position));
         vert.push(getPos(angle, lowest - 100, planet.position));
 
         /* Position the body at the correct location */
@@ -72,7 +77,7 @@ class PlanetSector {
                .moveTo(vert[i - 1].x, vert[i - 1].y)
                .lineTo(vert[i].x, vert[i].y);
         }
-        stage_handler.getStageByName('sim').stage.addChild(graphics);
+        stageHandler.getStageByName('sim').stage.addChild(graphics);
     }
 }
 

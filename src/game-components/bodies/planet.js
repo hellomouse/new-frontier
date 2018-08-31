@@ -11,6 +11,11 @@ const PlanetSectorGraphic = require('../planet-sector-graphic.js');
  * this class and override all variables
  */
 class Planet {
+    /**
+     * @constructor
+     * @param {int} x
+     * @param {int} y
+     */
     constructor(x, y) {
         this.position = { x: x, y: y };
 
@@ -101,26 +106,32 @@ class Planet {
         }
     }
 
-    updateGraphicSector(angle, sim, graphic_sector_scale) {
+    /**
+     * @method
+     * @param {*} angle
+     * @param {*} sim
+     * @param {*} graphicSectorScale
+     */
+    updateGraphicSector(angle, sim, graphicSectorScale) {
         let added = false;
 
         for (let i = -3; i <= 3; i++) {
-            let angle2 = Math.floor(angle / config.planet_graphic_sector_size + i * graphic_sector_scale)
+            let angle2 = Math.floor(angle / config.planet_graphic_sector_size + i * graphicSectorScale)
                 * config.planet_graphic_sector_size;
 
             // Sector already exists
             if (this.texture_sectors[angle2]) continue;
 
             this.texture_sectors[angle2] = new PlanetSectorGraphic(angle2, this, sim.stage, {},
-                config.planet_graphic_sector_size * graphic_sector_scale,
-                config.planet_graphic_sector_inc * graphic_sector_scale
+                config.planet_graphic_sector_size * graphicSectorScale,
+                config.planet_graphic_sector_inc * graphicSectorScale
             );
         }
 
         /* Trim extra angles that are too far away */
         if (added) {
             for (let a of Object.keys(this.texture_sectors)) {
-                if (Math.abs(angle - a) > config.planet_graphic_sector_size * 7 * graphic_sector_scale) {
+                if (Math.abs(angle - a) > config.planet_graphic_sector_size * 7 * graphicSectorScale) {
                     sim.stage.removeChild(this.texture_sectors[a].body);
                     delete this.texture_sectors[a];
                 }
@@ -128,6 +139,11 @@ class Planet {
         }
     }
 
+    /**
+     * @method
+     * @param {*} PIXI
+     * @param {*} stage
+     */
     addToStage(PIXI, stage) {
         /* let sprite = new PIXI.Sprite.fromImage(this.image);
 
@@ -141,20 +157,25 @@ class Planet {
         stage.addChild(sprite); */
     }
 
+    /**
+     * @method
+     * @param {*} rocket
+     */
     applyGravity(rocket) {
         let x = this.position.x;
         let y = this.position.y;
-        let x_rocket = rocket.position.x;
-        let y_rocket = rocket.position.y;
+        let xRocket = rocket.position.x;
+        let yRocket = rocket.position.y;
 
-        let x_distance = x - x_rocket;
-        let y_distance = y - y_rocket;
-        let distance_mag_square = x_distance ** 2 + y_distance ** 2;
+        let xDistance = x - xRocket;
+        let yDistance = y - yRocket;
+        let distanceMagSquare = xDistance ** 2 + yDistance ** 2;
 
-        let f_mag = (config.G_CONSTANT * this.mass * rocket.body.mass) / distance_mag_square; // F due to gravity = (g)(mass1)(mass2)/(distance between**2)
-        let angle = Math.atan2(y_distance, x_distance);
+         // F due to gravity = (g)(mass1)(mass2)/(distance between**2)
+        let fMag = (config.G_CONSTANT * this.mass * rocket.body.mass) / distanceMagSquare;
+        let angle = Math.atan2(yDistance, xDistance);
 
-        let vector = { x: f_mag * Math.cos(angle), y: f_mag * Math.sin(angle) };
+        let vector = { x: fMag * Math.cos(angle), y: fMag * Math.sin(angle) };
         Matter.Body.applyForce(rocket.body, rocket.position, vector);
     }
 }

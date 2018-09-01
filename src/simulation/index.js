@@ -23,7 +23,7 @@ class Simulation extends RenderableScene {
         // Game
         this.engine = Matter.Engine.create();
         this.scene = null;
-        this.active_rocket = null;
+        this.activeRocket = null;
 
         // Gamerules
         this.rules = {
@@ -104,9 +104,9 @@ class Simulation extends RenderableScene {
 
             // 1.5 is a "close enough" to start adding the planet's land collision box
             if (gameUtil.math.fastDistance(planet.position, this.rockets[0].position) < planet.radius + 10000) {
-                this.active_rocket.updateAngleToPlanet(planet);
-                planet.updateSector(this.active_rocket.angle_to_planet, this);
-                planet.updateGraphicSector(this.active_rocket.angle_to_planet, this, 1);
+                this.activeRocket.updateAngleToPlanet(planet);
+                planet.updateSector(this.activeRocket.angle_to_planet, this);
+                planet.updateGraphicSector(this.activeRocket.angle_to_planet, this, 1);
             }
         }
 
@@ -177,21 +177,21 @@ class Simulation extends RenderableScene {
     /**
      * getActiveRocket - Return the current controllable rocket
      * that's selected, or null if none are on screen. ALso updates
-     * this.active_rocket to be the present active rocket
+     * this.activeRocket to be the present active rocket
      *
      * @return {Rocket}  Current active rocket.
      */
     getActiveRocket() {
-        if (this.active_rocket === null || this.active_rocket.control === false) {
+        if (this.activeRocket === null || this.activeRocket.control === false) {
             for (let rocket of this.rockets) {
                 if (rocket.control === true) {
-                    this.active_rocket = rocket;
+                    this.activeRocket = rocket;
                     return rocket;
                 }
             }
             return null;
         }
-        return this.active_rocket;
+        return this.activeRocket;
     }
 
     /**

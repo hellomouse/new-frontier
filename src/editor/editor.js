@@ -1,31 +1,31 @@
 'use strict';
 
-const renderableScene = require('../ui/renderable-scene.js');
+const RenderableScene = require('../ui/renderable-scene.js');
 const gameUtil = require('../util.js');
 const config = require('../game/config.js');
-const camera = require('../ui/camera.js');
+const Camera = require('../ui/camera.js');
 const controlState = require('../controls.js');
 
 const allParts = require('../game/rocket-parts/all-parts.js');
-const rocketPartGraphic = require('../game-components/rocket-part-graphic.js');
-const rocket = require('../game/rocket.js');
+const RocketPartGraphic = require('../game-components/rocket-part-graphic.js');
+const Rocket = require('../game/rocket.js');
 
-const editorHtml = require('./editor-html.js');
+const EditorHtml = require('./Editor-html.js');
 
 /**
- * editor, or the shipBuilder. Handles logic
+ * Editor, or the shipBuilder. Handles logic
  * to construct, save, load ships.
  */
-class editor extends renderableScene {
+class Editor extends RenderableScene {
     /**
-     * constructor - Construct an editor
+     * constructor - Construct an Editor
      */
     constructor() {
         super();
 
         // Scene and other
         this.scene = null;
-        this.camera = new camera(0.3, 4, 1);
+        this.camera = new Camera(0.3, 4, 1);
 
         // Actions/build
         this.currentSelectBuild = null;
@@ -35,7 +35,7 @@ class editor extends renderableScene {
         this.currentBuild = [];
         this.selectedParts = [];
 
-        /* Width of left side of editor (selectors)
+        /* Width of left side of Editor (selectors)
          * Since HTML is not yet loaded will be loaded on click */
         this.leftPartWidth = null;
         this.topPartHeight = null;
@@ -45,12 +45,12 @@ class editor extends renderableScene {
     }
 
     /**
-     * init - Init the editor.
+     * init - Init the Editor.
      * @override
      */
     init() {
         super.init();
-        this.html = editorHtml; // Create buttons
+        this.html = EditorHtml; // Create buttons
 
         let lines = new PIXI.Graphics();
         this.stage.addChild(lines);
@@ -69,7 +69,7 @@ class editor extends renderableScene {
     }
 
     /**
-     * update - Update the editor (Per Frame)
+     * update - Update the Editor (Per Frame)
      * @override
      */
     update() {
@@ -90,17 +90,17 @@ class editor extends renderableScene {
 
         /* Add variables if doesn't exist */
         if (!this.leftPartWidth) {
-            this.leftPartWidth = +document.getElementById('editor-left-1').style.width.replace('px', '') +
+            this.leftPartWidth = +document.getElementById('Editor-left-1').style.width.replace('px', '') +
             +document.getElementById('parts').style.width.replace('px', '');
         }
         if (!this.topPartHeight) {
-            this.topPartHeight = +document.getElementById('editor-top').style.height.replace('px', '');
+            this.topPartHeight = +document.getElementById('Editor-top').style.height.replace('px', '');
         }
 
         /* X coordinate is on the left side of the screen
          * (User is selecting parts and not placing down parts)
          * Or Y coordinate is top 50 px */
-        if (x < this.leftPartWidth || y < this.topPartHeight) { // See editor-html.js, add the width of the 2 divs
+        if (x < this.leftPartWidth || y < this.topPartHeight) { // See Editor-html.js, add the width of the 2 divs
             this.unselectCurrentBuild();
             this.unselectAll();
             return;
@@ -204,7 +204,7 @@ class editor extends renderableScene {
         let h = initialPos.y - coords.y;
 
         /* Actual drawing */
-        if (this.selectRectangleGraphic) stageHandler.getStageByName('editor').stage.removeChild(this.selectRectangleGraphic);
+        if (this.selectRectangleGraphic) stageHandler.getStageByName('Editor').stage.removeChild(this.selectRectangleGraphic);
         this.selectRectangleGraphic = new PIXI.Graphics();
 
         this.selectRectangleGraphic.beginFill(0x00FF00);
@@ -212,7 +212,7 @@ class editor extends renderableScene {
         this.selectRectangleGraphic.drawRect(initialPos.x, initialPos.y, -w, -h);
         this.selectRectangleGraphic.alpha = 0.3;
 
-        stageHandler.getStageByName('editor').stage.addChild(this.selectRectangleGraphic);
+        stageHandler.getStageByName('Editor').stage.addChild(this.selectRectangleGraphic);
     }
 
     /**
@@ -234,7 +234,7 @@ class editor extends renderableScene {
     updatedSelectedIcon(e) {
         if (!e) return;
 
-        let icon = document.getElementById('follow-mouse-editor-icon');
+        let icon = document.getElementById('follow-mouse-Editor-icon');
 
         if (!this.currentSelectBuild) {
             icon.style.display = 'none';
@@ -278,7 +278,7 @@ class editor extends renderableScene {
      * removeRectangleGraphic - Removes select rect graphic
      */
     removeRectangleGraphic() {
-        stageHandler.getStageByName('editor').stage.removeChild(this.selectRectangleGraphic);
+        stageHandler.getStageByName('Editor').stage.removeChild(this.selectRectangleGraphic);
         this.selectRectangleGraphic = null;
     }
 
@@ -374,7 +374,7 @@ class editor extends renderableScene {
             }
         }
 
-        let obj = new rocketPartGraphic(this.currentSelectBuild, x, y);
+        let obj = new RocketPartGraphic(this.currentSelectBuild, x, y);
 
         this.currentBuild.push(obj);
         this.stage.addChild(obj.sprite);
@@ -409,7 +409,7 @@ class editor extends renderableScene {
      * constructrocket - Construct a new rocket object
      * that can be added to the sim
      *
-     * @return {rocket}  rocket built in the editor
+     * @return {rocket}  rocket built in the Editor
      */
     constructrocket() {
         let parts = this.currentBuild.map(part => {
@@ -423,7 +423,7 @@ class editor extends renderableScene {
 
             return new allParts.index[part.id](x, y);
         });
-        let rocket = new rocket(parts, Matter);
+        let rocket = new Rocket(parts, Matter);
 
         rocket.reposition(90, -100); // TODO update to launch pad coords
         return rocket;
@@ -431,4 +431,4 @@ class editor extends renderableScene {
 }
 
 
-module.exports = editor;
+module.exports = Editor;

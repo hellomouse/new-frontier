@@ -46,7 +46,7 @@ class Rocket {
 
         for (let part of this.parts) {
             part.rocket = this;
-            part.skip_add_body = true;
+            part.skipAddBody = true;
 
             if (part.x < minX) minX = part.x;
             if (part.x + part.sprite.width > maxX) maxX = part.x + part.sprite.width;

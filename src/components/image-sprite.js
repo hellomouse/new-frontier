@@ -1,9 +1,9 @@
 'use strict';
 
 /**
- * imageSprites are a sprite that display an image
+ * ImageSprites are a sprite that display an image
  */
-class imageSprite {
+class ImageSprite {
     /**
      * constructor - Construct an image sprite
      *
@@ -26,4 +26,4 @@ class imageSprite {
     }
 }
 
-module.exports = imageSprite;
+module.exports = ImageSprite;

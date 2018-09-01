@@ -1,17 +1,17 @@
 'use strict';
 
-const imageSprite = require('./image-sprite.js');
+const ImageSprite = require('./image-sprite.js');
 
 
 /**
- * physicalSprite class
+ * PhysicalSprite class
  *
  * A sprite that is subject to the laws of physics.
  * Pass a matter.js body object to the sprite.
  */
-class physicalSprite extends imageSprite {
+class PhysicalSprite extends ImageSprite {
     /**
-     * constructor - Construct a physicalSprite
+     * constructor - Construct a PhysicalSprite
      *
      * @param  {type} imagePath Path to the image, relative from src/init.js
      * @param  {type} width      Width of image to display (px)
@@ -35,4 +35,4 @@ class physicalSprite extends imageSprite {
     }
 }
 
-module.exports = physicalSprite;
+module.exports = PhysicalSprite;

@@ -1,18 +1,25 @@
 'use strict';
 
 const GuiComponent = require('./gui-comp.js');
-const DEFAULT_BUTTON_TEXTURES = {
+const defaultButtonTextures = {
     default: PIXI.Texture.fromImage('https://dl.dropboxusercontent.com/s/mi2cibdajml8qj9/arrow_wait.png?dl=0'),
     hover: PIXI.Texture.fromImage('https://dl.dropboxusercontent.com/s/mi2cibdajml8qj9/arrow_wait.png?dl=0'),
     active: PIXI.Texture.fromImage('https://dl.dropboxusercontent.com/s/mi2cibdajml8qj9/arrow_wait.png?dl=0')
 };
 
-
+/** */
 class Button {
+    /**
+     * @constructor
+     * @param {*} x 
+     * @param {*} y 
+     * @param {*} w 
+     * @param {*} h 
+     */
     constructor(x, y, w, h) {
-        super(new PIXI.Sprite(DEFAULT_BUTTON_TEXTURES.default), x, y);
+        super(new PIXI.Sprite(defaultButtonTextures.default), x, y);
 
-        this.button_textures = DEFAULT_BUTTON_TEXTURES;
+        this.buttonTextures = defaultButtonTextures;
         this.sprite.buttonMode = true;
         this.sprite.width = w;
         this.sprite.height = h;
@@ -25,18 +32,19 @@ class Button {
              .on('pointerout', this.onButtonOut);
     }
 
+    /** */
     onButtonDown() {
         // Called when button is clicked on
         this.sprite.isdown = true;
-        this.sprite.texture = this.button_textures.default;
+        this.sprite.texture = this.buttonTextures.default;
         this.sprite.alpha = 1;
     }
 
     onButtonUp() {
         this.sprite.isdown = false;
         this.sprite.texture = this.sprite.isOver ?
-            this.button_textures.hover :
-            this.button_textures.default;
+            this.buttonTextures.hover :
+            this.buttonTextures.default;
     }
 
     onButtonOver() {
@@ -44,7 +52,7 @@ class Button {
         if (this.sprite.isdown) {
             return;
         }
-        this.sprites.texture = this.button_textures.hover;
+        this.sprites.texture = this.buttonTextures.hover;
     }
 
     onButtonOut() {
@@ -52,7 +60,7 @@ class Button {
         if (this.sprite.isdown) {
             return;
         }
-        this.texture = this.button_textures.default;
+        this.texture = this.buttonTextures.default;
     }
 }
 

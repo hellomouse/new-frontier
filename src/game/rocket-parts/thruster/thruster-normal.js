@@ -17,9 +17,10 @@ const DATA = {
     category: 'Thruster'
 };
 
+/** */
 class ThrusterNormal extends Thruster {
     /**
-     * constructor - Construct a ThrusterNormal
+     * @constructor - Construct a ThrusterNormal
      * @param  {number} x  X pos
      * @param  {number} y  Y pos
      */

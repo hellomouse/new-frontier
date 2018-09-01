@@ -43,8 +43,8 @@ const allParts = dir
     .map(x => require(x));
 
 // Alert any parts that contain invalid categories
-allParts.forEach(x => {
-    let t = new x(); // x is class for a rocket part
+allParts.forEach(X => {
+    let t = new X(); // x is class for a rocket part
 
     // Warnings
     if (!CATEGORIES.includes(t.data.category)) {
@@ -63,7 +63,7 @@ allParts.forEach(x => {
         imagePath: t.imagePath
     };
 
-    allPartsIndex[t.id] = x;
+    allPartsIndex[t.id] = X;
     allPartsIndexData[t.id] = data;
     partsData.push(data);
 });
@@ -73,5 +73,5 @@ module.exports = {
     categories: CATEGORIES,
     partsData: partsData,
     index: allPartsIndex,
-    index_data: allPartsIndexData
+    indexData: allPartsIndexData
 };

@@ -1,6 +1,6 @@
 'use strict';
 
-const fuelTank = require('../base-classes/fuel-tank.js');
+const FuelTank = require('../base-classes/fuel-tank.js');
 const config = require('../../config.js');
 
 const DATA = {
@@ -18,9 +18,9 @@ const DATA = {
 };
 
 /** */
-class fuelTankTall extends fuelTank {
+class FuelTankTall extends FuelTank {
     /**
-     * constructor - Construct a fuelTankSmall
+     * constructor - Construct a FuelTankSmall
      * @param  {number} x  X pos
      * @param  {number} y  Y pos
      */
@@ -34,4 +34,4 @@ class fuelTankTall extends fuelTank {
     }
 }
 
-module.exports = fuelTankTall;
+module.exports = FuelTankTall;

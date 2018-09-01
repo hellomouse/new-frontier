@@ -1,7 +1,7 @@
 'use strict';
 
 /* Required */
-const planet = require('../../game-components/bodies/planet.js');
+const Planet = require('../../game-components/bodies/planet.js');
 const config = require('../config.js');
 
 /* Util */
@@ -89,7 +89,7 @@ function terrainGenerator(angle, planet) {
 }
 
 /** */
-class Earth extends planet {
+class Earth extends Planet {
     /**
      * @constructor
      * @param {*} x
@@ -121,8 +121,8 @@ class Earth extends planet {
         this.color = '#00FF00';
         this.surface = {
             ocean: true,
-            ocean_level: conversion.meterToPixel(12742 * 1000),
-            ocean_type: 'water',
+            oceanLevel: conversion.meterToPixel(12742 * 1000),
+            oceanType: 'water',
 
             getHeight: angle => terrainGenerator(angle, this),
             getBiome: angle => getBiome(angle)

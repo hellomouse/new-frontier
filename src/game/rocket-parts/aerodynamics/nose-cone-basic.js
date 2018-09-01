@@ -1,6 +1,6 @@
 'use strict';
 
-const noseCone = require('../base-classes/nose-cone.js');
+const NoseCone = require('../base-classes/nose-cone.js');
 const config = require('../../config.js');
 
 const DATA = {
@@ -18,9 +18,9 @@ const DATA = {
 };
 
 /** */
-class noseConeNormal extends noseCone {
+class NoseConeNormal extends NoseCone {
     /**
-     * constructor - Construct a noseConeNormal
+     * constructor - Construct a NoseConeNormal
      * @param  {number} x  X pos
      * @param  {number} y  Y pos
      */
@@ -33,4 +33,4 @@ class noseConeNormal extends noseCone {
     }
 }
 
-module.exports = noseConeNormal;
+module.exports = NoseConeNormal;

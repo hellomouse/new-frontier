@@ -1,13 +1,13 @@
 'use strict';
 
-const rocketPart = require('../../../game-components/rocket-part.js');
+const RocketPart = require('../../../game-components/rocket-part.js');
 
 /**
- * A thruster
+ * A Thruster
  */
-class thruster extends rocketPart {
+class Thruster extends RocketPart {
     /**
-     * constructor - thruster
+     * constructor - Thruster
      *
      * @param  {string} imagePath Path to image
      * @param  {number} width      Width of part
@@ -28,8 +28,8 @@ class thruster extends rocketPart {
 
         // This class should not be constructed directly
         // To avoid confusion this will throw a new error
-        if (new.target === thruster) {
-            throw new TypeError('Cannot construct Abstract instances directly - thruster is abstract');
+        if (new.target === Thruster) {
+            throw new TypeError('Cannot construct Abstract instances directly - Thruster is abstract');
         }
 
         // Debug
@@ -89,4 +89,4 @@ class thruster extends rocketPart {
     }
 }
 
-module.exports = thruster;
+module.exports = Thruster;

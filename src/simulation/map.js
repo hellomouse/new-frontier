@@ -8,7 +8,7 @@ const Camera = require('../ui/camera.js');
 const RenderableScene = require('../ui/renderable-scene.js');
 const gameUtil = require('../util.js');
 
-const DEFAULT_MAP_ZOOM = 100000; // Map is 1000x smaller than sim initially
+const defaultMapZoom = 100000; // Map is 1000x smaller than sim initially
 
 /** Represents a map in game */
 class Map extends RenderableScene {
@@ -30,8 +30,8 @@ class Map extends RenderableScene {
     loadPlanetSprites() {
         for (let planet of scenes.sim.planets) {
             let sprite = new PIXI.Sprite.fromImage(planet.map_image);
-            sprite.width = planet.radius / DEFAULT_MAP_ZOOM;
-            sprite.height = planet.radius / DEFAULT_MAP_ZOOM;
+            sprite.width = planet.radius / defaultMapZoom;
+            sprite.height = planet.radius / defaultMapZoom;
             sprite.anchor.set(0.5, 0.5);
 
             planet.map_sprite = sprite;
@@ -48,8 +48,8 @@ class Map extends RenderableScene {
         this.camera.updateScene(this.stage, this.renderer);
 
         for (let planet of scenes.sim.planets) {
-            planet.map_sprite.x = planet.position.x / DEFAULT_MAP_ZOOM;
-            planet.map_sprite.y = planet.position.y / DEFAULT_MAP_ZOOM;
+            planet.map_sprite.x = planet.position.x / defaultMapZoom;
+            planet.map_sprite.y = planet.position.y / defaultMapZoom;
         }
 
         // this.renderer.render(this.stage);

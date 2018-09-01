@@ -1,47 +1,47 @@
 'use strict';
 
-const RenderableScene = require('../ui/renderable-scene.js');
+const renderableScene = require('../ui/renderable-scene.js');
 const gameUtil = require('../util.js');
 const config = require('../game/config.js');
-const Camera = require('../ui/camera.js');
-const control_state = require('../controls.js');
+const camera = require('../ui/camera.js');
+const controlState = require('../controls.js');
 
 const allParts = require('../game/rocket-parts/all-parts.js');
-const RocketPartGraphic = require('../game-components/rocket-part-graphic.js');
-const Rocket = require('../game/rocket.js');
+const rocketPartGraphic = require('../game-components/rocket-part-graphic.js');
+const rocket = require('../game/rocket.js');
 
-const EDITOR_HTML = require('./editor-html.js');
+const editorHtml = require('./editor-html.js');
 
 /**
- * Editor, or the shipBuilder. Handles logic
+ * editor, or the shipBuilder. Handles logic
  * to construct, save, load ships.
  */
-class Editor extends RenderableScene {
+class editor extends renderableScene {
     /**
-     * constructor - Construct an Editor
+     * constructor - Construct an editor
      */
     constructor() {
         super();
 
         // Scene and other
         this.scene = null;
-        this.camera = new Camera(0.3, 4, 1);
+        this.camera = new camera(0.3, 4, 1);
 
         // Actions/build
-        this.current_select_build = null;
-        this.current_action = 'place'; // place, rotate, or move
-        this.camera_focus = { x: 0, y: 0 };
+        this.currentSelectBuild = null;
+        this.currentAction = 'place'; // place, rotate, or move
+        this.cameraFocus = { x: 0, y: 0 };
 
-        this.current_build = [];
-        this.selected_parts = [];
+        this.currentBuild = [];
+        this.selectedParts = [];
 
         /* Width of left side of editor (selectors)
          * Since HTML is not yet loaded will be loaded on click */
-        this.left_part_width = null;
-        this.top_part_height = null;
+        this.leftPartWidth = null;
+        this.topPartHeight = null;
 
         /* Select rectangle graphic */
-        this.select_rectangle_graphic = null;
+        this.selectRectangleGraphic = null;
     }
 
     /**
@@ -50,18 +50,18 @@ class Editor extends RenderableScene {
      */
     init() {
         super.init();
-        this.html = EDITOR_HTML; // Create buttons
+        this.html = editorHtml; // Create buttons
 
         let lines = new PIXI.Graphics();
         this.stage.addChild(lines);
 
         /* DEBUG */
-        for (let x = -config.build_grid_size * 20; x < 1000; x += config.build_grid_size) {
+        for (let x = -config.buildGridSize * 20; x < 1000; x += config.buildGridSize) {
             lines.lineStyle(1, 0xffffff)
                    .moveTo(x, -1000)
                    .lineTo(x, 1000);
         }
-        for (let y = -config.build_grid_size * 20; y < 1000; y += config.build_grid_size) {
+        for (let y = -config.buildGridSize * 20; y < 1000; y += config.buildGridSize) {
             lines.lineStyle(1, 0xffffff)
                    .moveTo(-1000, y)
                    .lineTo(1000, y);
@@ -73,7 +73,7 @@ class Editor extends RenderableScene {
      * @override
      */
     update() {
-        this.camera.focusOn(this.camera_focus);
+        this.camera.focusOn(this.cameraFocus);
         this.camera.updateScene(this.stage, this.renderer);
     }
 
@@ -89,18 +89,18 @@ class Editor extends RenderableScene {
         let y = e.clientY;
 
         /* Add variables if doesn't exist */
-        if (!this.left_part_width) {
-            this.left_part_width = +document.getElementById('editor-left-1').style.width.replace('px', '') +
+        if (!this.leftPartWidth) {
+            this.leftPartWidth = +document.getElementById('editor-left-1').style.width.replace('px', '') +
             +document.getElementById('parts').style.width.replace('px', '');
         }
-        if (!this.top_part_height) {
-            this.top_part_height = +document.getElementById('editor-top').style.height.replace('px', '');
+        if (!this.topPartHeight) {
+            this.topPartHeight = +document.getElementById('editor-top').style.height.replace('px', '');
         }
 
         /* X coordinate is on the left side of the screen
          * (User is selecting parts and not placing down parts)
          * Or Y coordinate is top 50 px */
-        if (x < this.left_part_width || y < this.top_part_height) { // See editor-html.js, add the width of the 2 divs
+        if (x < this.leftPartWidth || y < this.topPartHeight) { // See editor-html.js, add the width of the 2 divs
             this.unselectCurrentBuild();
             this.unselectAll();
             return;
@@ -129,24 +129,24 @@ class Editor extends RenderableScene {
          * Adds part at <x, y> */
 
         /* Drag = always box select */
-        if (control_state.mouse.dragging) {
-            let initial_pos = this.stage.toLocal(
+        if (controlState.mouse.dragging) {
+            let initialPos = this.stage.toLocal(
                 new PIXI.Point(
-                    control_state.mouse.last_mousedown[0],
-                    control_state.mouse.last_mousedown[1]
+                    controlState.mouse.lastMousedown[0],
+                    controlState.mouse.lastMousedown[1]
                 ));
 
-            if (!control_state.keyboard.Control) this.unselectAll();
+            if (!controlState.keyboard.Control) this.unselectAll();
 
             /* Remove the rectangle graphic */
             this.removeRectangleGraphic();
-            this.selectPartsBoundingBox(initial_pos.x, initial_pos.y, x, y);
+            this.selectPartsBoundingBox(initialPos.x, initialPos.y, x, y);
             return;
         }
 
         /* Failed to place part, try selecting part
          * Start by finding a part at location */
-        if (!this.addPart(x, y) && !this.current_select_build) this.selectPart(x, y);
+        if (!this.addPart(x, y) && !this.currentSelectBuild) this.selectPart(x, y);
 
         /* Success placing part!
          * Deselect everything */
@@ -191,28 +191,28 @@ class Editor extends RenderableScene {
         this.updatedSelectedIcon(e); // Updated selected icon
 
         /* Draw the select rectangle that shows the selection */
-        if (!control_state.mouse.isdown) {
+        if (!controlState.mouse.isdown) {
             this.removeRectangleGraphic();
             return;
         }
 
-        let lmdown = control_state.mouse.last_mousedown;
+        let lmdown = controlState.mouse.lastMousedown;
         let coords = this.stage.toLocal(new PIXI.Point(e.clientX, e.clientY));
-        let initial_pos = this.stage.toLocal(new PIXI.Point(lmdown[0], lmdown[1]));
+        let initialPos = this.stage.toLocal(new PIXI.Point(lmdown[0], lmdown[1]));
 
-        let w = initial_pos.x - coords.x;
-        let h = initial_pos.y - coords.y;
+        let w = initialPos.x - coords.x;
+        let h = initialPos.y - coords.y;
 
         /* Actual drawing */
-        if (this.select_rectangle_graphic) stage_handler.getStageByName('editor').stage.removeChild(this.select_rectangle_graphic);
-        this.select_rectangle_graphic = new PIXI.Graphics();
+        if (this.selectRectangleGraphic) stageHandler.getStageByName('editor').stage.removeChild(this.selectRectangleGraphic);
+        this.selectRectangleGraphic = new PIXI.Graphics();
 
-        this.select_rectangle_graphic.beginFill(0x00FF00);
-        this.select_rectangle_graphic.lineStyle(1, 0x00FF00);
-        this.select_rectangle_graphic.drawRect(initial_pos.x, initial_pos.y, -w, -h);
-        this.select_rectangle_graphic.alpha = 0.3;
+        this.selectRectangleGraphic.beginFill(0x00FF00);
+        this.selectRectangleGraphic.lineStyle(1, 0x00FF00);
+        this.selectRectangleGraphic.drawRect(initialPos.x, initialPos.y, -w, -h);
+        this.selectRectangleGraphic.alpha = 0.3;
 
-        stage_handler.getStageByName('editor').stage.addChild(this.select_rectangle_graphic);
+        stageHandler.getStageByName('editor').stage.addChild(this.selectRectangleGraphic);
     }
 
     /**
@@ -236,18 +236,18 @@ class Editor extends RenderableScene {
 
         let icon = document.getElementById('follow-mouse-editor-icon');
 
-        if (!this.current_select_build) {
+        if (!this.currentSelectBuild) {
             icon.style.display = 'none';
             return;
         }
 
         let x = e.clientX;
         let y = e.clientY;
-        let data = allParts.index_data[this.current_select_build];
+        let data = allParts.indexData[this.currentSelectBuild];
 
         icon.style.left = x + 'px';
         icon.style.top = y + 'px';
-        icon.src = data.image_path;
+        icon.src = data.imagePath;
 
         icon.style.width = data.width * this.camera.scale + 'px';
         icon.style.height = data.height * this.camera.scale + 'px';
@@ -259,10 +259,10 @@ class Editor extends RenderableScene {
      * selected parts.
      */
     unselectAll() {
-        for (let part of this.selected_parts) {
+        for (let part of this.selectedParts) {
             part.unselect();
         }
-        this.selected_parts = [];
+        this.selectedParts = [];
     }
 
     /**
@@ -270,16 +270,16 @@ class Editor extends RenderableScene {
      * part selected to place
      */
     unselectCurrentBuild() {
-        this.current_select_build = null;
-        this.updatedSelectedIcon(control_state.mouse.pos_event);
+        this.currentSelectBuild = null;
+        this.updatedSelectedIcon(controlState.mouse.pos_event);
     }
 
     /**
      * removeRectangleGraphic - Removes select rect graphic
      */
     removeRectangleGraphic() {
-        stage_handler.getStageByName('editor').stage.removeChild(this.select_rectangle_graphic);
-        this.select_rectangle_graphic = null;
+        stageHandler.getStageByName('editor').stage.removeChild(this.selectRectangleGraphic);
+        this.selectRectangleGraphic = null;
     }
 
     /**
@@ -294,9 +294,9 @@ class Editor extends RenderableScene {
 
         if (part) {
             /* If CTRL is held down add part to selection */
-            if (!control_state.keyboard.Control) this.unselectAll();
+            if (!controlState.keyboard.Control) this.unselectAll();
 
-            this.selected_parts.push(part);
+            this.selectedParts.push(part);
             part.select();
         } else {/* Clicking on empty space = deselect */
             this.unselectAll();
@@ -306,19 +306,19 @@ class Editor extends RenderableScene {
     /**
      * selectPartsBoundingBox - Select all parts in a bounding box
      *
-     * @param  {number} x1           Corner 1 X pos
-     * @param  {number} y1           Corner 1 Y pos
-     * @param  {number} x1           Corner 2 X pos
-     * @param  {number} y1           Corner 2 Y pos
+     * @param  {number} x1  Corner 1 X pos
+     * @param  {number} y1  Corner 1 Y pos
+     * @param  {number} x2  Corner 2 X pos
+     * @param  {number} y2  Corner 2 Y pos
      */
     selectPartsBoundingBox(x1, y1, x2, y2) {
-        let x_bounds = [x1, x2].sort((a, b) => a - b);
-        let y_bounds = [y1, y2].sort((a, b) => a - b);
+        let xBounds = [x1, x2].sort((a, b) => a - b);
+        let yBounds = [y1, y2].sort((a, b) => a - b);
 
-        for (let part of this.current_build) {
-            if (gameUtil.math.rectIntersect(x_bounds[0], y_bounds[0], x_bounds[1], y_bounds[1],
+        for (let part of this.currentBuild) {
+            if (gameUtil.math.rectIntersect(xBounds[0], yBounds[0], xBounds[1], yBounds[1],
                     part.x, part.y, part.x + part.data.width, part.y + part.data.height)) {
-                this.selected_parts.push(part);
+                this.selectedParts.push(part);
                 part.select();
             }
         }
@@ -329,15 +329,15 @@ class Editor extends RenderableScene {
      * selection of parts
      */
     deleteSelection() {
-        for (let part of this.selected_parts) {
+        for (let part of this.selectedParts) {
             /* Delete parts from stage, graphics array and part array */
             this.stage.removeChild(part.sprite);
-            delete this.current_build[this.current_build.indexOf(part)];
-            // this.current_build = this.current_build.filter(p => p.x !== part.x || p.y !== p.y || p.name !== part.id);
+            delete this.currentBuild[this.currentBuild.indexOf(part)];
+            // this.currentBuild = this.currentBuild.filter(p => p.x !== part.x || p.y !== p.y || p.name !== part.id);
         }
 
-        this.selected_parts = [];
-        this.current_build = this.current_build.filter(x => x !== undefined);
+        this.selectedParts = [];
+        this.currentBuild = this.currentBuild.filter(x => x !== undefined);
     }
 
     /**
@@ -349,34 +349,34 @@ class Editor extends RenderableScene {
      * @return {boolean}  Did it place
      */
     addPart(x, y) {
-        if (!this.current_select_build) return false; // Nothing selected
+        if (!this.currentSelectBuild) return false; // Nothing selected
 
-        let part_data = allParts.index_data[this.current_select_build];
+        let partData = allParts.indexData[this.currentSelectBuild];
 
         // Snap to smallest grid size
-        let smallest_x = part_data.data.min_snap_multiplier_x * config.build_grid_size;
-        let smallest_y = part_data.data.min_snap_multiplier_y * config.build_grid_size;
+        let smallestX = partData.data.min_snap_multiplier_x * config.buildGridSize;
+        let smallestY = partData.data.min_snap_multiplier_y * config.buildGridSize;
 
-        x = Math.floor(x / smallest_x) * smallest_x;
-        y = Math.floor(y / smallest_y) * smallest_y;
+        x = Math.floor(x / smallestX) * smallestX;
+        y = Math.floor(y / smallestY) * smallestY;
 
         // Can the part be allowed to overlap at that point?
-        if (!part_data.data.can_overlap) {
-            for (let part of this.current_build) {
+        if (!partData.data.can_overlap) {
+            for (let part of this.currentBuild) {
                 /* Occupies identical location */
                 if (x === part.x && y === part.y) return false;
 
                 /* Intersection between another part */
                 if (x < part.x + part.data.width &&
-                    part.x < x + part_data.width &&
+                    part.x < x + partData.width &&
                     y < part.y + part.data.height &&
-                    part.y < y + part_data.height) return false;
+                    part.y < y + partData.height) return false;
             }
         }
 
-        let obj = new RocketPartGraphic(this.current_select_build, x, y);
+        let obj = new rocketPartGraphic(this.currentSelectBuild, x, y);
 
-        this.current_build.push(obj);
+        this.currentBuild.push(obj);
         this.stage.addChild(obj.sprite);
 
         return true;
@@ -389,10 +389,10 @@ class Editor extends RenderableScene {
      *
      * @param  {number} x            X pos
      * @param  {number} y            Y pos
-     * @return {RocketPartGraphic}   Part
+     * @return {rocketPartGraphic}   Part
      */
     getPartAt(x, y) {
-        for (let part of this.current_build) {
+        for (let part of this.currentBuild) {
             /* Occupies identical location */
             if (x === part.x && y === part.y) return part;
 
@@ -406,13 +406,13 @@ class Editor extends RenderableScene {
     }
 
     /**
-     * constructRocket - Construct a new Rocket object
+     * constructrocket - Construct a new rocket object
      * that can be added to the sim
      *
-     * @return {Rocket}  Rocket built in the editor
+     * @return {rocket}  rocket built in the editor
      */
-    constructRocket() {
-        let parts = this.current_build.map(part => {
+    constructrocket() {
+        let parts = this.currentBuild.map(part => {
             /* Adjust from corner coordinates to
              * centered coordinates */
             let x = part.x;
@@ -423,7 +423,7 @@ class Editor extends RenderableScene {
 
             return new allParts.index[part.id](x, y);
         });
-        let rocket = new Rocket(parts, Matter);
+        let rocket = new rocket(parts, Matter);
 
         rocket.reposition(90, -100); // TODO update to launch pad coords
         return rocket;
@@ -431,4 +431,4 @@ class Editor extends RenderableScene {
 }
 
 
-module.exports = Editor;
+module.exports = editor;

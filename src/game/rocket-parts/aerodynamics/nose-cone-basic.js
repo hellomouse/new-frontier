@@ -1,6 +1,6 @@
 'use strict';
 
-const NoseCone = require('../base-classes/nose-cone.js');
+const noseCone = require('../base-classes/nose-cone.js');
 const config = require('../../config.js');
 
 const DATA = {
@@ -17,19 +17,20 @@ const DATA = {
     category: 'Aerodynamics'
 };
 
-class NoseConeNormal extends NoseCone {
+/** */
+class noseConeNormal extends noseCone {
     /**
-     * constructor - Construct a NoseConeNormal
+     * constructor - Construct a noseConeNormal
      * @param  {number} x  X pos
      * @param  {number} y  Y pos
      */
     constructor(x, y) {
         super(
-            config.IMG_PATH + 'parts/aerodynamics/nosecone-normal.png',
-            config.build_grid_size,
-            config.build_grid_size,
-            x, y, DATA, 'Basic Nosecone');
+            config.imgPath + 'parts/aerodynamics/nosecone-normal.png',
+            config.buildGridSize,
+            config.buildGridSize,
+            x, y, DATA, 'Basic nosecone');
     }
 }
 
-module.exports = NoseConeNormal;
+module.exports = noseConeNormal;

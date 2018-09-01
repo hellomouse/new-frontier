@@ -15,9 +15,10 @@ const DATA = {
     density: 52.98, // Including fuel
     description: 'A fuel tank carrying liquid fuel and oxygen. Explosive.',
     category: 'Fuel',
-    min_snap_multiplier_y: 0.5
+    minSnapMultiplierY: 0.5
 };
 
+/** */
 class FuelTankSmall extends FuelTank {
     /**
      * constructor - Construct a FuelTankSmall
@@ -26,9 +27,9 @@ class FuelTankSmall extends FuelTank {
      */
     constructor(x, y) {
         super(
-            config.IMG_PATH + 'parts/fuel-tank/fuel-tank.png',
-            config.build_grid_size,
-            config.build_grid_size / 2,
+            config.imgPath + 'parts/fuel-tank/fuel-tank.png',
+            config.buildGridSize,
+            config.buildGridSize / 2,
             x, y, DATA, 'Small Fuel Tank',
             2000);
     }

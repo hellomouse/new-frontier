@@ -1,15 +1,15 @@
 'use strict';
 
-const RocketPart = require('../../../game-components/rocket-part.js');
+const rocketPart = require('../../../game-components/rocket-part.js');
 
 /**
- * A Thruster
+ * A thruster
  */
-class Thruster extends RocketPart {
+class thruster extends rocketPart {
     /**
-     * constructor - Thruster
+     * constructor - thruster
      *
-     * @param  {string} image_path Path to image
+     * @param  {string} imagePath Path to image
      * @param  {number} width      Width of part
      * @param  {number} height     Height of part
      * @param  {number} x          X pos
@@ -17,28 +17,29 @@ class Thruster extends RocketPart {
      * @param  {object} data       Data, see below for desc and format
      * @param  {string} id         Unique ID name for the part
      * @param  {number} thrust     Thrust power
-     * @param  {number} burn_rate  Burn rate (kg/frame)
+     * @param  {number} burnRate  Burn rate (kg/frame)
      */
-    constructor(image_path, width, height, x, y, data, id, thrust, burn_rate) {
+    constructor(imagePath, width, height, x, y, data, id, thrust, burnRate) {
         /* Blocks are the same size as the image they're from
          * and are static. Non-static blocks should be an entitySprite */
-        super(image_path, width, height, x, y, data, id);
+        super(imagePath, width, height, x, y, data, id);
         this.thrust = thrust;
-        this.burn_rate = burn_rate;
+        this.burnRate = burnRate;
 
         // This class should not be constructed directly
         // To avoid confusion this will throw a new error
-        if (new.target === Thruster) {
-            throw new TypeError('Cannot construct Abstract instances directly - Thruster is abstract');
+        if (new.target === thruster) {
+            throw new TypeError('Cannot construct Abstract instances directly - thruster is abstract');
         }
 
         // Debug
-        this.debug_graphics = null;
+        this.debugGraphics = null;
     }
 
     /**
      * Update method. this.rocket is set
      * in the Rocket class
+     * @param {number}  multiplier
      */
     update(multiplier = 1) {
         super.update();
@@ -54,37 +55,38 @@ class Thruster extends RocketPart {
         let fx = -this.thrust * multiplier * Math.sin(angle);
         let fy = -this.thrust * multiplier * Math.cos(angle);
 
-        let center_x = Matter.Vertices.centre(this.body.vertices).x; // The center of the part
-        let center_y = Matter.Vertices.centre(this.body.vertices).y; // The center of the part
+        let centerX = Matter.Vertices.centre(this.body.vertices).x; // The center of the part
+        let centerY = Matter.Vertices.centre(this.body.vertices).y; // The center of the part
 
-        let thrust_x = center_x + (Math.sin(angle) * this.sprite.height * 0.5); // x + (sin(angle) * height) / 2
-        let thrust_y = center_y + (Math.cos(angle) * this.sprite.height * 0.5); // y + (cos(angle)  * height) / 2
+        let thrustX = centerX + (Math.sin(angle) * this.sprite.height * 0.5); // x + (sin(angle) * height) / 2
+        let thrustY = centerY + (Math.cos(angle) * this.sprite.height * 0.5); // y + (cos(angle)  * height) / 2
 
-        let new_pos = { // The position of the force.
-            x: thrust_x,
-            y: thrust_y
+        let newPos = { // The position of the force.
+            x: thrustX,
+            y: thrustY
         };
 
         if (fx !== 0 || fy !== 0) {
             Matter.Body.applyForce(
                 this.rocket.body,
-                new_pos, { x: fx, y: fy });
+                newPos, { x: fx, y: fy });
         }
 
         // DEBUG
-        if (this.debug_graphics) {
-            stage_handler.getStageByName('sim').stage.removeChild(this.debug_graphics);
+        if (this.debugGraphics) {
+            stageHandler.getStageByName('sim').stage.removeChild(this.debugGraphics);
         }
 
-        this.debug_graphics = new PIXI.Graphics();
-        this.debug_graphics.lineStyle(30, 0xff0000)
-           .moveTo(new_pos.x, new_pos.y)
-           .lineTo( Math.floor(new_pos.x - fx * 100000), Math.floor(new_pos.y - fy * 100000));
+        this.debugGraphics = new PIXI.Graphics();
+        this.debugGraphics.lineStyle(30, 0xff0000)
+           .moveTo(newPos.x, newPos.y)
+           .lineTo( Math.floor(newPos.x - fx * 100000), Math.floor(newPos.y - fy * 100000));
 
-        this.debug_graphics.beginFill(0xFFFFFF, 1).lineStyle(1, 0xFFFFFF).drawCircle(new_pos.x, new_pos.y, 5);
-        this.debug_graphics.beginFill(0xFFFF00, 1).lineStyle(1, 0xFFFF00).drawCircle(Math.floor(new_pos.x - fx * 10000000000), Math.floor(new_pos.y - fy * 10000000000), 5);
-        stage_handler.getStageByName('sim').stage.addChild(this.debug_graphics);
+        this.debugGraphics.beginFill(0xFFFFFF, 1).lineStyle(1, 0xFFFFFF).drawCircle(newPos.x, newPos.y, 5);
+        this.debugGraphics.beginFill(0xFFFF00, 1).lineStyle(1, 0xFFFF00).drawCircle(Math.floor(newPos.x -
+            fx * 10000000000), Math.floor(newPos.y - fy * 10000000000), 5);
+        stageHandler.getStageByName('sim').stage.addChild(this.debugGraphics);
     }
 }
 
-module.exports = Thruster;
+module.exports = thruster;

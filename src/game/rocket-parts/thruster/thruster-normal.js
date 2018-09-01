@@ -25,9 +25,9 @@ class ThrusterNormal extends Thruster {
      */
     constructor(x, y) {
         super(
-            config.IMG_PATH + 'parts/thruster/thruster-normal.png',
-            config.build_grid_size,
-            config.build_grid_size,
+            config.imgPath + 'parts/thruster/thruster-normal.png',
+            config.buildGridSize,
+            config.buildGridSize,
             x, y, DATA, 'Liquid Fuel Engine',
             0.01, 0.1);
     }

@@ -1,6 +1,6 @@
 'use strict';
 
-const FuelTank = require('../base-classes/fuel-tank.js');
+const fuelTank = require('../base-classes/fuel-tank.js');
 const config = require('../../config.js');
 
 const DATA = {
@@ -17,20 +17,21 @@ const DATA = {
     category: 'Fuel'
 };
 
-class FuelTankTall extends FuelTank {
+/** */
+class fuelTankTall extends fuelTank {
     /**
-     * constructor - Construct a FuelTankSmall
+     * constructor - Construct a fuelTankSmall
      * @param  {number} x  X pos
      * @param  {number} y  Y pos
      */
     constructor(x, y) {
         super(
-            config.IMG_PATH + 'parts/fuel-tank/fuel-tank.png',
-            config.build_grid_size,
-            config.build_grid_size * 2,
+            config.imgPath + 'parts/fuel-tank/fuel-tank.png',
+            config.buildGridSize,
+            config.buildGridSize * 2,
             x, y, DATA, 'Tall Fuel Tank',
             8000);
     }
 }
 
-module.exports = FuelTankTall;
+module.exports = fuelTankTall;

@@ -123,11 +123,12 @@ class Rocket {
     }
 
     /**
-     * 
+     *
      * @param {Object} planet
      */
     updateAngleToPlanet(planet) {
-        this.angleToPlanet = Math.atan2(this.position.y - planet.position.y, this.position.x - planet.position.x); // gameUtil.math.fastAtan(ratio);
+        this.angleToPlanet = Math.atan2(this.position.y - planet.position.y, this.position.x - planet.position.x);
+        // gameUtil.math.fastAtan(ratio);
     }
 
     /**

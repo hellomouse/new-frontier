@@ -90,11 +90,11 @@ class Editor extends RenderableScene {
 
         /* Add variables if doesn't exist */
         if (!this.leftPartWidth) {
-            this.leftPartWidth = +document.getElementById('Editor-left-1').style.width.replace('px', '') +
+            this.leftPartWidth = +document.getElementById('editor-left-1').style.width.replace('px', '') +
             +document.getElementById('parts').style.width.replace('px', '');
         }
         if (!this.topPartHeight) {
-            this.topPartHeight = +document.getElementById('Editor-top').style.height.replace('px', '');
+            this.topPartHeight = +document.getElementById('editor-top').style.height.replace('px', '');
         }
 
         /* X coordinate is on the left side of the screen
@@ -204,7 +204,7 @@ class Editor extends RenderableScene {
         let h = initialPos.y - coords.y;
 
         /* Actual drawing */
-        if (this.selectRectangleGraphic) stageHandler.getStageByName('Editor').stage.removeChild(this.selectRectangleGraphic);
+        if (this.selectRectangleGraphic) stageHandler.getStageByName('editor').stage.removeChild(this.selectRectangleGraphic);
         this.selectRectangleGraphic = new PIXI.Graphics();
 
         this.selectRectangleGraphic.beginFill(0x00FF00);
@@ -212,7 +212,7 @@ class Editor extends RenderableScene {
         this.selectRectangleGraphic.drawRect(initialPos.x, initialPos.y, -w, -h);
         this.selectRectangleGraphic.alpha = 0.3;
 
-        stageHandler.getStageByName('Editor').stage.addChild(this.selectRectangleGraphic);
+        stageHandler.getStageByName('editor').stage.addChild(this.selectRectangleGraphic);
     }
 
     /**
@@ -234,7 +234,7 @@ class Editor extends RenderableScene {
     updatedSelectedIcon(e) {
         if (!e) return;
 
-        let icon = document.getElementById('follow-mouse-Editor-icon');
+        let icon = document.getElementById('follow-mouse-editor-icon');
 
         if (!this.currentSelectBuild) {
             icon.style.display = 'none';
@@ -278,7 +278,7 @@ class Editor extends RenderableScene {
      * removeRectangleGraphic - Removes select rect graphic
      */
     removeRectangleGraphic() {
-        stageHandler.getStageByName('Editor').stage.removeChild(this.selectRectangleGraphic);
+        stageHandler.getStageByName('editor').stage.removeChild(this.selectRectangleGraphic);
         this.selectRectangleGraphic = null;
     }
 

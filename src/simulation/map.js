@@ -29,12 +29,12 @@ class Map extends RenderableScene {
      */
     loadPlanetSprites() {
         for (let planet of scenes.sim.planets) {
-            let sprite = new PIXI.Sprite.fromImage(planet.map_image);
+            let sprite = new PIXI.Sprite.fromImage(planet.mapImage);
             sprite.width = planet.radius / defaultMapZoom;
             sprite.height = planet.radius / defaultMapZoom;
             sprite.anchor.set(0.5, 0.5);
 
-            planet.map_sprite = sprite;
+            planet.mapSprite = sprite;
             this.stage.addChild(sprite);
         }
     }

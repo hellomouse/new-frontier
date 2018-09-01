@@ -62,11 +62,11 @@ global.scenes = {
     editor: new (require('./editor/editor.js'))()
 };
 
-require('./controls.js'); // Load in controls
-
 
 global.init = function() {
     global.stageHandler = new StageHandler();
+
+    require('./controls.js'); // Load in controls
 
     let currentScene = new Scene(
         [],

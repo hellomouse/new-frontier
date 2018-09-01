@@ -57,9 +57,9 @@ class Planet {
         this.desc = 'Default planet desc';
 
         // Graphics stuff
-        this.image = config.IMG_PATH + 'planets/default.png';
-        this.map_image = config.IMG_PATH + 'planets/default.png';
-        this.map_sprite = null; // Created in map.js
+        this.image = config.imgPath + 'planets/default.png';
+        this.mapImage = config.imgPath + 'planets/default.png';
+        this.mapSprite = null; // Created in map.js
         this.min_radius = this.radius; // Smallest possible height of the planet
     }
 

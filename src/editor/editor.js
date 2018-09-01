@@ -10,7 +10,7 @@ const allParts = require('../game/rocket-parts/all-parts.js');
 const RocketPartGraphic = require('../game-components/rocket-part-graphic.js');
 const Rocket = require('../game/rocket.js');
 
-const EditorHtml = require('./Editor-html.js');
+const EditorHtml = require('./editor-html.js');
 
 /**
  * Editor, or the shipBuilder. Handles logic

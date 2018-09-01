@@ -105,8 +105,8 @@ class Simulation extends RenderableScene {
             // 1.5 is a "close enough" to start adding the planet's land collision box
             if (gameUtil.math.fastDistance(planet.position, this.rockets[0].position) < planet.radius + 10000) {
                 this.activeRocket.updateAngleToPlanet(planet);
-                planet.updateSector(this.activeRocket.angle_to_planet, this);
-                planet.updateGraphicSector(this.activeRocket.angle_to_planet, this, 1);
+                planet.updateSector(this.activeRocket.angleToPlanet, this);
+                planet.updateGraphicSector(this.activeRocket.angleToPlanet, this, 1);
             }
         }
 

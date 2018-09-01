@@ -23,8 +23,33 @@ class Thruster extends RocketPart {
         /* Blocks are the same size as the image they're from
          * and are static. Non-static blocks should be an entitySprite */
         super(image_path, width, height, x, y, data, id);
+
         this.thrust = thrust;
         this.burn_rate = burn_rate;
+
+        this.properties = {
+            'static': {
+                max_thrust_atm: 10,
+                max_thrust_vac: 20,
+                fuel_consumption: 0.5,
+                isp: 1 / 0.5,  /* Thrust / Fuel consumption */
+                gimble: false,
+                heat_generation: 1,
+            },
+            dynamic: {
+                state: {
+                    label: 'On/Off',
+                    type: 'toggle',
+                    value: false  /* Default value, this CAN change */
+                },
+                thrust_limiter: {
+                    label: 'Thrust Limiter',
+                    type: 'range',
+                    range: [0, 100],
+                    value: 100    /* Default value, this CAN change */
+                }
+            }
+        };
 
         // This class should not be constructed directly
         // To avoid confusion this will throw a new error

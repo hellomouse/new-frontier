@@ -17,8 +17,10 @@ class RocketPart extends PhysicalSprite {
      * @param  {number} y          Y pos
      * @param  {object} data       Data, see below for desc and format
      * @param  {string} id         Unique ID name for the part
+     * @param  {object} properties Unique properties, such as fuel_amount, seperation_force, etc...
+     *                             See the tutorial for adding properties in /docs/rocket-parts/properties.md
      */
-    constructor(image_path, width, height, x, y, data, id) {
+    constructor(image_path, width, height, x, y, data, id, properties={}) {
         /* Blocks are the same size as the image they're from
          * and are static. Non-static blocks should be an entitySprite */
         let body = Matter.Bodies.rectangle(x, y, width, height);
@@ -34,6 +36,7 @@ class RocketPart extends PhysicalSprite {
         /* Data provided */
         this.x = x;
         this.y = y;
+        this.properties = properties;
 
         /* Data should be provided in this format
          * {
@@ -61,7 +64,20 @@ class RocketPart extends PhysicalSprite {
          *     a half grid object can fit with another half grid object in the same grid
          *     cell even if this is false). DEFAULT: false
          *
-         *     can_overlap: false
+         *     can_overlap: false,
+         *
+         *     Automatically rotate to line up with face (Ie RCS thruster)
+         *     autorotate: false,
+         *
+         *     tolerance: {
+         *        impact: <number>,
+         *        pressure: <number>,
+         *        acceleration: <number>,
+         *        temperature: <number>
+         *     },
+         *
+         *     explosiveness: 1,  // Explosive force multiplier
+         *     cost: 0
          * }
          */
         this.data = data;
@@ -76,6 +92,14 @@ class RocketPart extends PhysicalSprite {
      * with defaults as needed
      */
     checkForMissingData() {
+        //TODO enforce check of tolerance, this is temporary
+        this.data.tolerance = {
+            impact: 0,
+            pressure: 0,
+            acceleration: 0,
+            temperature: 0
+        };
+
         /* Data is missing (undefined or null) */
         for (let prop of ['mass', 'drag', 'volume', 'density', 'description', 'category']) {
             if (this.data[prop] === undefined || this.data[prop] === null) {
@@ -90,14 +114,19 @@ class RocketPart extends PhysicalSprite {
         }
 
         /* Fix defaults */
-        if (!this.data.min_snap_multiplier_x) {
+        if (!this.data.min_snap_multiplier_x)
             this.data.min_snap_multiplier_x = 1;
-        }
-        if (!this.data.min_snap_multiplier_y) {
+        if (!this.data.min_snap_multiplier_y)
             this.data.min_snap_multiplier_y = 1;
-        }
-        if (this.data.can_overlap === undefined) {
+        if (this.data.can_overlap === undefined)
             this.data.can_overlap = false;
+        if (this.data.autorotate === undefined)
+            this.data.autorotate = false;
+        if (this.data.explosiveness === undefined)
+            this.data.explosiveness = 1;
+        if (this.data.cost === undefined) {
+            console.warn('Cost value for ' + this.id + ' is missing in this.data (this.data.cost is undefined) Setting to default (0)');
+            this.data.cost = 0;
         }
     }
 

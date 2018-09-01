@@ -16,20 +16,31 @@ Create a simulation (calculations only)
     https://stackoverflow.com/questions/29429219/how-put-a-texture-on-pixi-js-polygon
 
 
+Use a real logger
+
 Editor draw the select box if drag
     Editor neater grid
     Editor select part category
 
     rework the 'currently selected div - it should work with multiple parts too'
 
-    editor view part desc
     editor right click to edit part
     editor move part
 
-    editor rotate part - add rotate button?
-    rotate part while placing
+    undo, redo
 
+    undo, redo buttons, rotate, move, delete
+
+    free-snap mode, enable/disable snapping
+
+    rotate part while placing
     editor auto-rotate part
+    //TODO collision check after rotate
+    // Fix rotating out of bounds
+
+
+    center of gravity, thrust, aero
+
     editor engineering report
     editor no-control report
     editor control list

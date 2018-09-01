@@ -30,10 +30,11 @@ let all_parts_index_data = {};
  * @return {boolean}
  */
 const isBlacklist = function(path) {
-    path = path.replace(/\\/g, '/');
+    path = path.replace(/\\/g, '/');  // Normalize path
     return !(
         path.includes('/base-classes') ||
-        path.includes('/all-parts.js'));
+        path.includes('/all-parts.js') ||
+        path.includes('/property-formatter.js'));
 };
 
 // Load all parts
@@ -59,6 +60,7 @@ ALL_PARTS.forEach(x => {
         width: t.sprite.width,
         height: t.sprite.height,
         data: t.data,
+        properties: t.properties,
         id: t.id,
         image_path: t.image_path
     };

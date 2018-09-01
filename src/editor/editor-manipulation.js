@@ -182,12 +182,13 @@ module.exports = {
         // Since we only rotate in 90 deg increments
         // recode this
 
-        while (angle < 0) angle += Math.PI * 2;
+        // This code only needed for grid snaping?
+        /*while (angle < 0) angle += Math.PI * 2;
         while (angle > Math.PI * 2) angle -= Math.PI * 2;
         while (angle >= Math.PI) {
             angle -= Math.PI / 2;
             this.rotateSelection(editor, Math.PI / 2);
-        }
+        }*/
 
         /* Center is the calculated rotation center
          * largest_snap is the largest x and y grid size a part
@@ -199,6 +200,9 @@ module.exports = {
         let largest_snap = {x: 0, y: 0};
         let w_range = [gameUtil.large, -gameUtil.large];
         let h_range = [gameUtil.large, -gameUtil.large];
+        let use_exact_center = editor.selected_parts.length === 1;
+
+        use_exact_center = true;
 
         editor.selected_parts.forEach((part) => {
             center.x += part.x;
@@ -208,7 +212,7 @@ module.exports = {
              * For multiple parts, rotate around the approx. center
              * (Calculated from the CORNER of the sprites) as
              * using exact center causes bugs */
-            if (editor.selected_parts.length === 1) {
+            if (use_exact_center) {
                 center.x += part.sprite.width * Math.cos(part.sprite.rotation);
                 center.y += part.sprite.height * Math.sin(part.sprite.rotation);
             }
@@ -238,7 +242,7 @@ module.exports = {
             let [px, py] = [part.x, part.y];
 
             /* Correction factor, same as above */
-            if (editor.selected_parts.length === 1) {
+            if (use_exact_center) {
                 px += part.sprite.width * Math.cos(part.sprite.rotation);
                 py += part.sprite.height * Math.sin(part.sprite.rotation);
             }
@@ -251,9 +255,6 @@ module.exports = {
             part.moveTo(x, y);
             part.sprite.rotation += angle;
         }
-
-        //TODO collision check after rotate
-        // Fix rotating out of bounds
     },
 
     /**
@@ -268,6 +269,8 @@ module.exports = {
      * @return {object}        {x: <number>, y: <number>} New coord
      */
     snapCoordToGrid(x, y, snap_x, snap_y, round=false) {
+        return {x: x, y: y};
+
         let smallest_x = snap_x * config.build_grid_size;
         let smallest_y = snap_y * config.build_grid_size;
         let f = round ? Math.round : Math.floor;

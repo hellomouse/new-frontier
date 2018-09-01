@@ -1,18 +1,18 @@
 'use strict';
 
 /**
- * ImageSprites are a sprite that display an image
+ * imageSprites are a sprite that display an image
  */
-class ImageSprite {
+class imageSprite {
     /**
      * constructor - Construct an image sprite
      *
-     * @param  {string} image_path Path to image
+     * @param  {string} imagePath Path to image
      * @param  {number} width      Width of sprite
      * @param  {string} height     Height of sprite
      */
-    constructor(image_path, width, height) {
-        this.sprite = new PIXI.Sprite.fromImage(image_path);
+    constructor(imagePath, width, height) {
+        this.sprite = new PIXI.Sprite.fromImage(imagePath);
         this.sprite.width = width;
         this.sprite.height = height;
         this.sprite.anchor.set(0.5, 0.5);
@@ -26,4 +26,4 @@ class ImageSprite {
     }
 }
 
-module.exports = ImageSprite;
+module.exports = imageSprite;

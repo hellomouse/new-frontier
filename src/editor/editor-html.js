@@ -65,7 +65,7 @@ module.exports = `
         background-color: rgba(0, 0, 0, 0.9);
     " class="noselect"
     >${
-        allParts.parts_data.map(x => {
+        allParts.partsData.map(x => {
             let xRatio = x.width / Math.max(x.width, x.height);
             let yRatio = x.height / Math.max(x.width, x.height);
 

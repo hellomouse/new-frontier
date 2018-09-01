@@ -21,9 +21,9 @@ let controlState = {
 
 /* Mouse wheel, zoom camera */
 window.addEventListener('wheel', function(e) {
-    let stage = stageHandler.stages[stageHandler.current_stage];
+    let stage = stageHandler.stages[stageHandler.currentStage];
 
-    if (CAMERA_STAGES.includes(stageHandler.current_stage)) {
+    if (CAMERA_STAGES.includes(stageHandler.currentStage)) {
         let scaleDelta = e.wheelDelta > 0 ? stage.camera.scroll_speed : 1 / stage.camera.scroll_speed;
 
         if (stage.camera.scale * scaleDelta > stage.camera.max_scroll || stage.camera.scale * scaleDelta < stage.camera.min_scroll) {
@@ -37,7 +37,7 @@ window.addEventListener('wheel', function(e) {
 
 /* Keyboarding */
 window.addEventListener('keydown', e => {
-    let stage = stageHandler.stages[stageHandler.current_stage];
+    let stage = stageHandler.stages[stageHandler.currentStage];
     let name = keyboardKey.getKey(e);
 
     stage.onKeyDown(e, name);
@@ -66,12 +66,12 @@ window.addEventListener('mousemove', function(e) {
     controlState.mouse.y = e.clientY;
     controlState.mouse.posEvent = e;
 
-    let stage = stageHandler.stages[stageHandler.current_stage];
+    let stage = stageHandler.stages[stageHandler.currentStage];
     stage.onMousemove(e);
 });
 
 window.addEventListener('mouseup', function(e) {
-    let stage = stageHandler.stages[stageHandler.current_stage];
+    let stage = stageHandler.stages[stageHandler.currentStage];
 
     controlState.mouse.lastMouseup = [e.clientX, e.clientY];
     controlState.mouse.isdowD = false;

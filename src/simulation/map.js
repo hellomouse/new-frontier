@@ -48,8 +48,8 @@ class Map extends RenderableScene {
         this.camera.updateScene(this.stage, this.renderer);
 
         for (let planet of scenes.sim.planets) {
-            planet.map_sprite.x = planet.position.x / defaultMapZoom;
-            planet.map_sprite.y = planet.position.y / defaultMapZoom;
+            planet.mapSprite.x = planet.position.x / defaultMapZoom;
+            planet.mapSprite.y = planet.position.y / defaultMapZoom;
         }
 
         // this.renderer.render(this.stage);

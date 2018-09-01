@@ -16,8 +16,8 @@ global.editorFunctions = global.editorFunctions ? global.editorFunctions : {};
 
 /* Create the functions */
 global.editorFunctions.changeEditorBuild = function(id, button) {
-    scenes.editor.current_select_build = scenes.editor.current_select_build === id ? null : id;
-    scenes.editor.updatedSelectedIcon(controlState.mouse.pos_event);
+    scenes.editor.currentSelectBuild = scenes.editor.currentSelectBuild === id ? null : id;
+    scenes.editor.updatedSelectedIcon(controlState.mouse.posEvent);
 };
 
 global.editorFunctions.spawnCurrentRocketAtLaunchPad = function() {

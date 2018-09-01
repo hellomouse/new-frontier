@@ -2,7 +2,7 @@
 
 const dir = require('node-dir');
 
-const CATEGORIES = [
+const categories = [
     'Command',
     'Fuel',
     'Thruster',
@@ -47,7 +47,7 @@ allParts.forEach(X => {
     let t = new X(); // x is class for a rocket part
 
     // Warnings
-    if (!CATEGORIES.includes(t.data.category)) {
+    if (!categories.includes(t.data.category)) {
         console.warn(t.id + ' does not belong in any valid category! (Category: ' + t.data.category + ')');
     }
     if (allPartsIndex[t.id]) {
@@ -70,7 +70,7 @@ allParts.forEach(X => {
 
 module.exports = {
     parts: allParts,
-    categories: CATEGORIES,
+    categories: categories,
     partsData: partsData,
     index: allPartsIndex,
     indexData: allPartsIndexData

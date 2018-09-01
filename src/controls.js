@@ -3,7 +3,7 @@
 const keyboardKey = require('keyboard-key');
 
 /* Stages with a camera */
-const CAMERA_STAGES = ['sim', 'map', 'editor'];
+const cameraStages = ['sim', 'map', 'editor'];
 
 let controlState = {
     mouse: {
@@ -23,10 +23,11 @@ let controlState = {
 window.addEventListener('wheel', function(e) {
     let stage = stageHandler.stages[stageHandler.currentStage];
 
-    if (CAMERA_STAGES.includes(stageHandler.currentStage)) {
-        let scaleDelta = e.wheelDelta > 0 ? stage.camera.scroll_speed : 1 / stage.camera.scroll_speed;
+    if (cameraStages.includes(stageHandler.currentStage)) {
+        let scaleDelta = e.wheelDelta > 0 ? stage.camera.scrollSpeed : 1 / stage.camera.scrollSpeed;
 
-        if (stage.camera.scale * scaleDelta > stage.camera.max_scroll || stage.camera.scale * scaleDelta < stage.camera.min_scroll) {
+        if (stage.camera.scale * scaleDelta > stage.camera.maxScroll || stage.camera.scale *
+                scaleDelta < stage.camera.minScroll) {
             return;
         }
         stage.camera.scale = +(stage.camera.scale * scaleDelta).toFixed(20);
@@ -52,7 +53,7 @@ window.addEventListener('mousedown', function(e) {
 
     controlState.mouse.dragging = false;
     controlState.mouse.lastMousedown = [x, y];
-    controlState.mouse.isdowD = true;
+    controlState.mouse.isDown = true;
 
     window.addEventListener('mousemove', function(e) {
         if (Math.abs(x - e.clientX) > 5 || Math.abs(y - e.clientY) > 5) {
@@ -74,7 +75,7 @@ window.addEventListener('mouseup', function(e) {
     let stage = stageHandler.stages[stageHandler.currentStage];
 
     controlState.mouse.lastMouseup = [e.clientX, e.clientY];
-    controlState.mouse.isdowD = false;
+    controlState.mouse.isDown = false;
 
     switch (e.button) {
         case 0: {

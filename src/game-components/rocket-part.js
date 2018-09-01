@@ -54,14 +54,14 @@ class RocketPart extends PhysicalSprite {
          *     0.25 = nearest quarter grid, etc...
          *     Defaults to 1 for both x and y
          *
-         *     min_snap_multiplier_x: <number>,
-         *     min_snap_multiplier_y: <number>,
+         *     minSnapMultiplierX: <number>,
+         *     minSnapMultiplierY: <number>,
          *
          *     Can it overlap another object (size is taken into account, for example
          *     a half grid object can fit with another half grid object in the same grid
          *     cell even if this is false). DEFAULT: false
          *
-         *     can_overlap: false
+         *     canOverlap: false
          * }
          */
         this.data = data;
@@ -90,14 +90,14 @@ class RocketPart extends PhysicalSprite {
         }
 
         /* Fix defaults */
-        if (!this.data.min_snap_multiplier_x) {
-            this.data.min_snap_multiplier_x = 1;
+        if (!this.data.minSnapMultiplierX) {
+            this.data.minSnapMultiplierX = 1;
         }
-        if (!this.data.min_snap_multiplier_y) {
-            this.data.min_snap_multiplier_y = 1;
+        if (!this.data.minSnapMultiplierY) {
+            this.data.minSnapMultiplierY = 1;
         }
-        if (this.data.can_overlap === undefined) {
-            this.data.can_overlap = false;
+        if (this.data.canOverlap === undefined) {
+            this.data.canOverlap = false;
         }
     }
 

@@ -10,7 +10,7 @@ const allParts = require('../game/rocket-parts/all-parts.js');
 const RocketPartGraphic = require('../game-components/rocket-part-graphic.js');
 const Rocket = require('../game/rocket.js');
 
-const EditorHtml = require('./editor-html.js');
+const editorHtml = require('./editor-html.js');
 
 /**
  * Editor, or the shipBuilder. Handles logic
@@ -50,7 +50,7 @@ class Editor extends RenderableScene {
      */
     init() {
         super.init();
-        this.html = EditorHtml; // Create buttons
+        this.html = editorHtml; // Create buttons
 
         let lines = new PIXI.Graphics();
         this.stage.addChild(lines);
@@ -271,7 +271,7 @@ class Editor extends RenderableScene {
      */
     unselectCurrentBuild() {
         this.currentSelectBuild = null;
-        this.updatedSelectedIcon(controlState.mouse.pos_event);
+        this.updatedSelectedIcon(controlState.mouse.posEvent);
     }
 
     /**
@@ -354,14 +354,14 @@ class Editor extends RenderableScene {
         let partData = allParts.indexData[this.currentSelectBuild];
 
         // Snap to smallest grid size
-        let smallestX = partData.data.min_snap_multiplier_x * config.buildGridSize;
-        let smallestY = partData.data.min_snap_multiplier_y * config.buildGridSize;
+        let smallestX = partData.data.minSnapMultiplierX * config.buildGridSize;
+        let smallestY = partData.data.minSnapMultiplierY * config.buildGridSize;
 
         x = Math.floor(x / smallestX) * smallestX;
         y = Math.floor(y / smallestY) * smallestY;
 
         // Can the part be allowed to overlap at that point?
-        if (!partData.data.can_overlap) {
+        if (!partData.data.canOverlap) {
             for (let part of this.currentBuild) {
                 /* Occupies identical location */
                 if (x === part.x && y === part.y) return false;

@@ -33,7 +33,7 @@ function getPos(angle, radius, center) {
  * @return {number}        Height difference
  */
 function getDif(height, planet) {
-    return height - planet.min_radius;
+    return height - planet.minRadius;
 }
 
 /**
@@ -82,7 +82,7 @@ class PlanetSectorGraphic {
         /* Create a texture and append to stage */
 
         // TODO texture replace with a default if biome is invalid
-        let texture = PIXI.Texture.fromImage(config.IMG_PATH + 'biomes/' + planet.surface.getBiome(-angle) + '.png');
+        let texture = PIXI.Texture.fromImage(config.imgPath + 'biomes/' + planet.surface.getBiome(-angle) + '.png');
         let tilingSprite = new PIXI.extras.TilingSprite(texture, 100000, 10000000);
         let pos = Matter.Vertices.centre(vert);
 

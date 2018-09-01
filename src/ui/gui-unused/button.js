@@ -11,10 +11,10 @@ const defaultButtonTextures = {
 class Button {
     /**
      * @constructor
-     * @param {*} x 
-     * @param {*} y 
-     * @param {*} w 
-     * @param {*} h 
+     * @param {*} x
+     * @param {*} y
+     * @param {*} w
+     * @param {*} h
      */
     constructor(x, y, w, h) {
         super(new PIXI.Sprite(defaultButtonTextures.default), x, y);
@@ -35,29 +35,32 @@ class Button {
     /** */
     onButtonDown() {
         // Called when button is clicked on
-        this.sprite.isdown = true;
+        this.sprite.isDown = true;
         this.sprite.texture = this.buttonTextures.default;
         this.sprite.alpha = 1;
     }
 
+    /** */
     onButtonUp() {
-        this.sprite.isdown = false;
+        this.sprite.isDown = false;
         this.sprite.texture = this.sprite.isOver ?
             this.buttonTextures.hover :
             this.buttonTextures.default;
     }
 
+    /** */
     onButtonOver() {
         this.sprite.isOver = true;
-        if (this.sprite.isdown) {
+        if (this.sprite.isDown) {
             return;
         }
         this.sprites.texture = this.buttonTextures.hover;
     }
 
+    /** */
     onButtonOut() {
         this.sprite.isOver = false;
-        if (this.sprite.isdown) {
+        if (this.sprite.isDown) {
             return;
         }
         this.texture = this.buttonTextures.default;

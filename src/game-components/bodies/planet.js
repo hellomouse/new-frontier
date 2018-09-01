@@ -19,10 +19,10 @@ class Planet {
     constructor(x, y) {
         this.position = { x: x, y: y };
 
-        this.orbital_e = 0; // Eccentricity
-        this.orbital_distance = 0;
-        this.rotation_speed = 0;
-        this.sphere_of_influence = 0;
+        this.orbitalE = 0; // Eccentricity
+        this.orbitalDistance = 0;
+        this.rotationSpeed = 0;
+        this.sphereOfInfluence = 0;
         this.orbits = null; // What does it orbit?
 
         this.radius = 0;
@@ -33,7 +33,7 @@ class Planet {
             present: true,
             height: 100,
             oxygen: true,
-            molar_weight: 0,
+            molarWeight: 0,
 
             getTemperature: height => 1,
             getDrag: height => height > this.radius + this.atmosphere.height ? 0 : 0.01
@@ -42,16 +42,16 @@ class Planet {
         this.color = '#FFFFFF';
         this.surface = {
             ocean: true,
-            ocean_level: 0,
-            ocean_type: 'water',
+            oceanLevel: 0,
+            oceanType: 'water',
 
             getHeight: angle => this.radius + Math.sin(angle * 10) * 1000,
             getBiome: angle => 'null biome'
         };
 
         this.sectors = {};
-        this.texture_sectors = {};
-        this.sectors_to_delete = []; // Optimization for deleting matter.js sectors
+        this.textureSectors = {};
+        this.sectorsToDelete = []; // Optimization for deleting matter.js sectors
 
         // Science and info
         this.desc = 'Default planet desc';
@@ -60,7 +60,7 @@ class Planet {
         this.image = config.imgPath + 'planets/default.png';
         this.mapImage = config.imgPath + 'planets/default.png';
         this.mapSprite = null; // Created in map.js
-        this.min_radius = this.radius; // Smallest possible height of the planet
+        this.minRadius = this.radius; // Smallest possible height of the planet
     }
 
     /**
@@ -73,9 +73,9 @@ class Planet {
     updateSector(angle, sim) {
         let added = false;
 
-        // Round angle to lowest multiple of a PLANET_SECTOR_SIZE
-        for (let i = -config.planet_sector_amount / 2; i <= config.planet_sector_amount / 2; i++) {
-            let angle2 = Math.floor(angle / config.planet_sector_size + i) * config.planet_sector_size;
+        // Round angle to lowest multiple of a planetSectorSize
+        for (let i = -config.planetSectorAmount / 2; i <= config.planetSectorAmount / 2; i++) {
+            let angle2 = Math.floor(angle / config.planetSectorSize + i) * config.planetSectorSize;
 
             // Sector already exists
             if (this.sectors[angle2]) continue;
@@ -88,19 +88,19 @@ class Planet {
         /* Trim extra angles that are too far away */
         if (added) {
             for (let a of Object.keys(this.sectors)) {
-                if (Math.abs(angle - a) > config.planet_sector_size * config.planet_sector_amount) {
+                if (Math.abs(angle - a) > config.planetSectorSize * config.planetSectorAmount) {
                     // Matter.Composite.remove(sim.engine.world, this.sectors[a].body);
                     Matter.Sleeping.set(this.sectors[a].body, true);
                     this.sectors[a].body.collision;
-                    this.sectors_to_delete.push(this.sectors[a].body);
+                    this.sectorsToDelete.push(this.sectors[a].body);
                     delete this.sectors[a];
                 }
             }
         }
 
         /* Delete matter.js bodies in one swoop */
-        if (this.sectors_to_delete.length > 30 || Math.random() < 0.05) {
-            for (let sector of this.sectors_to_delete) {
+        if (this.sectorsToDelete.length > 30 || Math.random() < 0.05) {
+            for (let sector of this.sectorsToDelete) {
                 Matter.Composite.remove(sim.engine.world, sector);
             }
         }
@@ -116,24 +116,24 @@ class Planet {
         let added = false;
 
         for (let i = -3; i <= 3; i++) {
-            let angle2 = Math.floor(angle / config.planet_graphic_sector_size + i * graphicSectorScale)
-                * config.planet_graphic_sector_size;
+            let angle2 = Math.floor(angle / config.planetGraphicSectorSize + i * graphicSectorScale)
+                * config.planetGraphicSectorSize;
 
             // Sector already exists
-            if (this.texture_sectors[angle2]) continue;
+            if (this.textureSectors[angle2]) continue;
 
-            this.texture_sectors[angle2] = new PlanetSectorGraphic(angle2, this, sim.stage, {},
-                config.planet_graphic_sector_size * graphicSectorScale,
-                config.planet_graphic_sector_inc * graphicSectorScale
+            this.textureSectors[angle2] = new PlanetSectorGraphic(angle2, this, sim.stage, {},
+                config.planetGraphicSectorSize * graphicSectorScale,
+                config.planetGraphicSectorInc * graphicSectorScale
             );
         }
 
         /* Trim extra angles that are too far away */
         if (added) {
-            for (let a of Object.keys(this.texture_sectors)) {
-                if (Math.abs(angle - a) > config.planet_graphic_sector_size * 7 * graphicSectorScale) {
-                    sim.stage.removeChild(this.texture_sectors[a].body);
-                    delete this.texture_sectors[a];
+            for (let a of Object.keys(this.textureSectors)) {
+                if (Math.abs(angle - a) > config.planetGraphicSectorSize * 7 * graphicSectorScale) {
+                    sim.stage.removeChild(this.textureSectors[a].body);
+                    delete this.textureSectors[a];
                 }
             }
         }
@@ -147,8 +147,8 @@ class Planet {
     addToStage(PIXI, stage) {
         /* let sprite = new PIXI.Sprite.fromImage(this.image);
 
-        sprite.width = this.min_radius * 1.988;
-        sprite.height = this.min_radius * 1.988;
+        sprite.width = this.minRadius * 1.988;
+        sprite.height = this.minRadius * 1.988;
         sprite.anchor.set(0.5, 0.5);
 
         sprite.x = this.position.x;
@@ -172,7 +172,7 @@ class Planet {
         let distanceMagSquare = xDistance ** 2 + yDistance ** 2;
 
          // F due to gravity = (g)(mass1)(mass2)/(distance between**2)
-        let fMag = (config.G_CONSTANT * this.mass * rocket.body.mass) / distanceMagSquare;
+        let fMag = (config.gConstant * this.mass * rocket.body.mass) / distanceMagSquare;
         let angle = Math.atan2(yDistance, xDistance);
 
         let vector = { x: fMag * Math.cos(angle), y: fMag * Math.sin(angle) };

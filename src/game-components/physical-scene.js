@@ -56,7 +56,7 @@ class PhysicalScene {
     addPhysicalSprites(stage, sprites) {
         for (let physicalSprite of sprites) {
             stage.addChild(physicalSprite.sprite);
-            if (!physicalSprite.skip_add_body) {
+            if (!physicalSprite.skipAddBody) {
                 this.bodies.push(physicalSprite.body);
             }
         }

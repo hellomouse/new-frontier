@@ -18,8 +18,8 @@ const perlin = new (require('@mohayonao/perlin-noise'))();
  * @return {number}    Output
  */
 function triangleWave(x) {
-    let TWO_PI = 2 * Math.PI;
-    return 2 * Math.abs(x / TWO_PI - Math.floor(x / TWO_PI + 0.5));
+    let twoPi = 2 * Math.PI;
+    return 2 * Math.abs(x / twoPi - Math.floor(x / twoPi + 0.5));
 }
 
 /**

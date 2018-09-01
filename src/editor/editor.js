@@ -411,7 +411,7 @@ class Editor extends RenderableScene {
      *
      * @return {rocket}  rocket built in the Editor
      */
-    constructrocket() {
+    constructRocket() {
         let parts = this.currentBuild.map(part => {
             /* Adjust from corner coordinates to
              * centered coordinates */

@@ -1,7 +1,7 @@
 'use strict';
 
 /* Required */
-const Planet = require('../../game-components/bodies/planet.js');
+const planet = require('../../game-components/bodies/planet.js');
 const config = require('../config.js');
 
 /* Util */
@@ -56,7 +56,8 @@ function getBiome(angle) {
  * Generate a terrain given an angle
  *
  * @param  {number} angle Angle of the sector
- * @return {number}       Height at point
+ * @param  {object} planet
+ * @return {number} Height at point
  */
 function terrainGenerator(angle, planet) {
     angle = -angle; // Sector angles are reversed for some reason
@@ -71,11 +72,11 @@ function terrainGenerator(angle, planet) {
                 130 / 180 * Math.PI : 310 / 180 * Math.PI;
             /* Larger = more peaks */
             let multiplier = 150;
-            let sin_h = Math.abs(triangleWave(multiplier * (angle - dtheta)));
+            let sinH = Math.abs(triangleWave(multiplier * (angle - dtheta)));
 
             return planet.radius
-                + conversion.meterToPixel(12000 * perlin.noise(100 * angle)) * sin_h
-                + conversion.meterToPixel(500) * perlin.noise(10000 * angle) * sin_h;
+                + conversion.meterToPixel(12000 * perlin.noise(100 * angle)) * sinH
+                + conversion.meterToPixel(500) * perlin.noise(10000 * angle) * sinH;
         }
         default: return planet.radius;
     }
@@ -85,20 +86,22 @@ function terrainGenerator(angle, planet) {
 
      /* Desert biome:
       * Very flag biome, rough, land is relatively smooth */
-
-
-    return planet.radius;
 }
 
-
-class Earth extends Planet {
+/** */
+class Earth extends planet {
+    /**
+     * @constructor
+     * @param {*} x
+     * @param {*} y
+     */
     constructor(x, y) {
         super(x, y);
 
-        this.orbital_e = 0; // Eccentricity
-        this.orbital_distance = 0;
-        this.rotation_speed = 0;
-        this.sphere_of_influence = 0;
+        this.orbitalE = 0; // Eccentricity
+        this.orbitalDistance = 0;
+        this.rotationSpeed = 0;
+        this.sphereOfInfluence = 0;
         this.orbits = null; // What does it orbit?
 
         this.radius = conversion.meterToPixel(1274 * 1000);
@@ -109,7 +112,7 @@ class Earth extends Planet {
             present: true,
             height: conversion.meterToPixel(100 * 1000),
             oxygen: true,
-            molar_weight: 0.0288,
+            molarWeight: 0.0288,
 
             getTemperature: height => 1,
             getDrag: height => height > this.radius + this.atmosphere.height ? 0 : 0.01
@@ -131,11 +134,12 @@ class Earth extends Planet {
             + '';
 
         // Map stuff
-        this.image = config.IMG_PATH + 'planets/default.png';
-        this.map_sprite = null; // Created in map.js
-        this.min_radius = this.radius - conversion.meterToPixel(100); // Smallest possible height of the planet
+        this.image = config.imgPath + 'planets/default.png';
+        this.mapSprite = null; // Created in map.js
+        this.minRadius = this.radius - conversion.meterToPixel(100); // Smallest possible height of the planet
     }
 
+    /** */
     update() {
         // Pretend to be a physicalsprite
     }

@@ -146,13 +146,13 @@ class Simulation extends RenderableScene {
     updateAirFriction() {
         if (this.rules.doAirFriction) {
             for (let rocket of this.rockets) {
-                rocket.body.airFriction = 0;
+                rocket.body.frictionAir = 0;
 
                 for (let planet of this.planets) {
                     let height = gameUtil.math.distance(planet.position, rocket.position);
 
                     if (height <= planet.radius + planet.atmosphere.height) {
-                        rocket.body.airFriction = planet.atmosphere.getDrag(height);
+                        rocket.body.frictionAir = planet.atmosphere.getDrag(height);
                         break;
                     }
                 }

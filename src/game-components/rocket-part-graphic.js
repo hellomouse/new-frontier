@@ -15,20 +15,26 @@ class RocketPartGraphic {
      * @param  {number} y  y to spawn
      */
     constructor(id, x, y) {
+        /* Load data from rocket part */
         this.id = id;
         this.data = allParts.index_data[id];
 
+        /* Sprite data */
         this.sprite = PIXI.Sprite.from(this.data.image_path);
-
         this.sprite.width = this.data.width;
         this.sprite.height = this.data.height;
+        this.sprite.x = x;
+        this.sprite.y = y;
 
+        /* Alias for sprite.x */
         this.x = x;
         this.y = y;
 
-        // this.sprite.anchor.set(0.5, 0.5);
-        this.sprite.x = x;
-        this.sprite.y = y;
+        /* Other variables */
+        this.selected = false;
+        this.moving = false;
+        this.validLocation = true;
+
     }
 
     /**
@@ -36,6 +42,7 @@ class RocketPartGraphic {
      */
     select() {
         this.sprite.tint = 0x00FF00;
+        this.selected = true;
     }
 
     /**
@@ -43,6 +50,7 @@ class RocketPartGraphic {
      */
     unselect() {
         this.sprite.tint = 0xFFFFFF;
+        this.selected = false;
     }
 
     /**
@@ -56,6 +64,17 @@ class RocketPartGraphic {
         this.y = y;
         this.sprite.x = x;
         this.sprite.y = y;
+    }
+    
+    /**
+     * moveTo - Moves to new relative
+     * location (dx and dy)
+     *
+     * @param  {number} dx X pos cahnge
+     * @param  {number} dy Y pos change
+     */
+    moveToRelative(dx, dy) {
+        this.moveTo(this.x + dx, this.y + dy);
     }
 }
 

@@ -11,7 +11,7 @@ module.exports = {
          * @param  {number} x Ratio
          * @return {number}   Angle, in rad
          */
-        fastAtan(x) {
+        fastAtan (x) {
             return (3.14159265 / 4) * x - x * (Math.abs(x) - 1) * (0.2447 + 0.0663 * Math.abs(x));
         },
 
@@ -24,7 +24,7 @@ module.exports = {
          * @param  {Vector} pos2 {x: number, y: number}
          * @return {number}      Distance (2D)
          */
-        fastDistance(pos1, pos2) {
+        fastDistance (pos1, pos2) {
             let approx;
             let dx = Math.abs(pos1.x - pos2.x);
             let dy = Math.abs(pos1.y - pos2.y);
@@ -46,7 +46,7 @@ module.exports = {
          * @param  {Vector} pos2 {x: number, y: number}
          * @return {number}      Distance (2D)
          */
-        distance(pos1, pos2) {
+        distance (pos1, pos2) {
             return Math.sqrt((pos1.x - pos2.x) ** 2 + (pos1.y - pos2.y) ** 2);
         },
 
@@ -57,7 +57,7 @@ module.exports = {
          * @param  {number} number Number to check
          * @return {number}        -1 or 1
          */
-        copySign(number) {
+        copySign (number) {
             return number < 0 ? -1 : 1;
         },
 
@@ -67,7 +67,7 @@ module.exports = {
          * @param  {number} deg Degree
          * @return {number}     Radian
          */
-        degToRad(deg) {
+        degToRad (deg) {
             return deg / 180 * Math.PI;
         },
 
@@ -77,7 +77,7 @@ module.exports = {
          * @param  {number} rad Radian
          * @return {number}     Degree
          */
-        radToDeg(rad) {
+        radToDeg (rad) {
             return rad / Math.PI * 180;
         },
 
@@ -89,7 +89,7 @@ module.exports = {
          * @param  {number} b High bound
          * @return {boolean}  Is it between?
          */
-        isBetween(x, a, b) {
+        isBetween (x, a, b) {
             return a <= x && x <= b;
         },
 
@@ -102,7 +102,7 @@ module.exports = {
          * @param  {number} b High bound (Degrees)
          * @return {boolean}  Is it between?
          */
-        isAngleBetween(x, a, b) {
+        isAngleBetween (x, a, b) {
             return this.isBetween(this.radToDeg(x), a, b);
         },
 
@@ -122,6 +122,33 @@ module.exports = {
          */
         rectIntersect(x1, y1, x2, y2, x3, y3, x4, y4) {
             return !(x3 > x2 || x4 < x1 || y3 > y2 || y4 < y1);
+        }
+    },
+
+    controls: {
+        /**
+         * WASDToDxDy - Convert WASD and arrow keys
+         * to a dx dy direction
+         *
+         * @param  {number} x_inc   X increment per key press
+         * @param  {number} y_inc   Y increment per key press
+         * @param  {string} keyname Name of key pressed from keyboard-key
+         * @return {object}         {dx, dy}
+         */
+        WASDToDxDy (x_inc, y_inc, keyname) {
+            let [dx, dy] = [0, 0];
+
+            /* Set dx or dy to a positive value, depends if it's horz or vertical mvoement */
+            if (['a', 'd', 'ArrowLeft', 'ArrowRight'].includes(keyname)) dx = x_inc;
+            else dy = y_inc;
+
+            /* These go in "opposite" negative directions */
+            if (['a', 'ArrowLeft', 'w', 'ArrowUp'].includes(keyname)) {
+                dx *= -1;
+                dy *= -1;
+            }
+
+            return {dx, dy};
         }
     }
 };

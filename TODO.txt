@@ -22,26 +22,30 @@ Editor draw the select box if drag
     Editor neater grid
     Editor select part category
 
-    rework the 'currently selected div - it should work with multiple parts too'
-
     editor right click to edit part
-    editor move part
 
     undo, redo
+    undo, redo buttons,
 
-    undo, redo buttons, rotate, move, delete
+    rotate, move, delete -> appear in middle of selection
 
     free-snap mode, enable/disable snapping
+    free move mode
 
     rotate part while placing
     editor auto-rotate part
-    //TODO collision check after rotate
-    // Fix rotating out of bounds
 
+    //TODO collision check after rotate and move
+    // Fix rotating out of bounds, make it red and invalid
+
+    right click while part is selected TO Place to deselect it
 
     center of gravity, thrust, aero
 
     editor engineering report
+        parachute
+        comm checks
+        idk
     editor no-control report
     editor control list
     editor actions

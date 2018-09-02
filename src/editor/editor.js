@@ -28,7 +28,7 @@ class Editor extends RenderableScene {
 
         // Scene and other
         this.scene = null;
-        this.camera = new Camera(0.3, 4, 1);
+        this.camera = new Camera(0.1, 4, 1);
 
         // Actions/build
         this.current_select_build = null;
@@ -178,14 +178,43 @@ class Editor extends RenderableScene {
      * @override
      */
     onKeyDown(e, name) {
-        /* Delete selection */
-        if (name === 'Backspace' || name === 'Delete')
-            editor_man.deleteSelection(this);
-        /* Rotate left */
-        else if (name === 'q')
-            editor_man.rotateSelection(this, -Math.PI / 2);
-        else if (name === 'e')
-            editor_man.rotateSelection(this, Math.PI / 2);
+        switch (name) {
+            /* Delete selection */
+            case 'Backspace':
+            case 'Delete': {
+                editor_man.deleteSelection(this);
+                break;
+            }
+
+            /* Rotate selection left and right respectively */
+            case 'q':
+            case 'e': {
+                editor_man.rotateSelection(this, (name === 'e' ? 1 : -1) * Math.PI / 2);
+                break;
+            }
+
+            /* Move camera left, up, down or right */
+            case 'a': case 'ArrowLeft':
+            case 's': case 'ArrowDown':
+            case 'w': case 'ArrowUp':
+            case 'd': case 'ArrowRight': {
+                let dpos = gameUtil.controls.WASDToDxDy(config.build_grid_size / 4, config.build_grid_size / 4, name);
+
+                /* Camera can't go out of bounds */
+                if (Math.abs(this.camera_focus.x + dpos.dx) > config.build_grid_boundary ||
+                    Math.abs(this.camera_focus.y + dpos.dy) > config.build_grid_boundary) return;
+
+                this.camera_focus.x += dpos.dx;
+                this.camera_focus.y += dpos.dy;
+                break;
+            }
+        }
+
+
+        /* Move the selection */
+        if (name === 'a' || name === 'Left') {
+
+        }
     }
 
 
@@ -204,12 +233,13 @@ class Editor extends RenderableScene {
             return;
         }
 
-        let lmdown = control_state.mouse.last_mousedown;
         let coords = this.stage.toLocal(new PIXI.Point(e.clientX, e.clientY));
+        let lmdown = control_state.mouse.last_mousedown;
         let initial_pos = this.stage.toLocal(new PIXI.Point(lmdown[0], lmdown[1]));
 
         let w = initial_pos.x - coords.x;
         let h = initial_pos.y - coords.y;
+
 
         /* Actual drawing */
         if (this.select_rectangle_graphic) stage_handler.getStageByName('editor').stage.removeChild(this.select_rectangle_graphic);
@@ -225,7 +255,7 @@ class Editor extends RenderableScene {
 
     /**
      * onScroll - On scroll event
-     * @param  {Event} e      Event
+     * @param  {Event} e  Event
      * @override
      */
     onScroll(e) {

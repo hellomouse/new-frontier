@@ -24,7 +24,7 @@ module.exports = {
      *
      * @param {Edtior} editor  Level editor
      */
-    unselectAll: function (editor) {
+    unselectAll  (editor) {
         for (let part of editor.selected_parts) {
             part.unselect();
         }
@@ -37,7 +37,7 @@ module.exports = {
      *
      * * @param {Edtior} editor  Level editor
      */
-    unselectCurrentBuild: function (editor) {
+    unselectCurrentBuild  (editor) {
         editor.current_select_build = null;
         editor.updatedSelectedIcon(control_state.mouse.pos_event);
     },
@@ -51,7 +51,7 @@ module.exports = {
      * @param  {number} x      X pos
      * @param  {number} y      Y pos
      */
-    selectPart: function (editor, x, y) {
+    selectPart  (editor, x, y) {
         let part = this.getPartAt(editor, x, y);
 
         if (part) {
@@ -74,7 +74,7 @@ module.exports = {
      * @param  {number} x1     Corner 2 X pos
      * @param  {number} y1     Corner 2 Y pos
      */
-    selectPartsBoundingBox: function (editor, x1, y1, x2, y2) {
+    selectPartsBoundingBox  (editor, x1, y1, x2, y2) {
         let x_bounds = [x1, x2].sort((a, b) => a - b);
         let y_bounds = [y1, y2].sort((a, b) => a - b);
 
@@ -93,7 +93,7 @@ module.exports = {
      *
      * @param {Edtior} editor  Level editor
      */
-    deleteSelection: function (editor) {
+    deleteSelection  (editor) {
         for (let part of editor.selected_parts) {
             /* Delete parts from stage, graphics array and part array */
             editor.stage.removeChild(part.sprite);
@@ -114,7 +114,7 @@ module.exports = {
      * @param  {number} y      Y pos
      * @return {boolean}       Did it place
      */
-    addPart: function(editor, x, y) {
+    addPart (editor, x, y) {
         if (!editor.current_select_build) return false;  // Nothing selected
 
         // Snap to smallest grid size
@@ -153,7 +153,7 @@ module.exports = {
      * @param  {number} y            Y pos
      * @return {RocketPartGraphic}   Part
      */
-    getPartAt: function (editor, x, y) {
+    getPartAt  (editor, x, y) {
         for (let part of editor.current_build) {
             /* Occupies identical location */
             if (x === part.x && y === part.y) return part;
@@ -174,22 +174,56 @@ module.exports = {
      * @param {Edtior} editor  Level editor
      * @param  {number} angle  Rotation in RAD
      */
-    rotateSelection: function (editor, angle) {
+    rotateSelection  (editor, angle) {
         /* No parts to rotate */
         if (editor.selected_parts.length === 0) return;
 
-        // // TODO:
-        // Since we only rotate in 90 deg increments
-        // recode this
-
-        // This code only needed for grid snaping?
-        /*while (angle < 0) angle += Math.PI * 2;
+        /* Due to some bug with rotating large/negative angles,
+         * it will rotate the angle in 90 DEG increments */
+        while (angle < 0) angle += Math.PI * 2;
         while (angle > Math.PI * 2) angle -= Math.PI * 2;
         while (angle >= Math.PI) {
             angle -= Math.PI / 2;
             this.rotateSelection(editor, Math.PI / 2);
-        }*/
+        }
 
+        let use_exact_center = true;
+        let {center, largest_snap, w_range, h_range} = this.getSelectionData(editor, editor.selected_parts, use_exact_center);
+
+        /* Radius is max X or Y difference */
+        let r = Math.max(h_range[1] - h_range[0], w_range[1] - w_range[0]);
+
+        /* Rotate each part around the center,
+         * then rotate the part itself */
+        for (let part of editor.selected_parts) {
+            let [px, py] = [part.x, part.y];
+
+            /* Correction factor, same as above */
+            if (use_exact_center) {
+                px += part.sprite.width * Math.cos(part.sprite.rotation);
+                py += part.sprite.height * Math.sin(part.sprite.rotation);
+            }
+
+            let x = Math.cos(angle) * (px - center.x) - Math.sin(angle) * (py - center.y) + center.x;
+            let y = Math.sin(angle) * (px - center.x) + Math.cos(angle) * (py - center.y) + center.y;
+
+            ({x, y} = this.snapCoordToGrid(x, y, largest_snap.x, largest_snap.y, true));
+
+            part.moveTo(x, y);
+            part.sprite.rotation += angle;
+        }
+    },
+
+    /**
+     * getSelectionData - Get selection data for an
+     * array of placed parts
+     *
+     * @param {Edtior} editor             Level editor
+     * @param  {array} parts              description
+     * @param  {boolean} use_exact_center description
+     * @return {object}                   See return below
+     */
+    getSelectionData (editor, parts, use_exact_center) {
         /* Center is the calculated rotation center
          * largest_snap is the largest x and y grid size a part
          * in the selection has.
@@ -200,11 +234,8 @@ module.exports = {
         let largest_snap = {x: 0, y: 0};
         let w_range = [gameUtil.large, -gameUtil.large];
         let h_range = [gameUtil.large, -gameUtil.large];
-        let use_exact_center = editor.selected_parts.length === 1;
 
-        use_exact_center = true;
-
-        editor.selected_parts.forEach((part) => {
+        parts.forEach((part) => {
             center.x += part.x;
             center.y += part.y;
 
@@ -233,28 +264,12 @@ module.exports = {
         center.x = Math.round(center.x / editor.selected_parts.length);
         center.y = Math.round(center.y / editor.selected_parts.length);
 
-        /* Radius is max X or Y difference */
-        let r = Math.max(h_range[1] - h_range[0], w_range[1] - w_range[0]);
-
-        /* Rotate each part around the center,
-         * then rotate the part itself */
-        for (let part of editor.selected_parts) {
-            let [px, py] = [part.x, part.y];
-
-            /* Correction factor, same as above */
-            if (use_exact_center) {
-                px += part.sprite.width * Math.cos(part.sprite.rotation);
-                py += part.sprite.height * Math.sin(part.sprite.rotation);
-            }
-
-            let x = Math.cos(angle) * (px - center.x) - Math.sin(angle) * (py - center.y) + center.x;
-            let y = Math.sin(angle) * (px - center.x) + Math.cos(angle) * (py - center.y) + center.y;
-
-            ({x, y} = this.snapCoordToGrid(x, y, largest_snap.x, largest_snap.y, true));
-
-            part.moveTo(x, y);
-            part.sprite.rotation += angle;
-        }
+        return {
+            center: center,                /* Center of selection {x: x, y: y} */
+            largest_snap: largest_snap,    /* Grid coord multiplier to snap selection to {x: x, y: y} */
+            w_range: w_range,              /* [low, high] range for x (width) values */
+            h_range: h_range               /* [low, high] range for y (height) values */
+        };
     },
 
     /**
@@ -268,7 +283,7 @@ module.exports = {
      * @param  {boolean} round Round to nearest grid instead of flooring
      * @return {object}        {x: <number>, y: <number>} New coord
      */
-    snapCoordToGrid(x, y, snap_x, snap_y, round=false) {
+    snapCoordToGrid (x, y, snap_x, snap_y, round=false) {
         return {x: x, y: y};
 
         let smallest_x = snap_x * config.build_grid_size;
@@ -280,3 +295,36 @@ module.exports = {
         return {x: x, y: y};
     }
 };
+
+
+
+// TODO deal with this crap
+// /**
+//  * moveSelection - Move the current selection by
+//  * the max grid unit of the selection
+//  *
+//  * @param  {Editor} editor  Editor object
+//  * @param  {string} keyname Keyboard key pressed (name from keyboard-key)
+//  * @param  {number} multi=1 Multiplier, ie 3 = move 3 grid spaces
+//  */
+// moveSelection (editor, keyname, multi=1) {
+//     let [dx, dy] = [0, 0];
+//
+//     /* Set dx or dy to a positive value, depends if it's horz or vertical mvoement */
+//     if (['a', 'd', 'ArrowLeft', 'ArrowRight'].includes(keyname)) {
+//         dx = Math.max.apply(null, editor.selected_parts.map(p => p.data.data.min_snap_multiplier_x)) * config.build_grid_size;
+//     } else {
+//         dy = Math.max.apply(null, editor.selected_parts.map(p => p.data.data.min_snap_multiplier_y)) * config.build_grid_size;
+//     }
+//
+//     /* These go in "opposite" negative directions */
+//     if (['a', 'ArrowLeft', 'w', 'ArrowUp'].includes(keyname)) {
+//         dx *= -1;
+//         dy *= -1;
+//     }
+//
+//     /* Move the parts */
+//     for (let part of editor.selected_parts) {
+//         part.moveToRelative(dx, dy);
+//     }
+// },

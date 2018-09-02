@@ -32,8 +32,11 @@ class Editor extends RenderableScene {
 
         // Actions/build
         this.current_select_build = null;
-        this.current_action = 'place';   // place, rotate, or move
+        this.swipe = false;  // Swipe enabled is drag a select box, otherwise camera drag
+
+        // Camera
         this.camera_focus = {x: 0, y: 0};
+        this.camera_focus_initial = {x: 0, y: 0};
 
         this.current_build = [];
         this.selected_parts = [];
@@ -131,7 +134,7 @@ class Editor extends RenderableScene {
         /* Left mouse click
          * Adds part at <x, y> */
 
-        /* Drag = always box select */
+        /* Drag - box select or camera move */
         if (control_state.mouse.dragging) {
             let initial_pos = this.stage.toLocal(
                 new PIXI.Point(
@@ -139,11 +142,16 @@ class Editor extends RenderableScene {
                     control_state.mouse.last_mousedown[1]
                 ));
 
-            if (!control_state.keyboard.Control) editor_man.unselectAll(this);
+            if (this.swipe) {
+                if (!control_state.keyboard.Control) editor_man.unselectAll(this);
 
-            /* Remove the rectangle graphic */
-            this.removeRectangleGraphic();
-            editor_man.selectPartsBoundingBox(this,initial_pos.x, initial_pos.y, x, y);
+                /* Remove the rectangle graphic */
+                this.removeRectangleGraphic();
+                editor_man.selectPartsBoundingBox(this,initial_pos.x, initial_pos.y, x, y);
+            } else {
+                this.camera_focus_initial.x = this.camera_focus.x;
+                this.camera_focus_initial.y = this.camera_focus.y;
+            }
             return;
         }
 
@@ -154,6 +162,9 @@ class Editor extends RenderableScene {
         /* Success placing part!
          * Deselect everything */
         else editor_man.unselectAll(this);
+
+        this.camera_focus_initial.x = this.camera_focus.x;
+        this.camera_focus_initial.y = this.camera_focus.y;
     }
 
     /**
@@ -198,23 +209,23 @@ class Editor extends RenderableScene {
             case 's': case 'ArrowDown':
             case 'w': case 'ArrowUp':
             case 'd': case 'ArrowRight': {
-                let dpos = gameUtil.controls.WASDToDxDy(config.build_grid_size / 4, config.build_grid_size / 4, name);
+                let dpos = gameUtil.controls.WASDToDxDy(
+                    Math.max.apply(null, this.selected_parts.map(p => p.data.data.min_snap_multiplier_x)) * config.build_grid_size,
+                    Math.max.apply(null, this.selected_parts.map(p => p.data.data.min_snap_multiplier_y)) * config.build_grid_size,
+                    name);
 
-                /* Camera can't go out of bounds */
-                if (Math.abs(this.camera_focus.x + dpos.dx) > config.build_grid_boundary ||
-                    Math.abs(this.camera_focus.y + dpos.dy) > config.build_grid_boundary) return;
-
-                this.camera_focus.x += dpos.dx;
-                this.camera_focus.y += dpos.dy;
+                for (let part of this.selected_parts)
+                    part.moveToRelative(dpos.dx, dpos.dy);
                 break;
             }
         }
 
-
-        /* Move the selection */
-        if (name === 'a' || name === 'Left') {
-
-        }
+        // /* Camera can't go out of bounds */
+        // if (Math.abs(this.camera_focus.x + dpos.dx) > config.build_grid_boundary ||
+        //     Math.abs(this.camera_focus.y + dpos.dy) > config.build_grid_boundary) return;
+        //
+        // this.camera_focus.x += dpos.dx;
+        // this.camera_focus.y += dpos.dy;
     }
 
 
@@ -237,20 +248,17 @@ class Editor extends RenderableScene {
         let lmdown = control_state.mouse.last_mousedown;
         let initial_pos = this.stage.toLocal(new PIXI.Point(lmdown[0], lmdown[1]));
 
-        let w = initial_pos.x - coords.x;
-        let h = initial_pos.y - coords.y;
+        /* Draw the selection rectangle */
+        if (this.swipe) this.drawSelectionRectangle(e, coords, initial_pos)
+        else {
+            this.camera_focus.x = this.camera_focus_initial.x + initial_pos.x - coords.x;
+            this.camera_focus.y = this.camera_focus_initial.y + initial_pos.y - coords.y;
 
-
-        /* Actual drawing */
-        if (this.select_rectangle_graphic) stage_handler.getStageByName('editor').stage.removeChild(this.select_rectangle_graphic);
-        this.select_rectangle_graphic = new PIXI.Graphics();
-
-        this.select_rectangle_graphic.beginFill(0x00FF00);
-        this.select_rectangle_graphic.lineStyle(1, 0x00FF00);
-        this.select_rectangle_graphic.drawRect(initial_pos.x, initial_pos.y, -w, -h)
-        this.select_rectangle_graphic.alpha = 0.3;
-
-        stage_handler.getStageByName('editor').stage.addChild(this.select_rectangle_graphic);
+            if (Math.abs(this.camera_focus.x) > config.build_grid_boundary)
+                this.camera_focus.x = gameUtil.math.copySign(this.camera_focus.x) * config.build_grid_boundary;
+            if (Math.abs(this.camera_focus.y) > config.build_grid_boundary)
+                this.camera_focus.y = gameUtil.math.copySign(this.camera_focus.y) * config.build_grid_boundary;
+        }
     }
 
     /**
@@ -267,7 +275,7 @@ class Editor extends RenderableScene {
      * little mouse icon that displays the part
      * that is selected
      *
-     * @param  {Event} e      Event
+     * @param  {Event} e  Event
      */
     updatedSelectedIcon(e) {
         if (!e) return;
@@ -290,6 +298,28 @@ class Editor extends RenderableScene {
         icon.style.width = data.width * this.camera.scale + 'px';
         icon.style.height = data.height * this.camera.scale + 'px';
         icon.style.display = 'inline';
+    }
+
+    /**
+     * handleSelectionRectangle - Draws the selection rectangle
+     *
+     * @param  {Event} e                Event
+     * @param  {PIXI.Point} coords      Coord of mouse (to local stage)
+     * @param  {PIXI.Point} initial_pos Coord of last mouse down (to local stage)
+     */
+    drawSelectionRectangle(e, coords, initial_pos) {
+        let w = initial_pos.x - coords.x;
+        let h = initial_pos.y - coords.y;
+
+        if (this.select_rectangle_graphic) stage_handler.getStageByName('editor').stage.removeChild(this.select_rectangle_graphic);
+        this.select_rectangle_graphic = new PIXI.Graphics();
+
+        this.select_rectangle_graphic.beginFill(0x00FF00);
+        this.select_rectangle_graphic.lineStyle(1, 0x00FF00);
+        this.select_rectangle_graphic.drawRect(initial_pos.x, initial_pos.y, -w, -h)
+        this.select_rectangle_graphic.alpha = 0.3;
+
+        stage_handler.getStageByName('editor').stage.addChild(this.select_rectangle_graphic);
     }
 
     /**

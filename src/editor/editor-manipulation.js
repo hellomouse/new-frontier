@@ -22,7 +22,7 @@ module.exports = {
      * unselectAll - Unselects all currently
      * selected parts.
      *
-     * @param {Edtior} editor  Level editor
+     * @param {Editor} editor  Level editor
      */
     unselectAll  (editor) {
         for (let part of editor.selected_parts) {
@@ -35,7 +35,7 @@ module.exports = {
      * unselectCurrentBuild - Unselects the current
      * part selected to place
      *
-     * * @param {Edtior} editor  Level editor
+     * * @param {Editor} editor  Level editor
      */
     unselectCurrentBuild  (editor) {
         editor.current_select_build = null;
@@ -47,11 +47,11 @@ module.exports = {
      * selectPart - Select a part at
      * coordinates
      *
-     * @param {Edtior} editor  Level editor
+     * @param  {Editor} editor Level editor
      * @param  {number} x      X pos
      * @param  {number} y      Y pos
      */
-    selectPart  (editor, x, y) {
+    selectPart (editor, x, y) {
         let part = this.getPartAt(editor, x, y);
 
         if (part) {
@@ -68,7 +68,7 @@ module.exports = {
     /**
      * selectPartsBoundingBox - Select all parts in a bounding box
      *
-     * @param {Edtior} editor  Level editor
+     * @param  {Editor} editor Level editor
      * @param  {number} x1     Corner 1 X pos
      * @param  {number} y1     Corner 1 Y pos
      * @param  {number} x1     Corner 2 X pos
@@ -91,9 +91,9 @@ module.exports = {
      * deleteSelection - Deletes current
      * selection of parts
      *
-     * @param {Edtior} editor  Level editor
+     * @param {Editor} editor  Level editor
      */
-    deleteSelection  (editor) {
+    deleteSelection (editor) {
         for (let part of editor.selected_parts) {
             /* Delete parts from stage, graphics array and part array */
             editor.stage.removeChild(part.sprite);
@@ -109,7 +109,7 @@ module.exports = {
      * addPart - Add the currently selected part
      * at given position.
      *
-     * @param {Edtior} editor  Level editor
+     * @param  {Editor} editor Level editor
      * @param  {number} x      X pos
      * @param  {number} y      Y pos
      * @return {boolean}       Did it place
@@ -148,7 +148,7 @@ module.exports = {
      * part at coordinates.
      * ONLY SELECTS UNSELECTED PARTS
      *
-     * @param  {Edtior} editor       Level editor
+     * @param  {Editor} editor       Level editor
      * @param  {number} x            X pos
      * @param  {number} y            Y pos
      * @return {RocketPartGraphic}   Part
@@ -171,7 +171,7 @@ module.exports = {
      * rotateSelection - Rotates the current
      * selection by an angle
      *
-     * @param {Edtior} editor  Level editor
+     * @param {Editor} editor  Level editor
      * @param  {number} angle  Rotation in RAD
      */
     rotateSelection  (editor, angle) {
@@ -218,7 +218,7 @@ module.exports = {
      * getSelectionData - Get selection data for an
      * array of placed parts
      *
-     * @param {Edtior} editor             Level editor
+     * @param {Editor} editor             Level editor
      * @param  {array} parts              description
      * @param  {boolean} use_exact_center description
      * @return {object}                   See return below
@@ -295,36 +295,3 @@ module.exports = {
         return {x: x, y: y};
     }
 };
-
-
-
-// TODO deal with this crap
-// /**
-//  * moveSelection - Move the current selection by
-//  * the max grid unit of the selection
-//  *
-//  * @param  {Editor} editor  Editor object
-//  * @param  {string} keyname Keyboard key pressed (name from keyboard-key)
-//  * @param  {number} multi=1 Multiplier, ie 3 = move 3 grid spaces
-//  */
-// moveSelection (editor, keyname, multi=1) {
-//     let [dx, dy] = [0, 0];
-//
-//     /* Set dx or dy to a positive value, depends if it's horz or vertical mvoement */
-//     if (['a', 'd', 'ArrowLeft', 'ArrowRight'].includes(keyname)) {
-//         dx = Math.max.apply(null, editor.selected_parts.map(p => p.data.data.min_snap_multiplier_x)) * config.build_grid_size;
-//     } else {
-//         dy = Math.max.apply(null, editor.selected_parts.map(p => p.data.data.min_snap_multiplier_y)) * config.build_grid_size;
-//     }
-//
-//     /* These go in "opposite" negative directions */
-//     if (['a', 'ArrowLeft', 'w', 'ArrowUp'].includes(keyname)) {
-//         dx *= -1;
-//         dy *= -1;
-//     }
-//
-//     /* Move the parts */
-//     for (let part of editor.selected_parts) {
-//         part.moveToRelative(dx, dy);
-//     }
-// },

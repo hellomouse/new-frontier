@@ -19,18 +19,29 @@ Create a simulation (calculations only)
 Use a real logger
 
 Editor draw the select box if drag
+    Tidy everything - no magic numbers, no underscore, linting and shit
+        table of contents, file desc
+
+    REDO CONTROLS
+        Swipe controls at bottom, with move and rotate buttons
+        Subtle move buttons? like GD?
+
+    Dragging cursor effect
+
+
     Editor neater grid
     Editor select part category
 
     editor right click to edit part
 
-    undo, redo
-    undo, redo buttons,
+    BUG: Part collision when placing doesn't take part rotation int oaccount
 
-    rotate, move, delete -> appear in middle of selection
+    undo, redo + buttons
+
+    copy-paste
 
     free-snap mode, enable/disable snapping
-    free move mode
+    free move mode - drag
 
     rotate part while placing
     editor auto-rotate part
@@ -52,8 +63,9 @@ Editor draw the select box if drag
     editor crew tab
     editor save, load managment of ships
 
+    Seperate parts ine editor into seperate rockets (not connected)
 
-Seperate parts ine editor into seperate rockets (not connected)
+
 
 Fix sprite rotation
 

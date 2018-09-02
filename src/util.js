@@ -118,10 +118,12 @@ module.exports = {
          * @param  {number} y3 Top left corner rect 2 y
          * @param  {number} x4 Bottom right corner rect 2 x
          * @param  {number} y4 Bottom right corner rect 2 y
+         * @param  {boolean} s Strict?
          * @return {boolean}   Intersects?
          */
-        rectIntersect(x1, y1, x2, y2, x3, y3, x4, y4) {
-            return !(x3 > x2 || x4 < x1 || y3 > y2 || y4 < y1);
+        rectIntersect(x1, y1, x2, y2, x3, y3, x4, y4, s=true) {
+            if (s) return !(x3 > x2 || x4 < x1 || y3 > y2 || y4 < y1);
+            return !(x3 >= x2 || x4 <= x1 || y3 >= y2 || y4 <= y1);
         },
 
         /**
@@ -133,6 +135,62 @@ module.exports = {
          */
         copySign(n) {
             return n < 0 ? -1 : 1;
+        },
+
+        /**
+         * quadCos - For an angle that is a multiple of 90
+         * degrees returns exact cos value (-1, 0 or 1)
+         *
+         * @param  {number} angle Angle in rad between 0 and 2 * PI
+         * @return {number}       COS angle
+         */
+        quadCos(angle) {
+            if (Math.abs(angle - 0) < 0.1) return 1;
+            if (Math.abs(angle - Math.PI / 2) < 0.1) return 0;
+            if (Math.abs(angle - 3 * Math.PI / 2) < 0.1) return 0;
+            if (Math.abs(angle - Math.PI) < 0.1) return -1;
+            if (Math.abs(angle - Math.PI * 2) < 0.1) return 1;
+        },
+
+        /**
+         * quadSin - For an angle that is a multiple of 90
+         * degrees returns exact sin value (-1, 0 or 1)
+         *
+         * @param  {number} angle Angle in rad between 0 and 2 * PI
+         * @return {number}       SIN angle
+         */
+        quadSin(angle) {
+            if (Math.abs(angle - 0) < 0.1) return 0;
+            if (Math.abs(angle - Math.PI / 2) < 0.1) return 1;
+            if (Math.abs(angle - 3 * Math.PI / 2) < 0.1) return -1;
+            if (Math.abs(angle - Math.PI) < 0.1) return 0;
+            if (Math.abs(angle - Math.PI * 2) < 0.1) return 0;
+        },
+
+        /**
+         * normalizeAngle - Given a radian angle, normalizes
+         * it to be between 0 and 2 PI
+         *
+         * @param  {number} angle Angle in rad
+         * @return {number}       Coterminal angle in rad between 0 and 2 * PI
+         */
+        normalizeAngle(angle) {
+            while (angle < 0) angle += Math.PI * 2;
+            while (angle >= Math.PI * 2) angle -= Math.PI * 2;
+            return angle;
+        },
+
+        /**
+         * isBetween - Is x between a and b
+         *
+         * @param  {number} x Variable to check
+         * @param  {number} a Bound 1 - Not necessarily lower
+         * @param  {number} b Bound 2 - Not necessarily lower
+         * @return {boolean}  Is it between
+         */
+        isBetween(x, a, b) {
+            let bounds = [a, b].sort((a, b) => a - b);
+            return bounds[0] < x && x < bounds[1];
         }
     },
 

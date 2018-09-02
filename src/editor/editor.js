@@ -200,7 +200,7 @@ class Editor extends RenderableScene {
             /* Rotate selection left and right respectively */
             case 'q':
             case 'e': {
-                editor_man.rotateSelection(this, (name === 'e' ? 1 : -1) * Math.PI / 2);
+                editor_man.rotateSelection90Deg(this, (name === 'e' ? 1 : -1) * Math.PI / 2, true);
                 break;
             }
 

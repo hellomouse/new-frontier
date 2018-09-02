@@ -1,6 +1,7 @@
 'use strict';
 
 const allParts = require('../game/rocket-parts/all-parts.js');
+const gameUtil = require('../util.js');
 
 /**
  * A graphic for a rocket part used in the
@@ -32,10 +33,52 @@ class RocketPartGraphic {
 
         /* Other variables */
         this.selected = false;
-        this.moving = false;
         this.validLocation = true;
-
     }
+
+
+    /**
+     * containsPoint - Proper check if
+     * a point is within its sprite.
+     *
+     * @param  {number} x X
+     * @param  {number} y Y
+     * @return {boolean}  Is point in sprite
+     */
+    containsPoint(x, y) {
+        let bounds = this.getBounds();
+        return gameUtil.math.isBetween(x, bounds[0], bounds[2]) &&
+               gameUtil.math.isBetween(y, bounds[1], bounds[3]);
+    }
+
+    /**
+     * getBounds - Return bounds.
+     * @return {array}  [x1, y1, x2, y2]
+     */
+    getBounds() {
+        let rotation = Math.floor(this.sprite.rotation / (Math.PI / 2));
+        let bounds;
+
+        if (rotation === 0 || rotation === 4) bounds = [this.x, this.y, this.x + this.sprite.width, this.y + this.sprite.height];
+        else if (rotation === 2) bounds = [this.x, this.y, this.x - this.sprite.width, this.y - this.sprite.height];
+        else if (rotation === 1) bounds = [this.x, this.y, this.x - this.sprite.height, this.y + this.sprite.width];
+        else if (rotation === 3) bounds = [this.x, this.y, this.x + this.sprite.height, this.y - this.sprite.width];
+
+        let t;
+        if (bounds[0] > bounds[2]) {
+            t = bounds[0];
+            bounds[0] = bounds[2];
+            bounds[2] = t;
+        }
+        if (bounds[1] > bounds[3]) {
+            t = bounds[1];
+            bounds[1] = bounds[3];
+            bounds[3] = t;
+        }
+
+        return bounds;
+    }
+
 
     /**
      * select - Display the part as selected
@@ -60,12 +103,14 @@ class RocketPartGraphic {
      * @param  {number} y Y pos
      */
     moveTo(x, y) {
+        [x, y] = [Math.floor(x), Math.floor(y)]; // Fix rounding errors
+
         this.x = x;
         this.y = y;
         this.sprite.x = x;
         this.sprite.y = y;
     }
-    
+
     /**
      * moveTo - Moves to new relative
      * location (dx and dy)

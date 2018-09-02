@@ -24,7 +24,7 @@ module.exports = {
      *
      * @param {Editor} editor  Level editor
      */
-    unselectAll  (editor) {
+    unselectAll (editor) {
         for (let part of editor.selected_parts) {
             part.unselect();
         }
@@ -37,7 +37,7 @@ module.exports = {
      *
      * * @param {Editor} editor  Level editor
      */
-    unselectCurrentBuild  (editor) {
+    unselectCurrentBuild (editor) {
         editor.current_select_build = null;
         editor.updatedSelectedIcon(control_state.mouse.pos_event);
     },
@@ -74,7 +74,7 @@ module.exports = {
      * @param  {number} x1     Corner 2 X pos
      * @param  {number} y1     Corner 2 Y pos
      */
-    selectPartsBoundingBox  (editor, x1, y1, x2, y2) {
+    selectPartsBoundingBox (editor, x1, y1, x2, y2) {
         let x_bounds = [x1, x2].sort((a, b) => a - b);
         let y_bounds = [y1, y2].sort((a, b) => a - b);
 
@@ -124,14 +124,12 @@ module.exports = {
         // Can the part be allowed to overlap at that point?
         if (!part_data.data.can_overlap) {
             for (let part of editor.current_build) {
-                /* Occupies identical location */
-                if (x === part.x && y === part.y) return false;
-
                 /* Intersection between another part */
-                if (x < part.x + part.data.width &&
-                    part.x < x + part_data.width &&
-                    y < part.y + part.data.height &&
-                    part.y < y + part_data.height) return false;
+                let bounds = part.getBounds();
+
+                if (gameUtil.math.rectIntersect(bounds[0], bounds[1], bounds[2], bounds[3],
+                    x + 1, y + 1, x + part_data.width - 1, y + part_data.height - 1))
+                        return false;
             }
         }
 
@@ -153,38 +151,27 @@ module.exports = {
      * @param  {number} y            Y pos
      * @return {RocketPartGraphic}   Part
      */
-    getPartAt  (editor, x, y) {
+    getPartAt (editor, x, y) {
         for (let part of editor.current_build) {
             /* Occupies identical location */
             if (x === part.x && y === part.y) return part;
 
             /* Intersection between another part */
-            if (x < part.x + part.data.width &&
-                x > part.x &&
-                y < part.y + part.data.height &&
-                y > part.y) return part;
+            if (part.containsPoint(x, y)) return part;
         }
         return null;
     },
 
-    /**
-     * rotateSelection - Rotates the current
-     * selection by an angle
-     *
-     * @param {Editor} editor  Level editor
-     * @param  {number} angle  Rotation in RAD
-     */
-    rotateSelection  (editor, angle) {
+    rotateSelection90Deg(editor, angle) {
         /* No parts to rotate */
         if (editor.selected_parts.length === 0) return;
 
         /* Due to some bug with rotating large/negative angles,
          * it will rotate the angle in 90 DEG increments */
-        while (angle < 0) angle += Math.PI * 2;
-        while (angle > Math.PI * 2) angle -= Math.PI * 2;
+        angle = gameUtil.math.normalizeAngle(angle);
         while (angle >= Math.PI) {
             angle -= Math.PI / 2;
-            this.rotateSelection(editor, Math.PI / 2);
+            this.rotateSelection90Deg(editor, Math.PI / 2);
         }
 
         let use_exact_center = true;
@@ -198,14 +185,10 @@ module.exports = {
         for (let part of editor.selected_parts) {
             let [px, py] = [part.x, part.y];
 
-            /* Correction factor, same as above */
-            if (use_exact_center) {
-                px += part.sprite.width * Math.cos(part.sprite.rotation);
-                py += part.sprite.height * Math.sin(part.sprite.rotation);
-            }
+            part.sprite.rotation = gameUtil.math.normalizeAngle(part.sprite.rotation);
 
-            let x = Math.cos(angle) * (px - center.x) - Math.sin(angle) * (py - center.y) + center.x;
-            let y = Math.sin(angle) * (px - center.x) + Math.cos(angle) * (py - center.y) + center.y;
+            let x = -(py - center.y) + center.x;
+            let y = (px - center.x) + center.y;
 
             ({x, y} = this.snapCoordToGrid(x, y, largest_snap.x, largest_snap.y, true));
 
@@ -213,6 +196,56 @@ module.exports = {
             part.sprite.rotation += angle;
         }
     },
+
+    // /**
+    //  * rotateSelection - Rotates the current
+    //  * selection by an angle
+    //  *
+    //  * @param {Editor} editor  Level editor
+    //  * @param {number} angle  Rotation in RAD
+    //  */
+    // rotateSelection (editor, angle) {
+    //     /* No parts to rotate */
+    //     if (editor.selected_parts.length === 0) return;
+    //
+    //     /* Due to some bug with rotating large/negative angles,
+    //      * it will rotate the angle in 90 DEG increments */
+    //     while (angle < 0) angle += Math.PI * 2;
+    //     while (angle > Math.PI * 2) angle -= Math.PI * 2;
+    //     while (angle >= Math.PI) {
+    //         angle -= Math.PI / 2;
+    //         this.rotateSelection(editor, Math.PI / 2);
+    //     }
+    //
+    //     let use_exact_center = true;
+    //     let {center, largest_snap, w_range, h_range} = this.getSelectionData(editor, editor.selected_parts, use_exact_center);
+    //
+    //     /* Radius is max X or Y difference */
+    //     let r = Math.max(h_range[1] - h_range[0], w_range[1] - w_range[0]);
+    //
+    //     /* Rotate each part around the center,
+    //      * then rotate the part itself */
+    //     for (let part of editor.selected_parts) {
+    //         let [px, py] = [part.x, part.y];
+    //
+    //         /* Correction factor, same as above */
+    //         if (use_exact_center) {
+    //             px += part.sprite.width * Math.cos(part.sprite.rotation);
+    //             py += part.sprite.height * Math.sin(part.sprite.rotation);
+    //         }
+    //
+    //         //let x = Math.cos(angle) * (px - center.x) - Math.sin(angle) * (py - center.y) + center.x;
+    //         //let y = Math.sin(angle) * (px - center.x) + Math.cos(angle) * (py - center.y) + center.y;
+    //
+    //         //let temp = this.snapCoordToGrid(x, y, largest_snap.x, largest_snap.y, true);
+    //
+    //         let x = -(py - center.y) + center.x;
+    //         let y = (px - center.x) + center.y;
+    //
+    //         part.moveTo(x, y);
+    //         part.sprite.rotation += angle;
+    //     }
+    // },
 
     /**
      * getSelectionData - Get selection data for an
@@ -284,8 +317,6 @@ module.exports = {
      * @return {object}        {x: <number>, y: <number>} New coord
      */
     snapCoordToGrid (x, y, snap_x, snap_y, round=false) {
-        return {x: x, y: y};
-
         let smallest_x = snap_x * config.build_grid_size;
         let smallest_y = snap_y * config.build_grid_size;
         let f = round ? Math.round : Math.floor;

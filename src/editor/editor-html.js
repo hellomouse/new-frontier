@@ -156,6 +156,16 @@ module.exports = `
          <div id="part-desc-2" style="width: 170px; float: left; margin: 5px;"></div>
     </div>
 
+    <div
+        style="
+            position: absolute;
+            right: 0;
+            bottom: 0;
+        ">
+        <button>FREE MOVE</button>
+        <button>SWIPE</button>
+    </div>
+
     <div style="
         width: 500px;
         height: 50px;

@@ -18,13 +18,22 @@ Create a simulation (calculations only)
 
 Use a real logger
 
+Ramp object to snap objects diagionally
+    and horiziontal fuel tanks and shit
+
+UTIL FOLDER
+
 Editor draw the select box if drag
     Tidy everything - no magic numbers, no underscore, linting and shit
         table of contents, file desc
 
-    REDO CONTROLS
+    REDO CONTROLS - Buttons
         Swipe controls at bottom, with move and rotate buttons
         Subtle move buttons? like GD?
+        free-snap mode, enable/disable snapping
+        free move mode - drag
+        collapsable bottom bar 
+
 
     Dragging cursor effect
 
@@ -34,14 +43,11 @@ Editor draw the select box if drag
 
     editor right click to edit part
 
-    BUG: Part collision when placing doesn't take part rotation int oaccount
-
     undo, redo + buttons
 
     copy-paste
 
-    free-snap mode, enable/disable snapping
-    free move mode - drag
+
 
     rotate part while placing
     editor auto-rotate part

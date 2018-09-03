@@ -42,14 +42,6 @@ Editor draw the select box if drag
     Editor neater grid
 
 
-
-    EXPERIMENT WITH NEW SPRITE THING - 0.5 0.5 vs corner
-
-    MIRRORING!!!
-        shift-ctrl-f - horz
-        ctrl-f - vertical
-        BUGGY
-
     rotating slabs in place doesn't work - snap rotates too
             x and y snapping ALSO rotates
 

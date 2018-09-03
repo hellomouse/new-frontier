@@ -481,9 +481,8 @@ class Editor extends RenderableScene {
         let parts = this.current_build.map(part => {
             /* Adjust from corner coordinates to
              * centered coordinates */
-            let bounds = part.getBounds();
-            let x = (bounds[0] + bounds[2]) / 2;
-            let y = (bounds[1] + bounds[3]) / 2;
+            let x = part.x;
+            let y = part.y;
             let returned = new allParts.index[part.id](x, y);
 
             returned.setSpriteRotation(part.sprite.rotation);

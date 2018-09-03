@@ -314,23 +314,46 @@ module.exports = {
         /* No parts to rotate */
         if (editor.selected_parts.length === 0) return;
 
-        let {w_range, h_range} = this.getSelectionData( editor.selected_parts);
-        let cx = (w_range[0] + w_range[1]) / 2;
-        let cy = (h_range[0] + h_range[1]) / 2;
+        let {center, w_range, h_range, largest_snap} = this.getSelectionData( editor.selected_parts);
+        let cx = center.x
+        let cy = center.y
 
-        /* Rotate each part around the center,
-         * then rotate the part itself */
+
+        let largest_width = { width: 0 };
+        let largest_height = { height: 0 };
+
         for (let part of editor.selected_parts) {
             let [px, py] = [part.x, part.y];
 
-            console.log(cx, px, cx - px + cx, - part.getRealWidth())
+            if (vertical) py = cy - py + cy;
+            else          px = cx - px + cx;
 
-            if (vertical) py = cy - py + cy - part.getRealHeight();
-            else          px = cx - px + cx - part.getRealWidth();
+            if (part.getRealWidth() > largest_width.width) {
+                largest_width = {
+                    width: part.getRealWidth(),
+                    x: px
+                }
+            }
+            if (part.getRealHeight() > largest_height.height) {
+                largest_height = {
+                    height: part.getRealHeight(),
+                    y:py
+                }
+            }
+        }
 
-            part.moveTo(px, py);
+        for (let part of editor.selected_parts) {
+            let [px, py] = [part.x, part.y];
 
+            if (vertical) py = cy - py + cy;
+            else          px = cx - px + cx;
 
+            let snap = this.snapCoordToGrid(largest_width.x + largest_width.width / 2, largest_height.y + largest_height.height / 2, largest_snap.x, largest_snap.y, true);
+
+            let dx = snap.x - (largest_width.x + largest_width.width / 2);
+            let dy = snap.y - (largest_height.y + largest_height.height / 2);
+
+            part.moveTo(px + dx, py + dy);
 
 
             //TODO symmetry checks

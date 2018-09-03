@@ -3,6 +3,7 @@
 const keyboardKey = require('keyboard-key');
 
 /* Stages with a camera */
+//TODO make this automatic
 const CAMERA_STAGES = ['sim', 'map', 'editor'];
 
 let control_state = {
@@ -19,9 +20,11 @@ let control_state = {
 };
 
 
+//TODO ES6 func notation
+
 /* Mouse wheel, zoom camera */
 window.addEventListener('wheel', function(e) {
-    let stage = stage_handler.stages[stage_handler.current_stage];
+    let stage = stage_handler.getCurrentStage();
 
     if (CAMERA_STAGES.includes(stage_handler.current_stage)) {
         let scaleDelta = e.wheelDelta > 0 ? stage.camera.scroll_speed : 1 / stage.camera.scroll_speed;
@@ -37,7 +40,7 @@ window.addEventListener('wheel', function(e) {
 
 /* Keyboarding */
 window.addEventListener('keydown', e => {
-    let stage = stage_handler.stages[stage_handler.current_stage];
+    let stage = stage_handler.getCurrentStage();
     let name = keyboardKey.getKey(e);
 
     stage.onKeyDown(e, name);
@@ -65,12 +68,12 @@ window.addEventListener('mousemove', function(e) {
     control_state.mouse.y = e.clientY;
     control_state.mouse.pos_event = e;
 
-    let stage = stage_handler.stages[stage_handler.current_stage];
+    let stage = stage_handler.getCurrentStage();
     stage.onMousemove(e);
 });
 
 window.addEventListener('mouseup', function(e) {
-    let stage = stage_handler.stages[stage_handler.current_stage];
+    let stage = stage_handler.getCurrentStage();
 
     control_state.mouse.last_mouseup = [e.clientX, e.clientY];
     control_state.mouse.isdown = false;
@@ -92,5 +95,9 @@ window.addEventListener('mouseup', function(e) {
     control_state.mouse.dragging = false;
 });
 
+/* Copy, cut, paste */
+window.addEventListener('cut', (e) => stage_handler.getCurrentStage().onCut(e));
+window.addEventListener('copy', (e) => stage_handler.getCurrentStage().onCopy(e));
+window.addEventListener('paste', (e) => stage_handler.getCurrentStage().onPaste(e));
 
 module.exports = control_state;

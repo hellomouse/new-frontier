@@ -66,6 +66,22 @@ module.exports = {
     },
 
     /**
+     * selectPartObject - Select a part given
+     * reference to the part
+     *
+     * @param  {Editor} editor            Level editor
+     * @param  {RocketPartgraphic} obj    Obj to select
+     * @param  {boolean} ignoreCtrl=false Ignore the ctrl check
+     */
+    selectPartObject (editor, obj, ignoreCtrl=false) {
+        /* If CTRL is held down add part to selection */
+        if (!control_state.keyboard.Control && !ignoreCtrl) this.unselectAll(editor);
+
+        editor.selected_parts.push(obj);
+        obj.select();
+    },
+
+    /**
      * selectPartsBoundingBox - Select all parts in a bounding box
      *
      * @param  {Editor} editor Level editor
@@ -112,28 +128,48 @@ module.exports = {
      * @param  {Editor} editor Level editor
      * @param  {number} x      X pos
      * @param  {number} y      Y pos
+     * @param  {boolean} force Force placement?
      * @return {boolean}       Did it place
      */
-    addPart (editor, x, y) {
+    addPart (editor, x, y, force=false) {
         if (!editor.current_select_build) return false;  // Nothing selected
 
         // Snap to smallest grid size
         let part_data = allParts.index_data[editor.current_select_build];
+        let angle = gameUtil.math.normalizeAngle(Math.PI / 2 * editor.placement_rotation);
+        let obj = new RocketPartGraphic(editor.current_select_build, x, y);
+
+        obj.sprite.rotation = angle;
+
+        let a = Math.round(angle / (Math.PI / 2));
+
+        if ( a === 1) {
+            x += part_data.height;
+        }
+        else if (a === 2) {
+            x += part_data.width;
+            y += part_data.height;
+        } else if (a === 3) {
+            y += part_data.width;
+        }
+
         ({x, y} = this.snapCoordToGrid(x, y, part_data.data.min_snap_multiplier_x, part_data.data.min_snap_multiplier_y));
 
+        obj.moveTo(x, y);
+
         // Can the part be allowed to overlap at that point?
-        if (!part_data.data.can_overlap) {
+        if (!part_data.data.can_overlap && !force) {
             for (let part of editor.current_build) {
                 /* Intersection between another part */
                 let bounds = part.getBounds();
+                let bounds2 = obj.getBounds();
 
                 if (gameUtil.math.rectIntersect(bounds[0], bounds[1], bounds[2], bounds[3],
-                    x + 1, y + 1, x + part_data.width - 1, y + part_data.height - 1))
+                    bounds2[0] + 1, bounds2[1] + 1, bounds2[2] - 1, bounds2[3] - 1))
                         return false;
+
             }
         }
-
-        let obj = new RocketPartGraphic(editor.current_select_build, x, y);
 
         editor.current_build.push(obj);
         editor.stage.addChild(obj.sprite);
@@ -174,8 +210,7 @@ module.exports = {
             this.rotateSelection90Deg(editor, Math.PI / 2);
         }
 
-        let use_exact_center = true;
-        let {center, largest_snap, w_range, h_range} = this.getSelectionData(editor, editor.selected_parts, use_exact_center);
+        let {center, largest_snap, w_range, h_range} = this.getSelectionData(editor, editor.selected_parts, true);
 
         /* Radius is max X or Y difference */
         let r = Math.max(h_range[1] - h_range[0], w_range[1] - w_range[0]);
@@ -186,6 +221,12 @@ module.exports = {
             let [px, py] = [part.x, part.y];
 
             part.sprite.rotation = gameUtil.math.normalizeAngle(part.sprite.rotation);
+
+            /* Fix for rotating single parts in place */
+            if (editor.selected_parts.length === 1) {
+                px += part.sprite.width *  gameUtil.math.quadCos(part.sprite.rotation);
+                py += part.sprite.height * gameUtil.math.quadSin(part.sprite.rotation);
+            }
 
             let x = -(py - center.y) + center.x;
             let y = (px - center.x) + center.y;

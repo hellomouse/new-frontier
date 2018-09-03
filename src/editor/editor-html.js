@@ -137,6 +137,7 @@ module.exports = `
             left: 0;
             display: none;
             pointer-events: none;
+            transform: rotate(0deg);
         " class="noselect"
         src="">
 
@@ -162,7 +163,6 @@ module.exports = `
             right: 0;
             bottom: 0;
         ">
-        <button>FREE MOVE</button>
         <button>SWIPE</button>
     </div>
 

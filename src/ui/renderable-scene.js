@@ -93,6 +93,11 @@ class RenderableScene {
     onKeyDown(e, name) {
         // Empty, override
     }
+
+    //TODO fix this
+    onCut(e) {}
+    onCopy(e) {}
+    onPaste(e) {}
 }
 
 module.exports = RenderableScene;

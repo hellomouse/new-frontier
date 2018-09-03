@@ -18,6 +18,11 @@ Create a simulation (calculations only)
 
 Use a real logger
 
+PIXI destroy texture after load to save memory
+
+Work on culling - pixi does not cull
+
+
 Ramp object to snap objects diagionally
     and horiziontal fuel tanks and shit
 
@@ -29,11 +34,7 @@ Editor draw the select box if drag
 
     REDO CONTROLS - Buttons
         Swipe controls at bottom, with move and rotate buttons
-        Subtle move buttons? like GD?
-        free-snap mode, enable/disable snapping
-        free move mode - drag
-        collapsable bottom bar 
-
+        collapsable bottom bar
 
     Dragging cursor effect
 
@@ -45,12 +46,11 @@ Editor draw the select box if drag
 
     undo, redo + buttons
 
-    copy-paste
+    paste - move down and to left 1 each paste, reset on camera move
 
-
-
-    rotate part while placing
     editor auto-rotate part
+
+    Editor top-bar smaller, and don't deselect
 
     //TODO collision check after rotate and move
     // Fix rotating out of bounds, make it red and invalid

@@ -32,6 +32,7 @@ class Editor extends RenderableScene {
 
         // Actions/build
         this.current_select_build = null;
+        this.placement_rotation = 0;
         this.swipe = false;  // Swipe enabled is drag a select box, otherwise camera drag
 
         // Camera
@@ -40,6 +41,7 @@ class Editor extends RenderableScene {
 
         this.current_build = [];
         this.selected_parts = [];
+        this.clipboard = [];
 
         /* Width of left side of editor (selectors)
          * Since HTML is not yet loaded will be loaded on click */
@@ -201,6 +203,13 @@ class Editor extends RenderableScene {
             case 'q':
             case 'e': {
                 editor_man.rotateSelection90Deg(this, (name === 'e' ? 1 : -1) * Math.PI / 2, true);
+
+                /* Rotate the icon of selection */
+                if (this.current_select_build) {
+                    this.placement_rotation += (name === 'e' ? 1 : -1);
+                    document.getElementById('follow-mouse-editor-icon').style.transform = `rotate(${Math.round(this.placement_rotation * 90)}deg)`;
+                }
+
                 break;
             }
 
@@ -271,6 +280,56 @@ class Editor extends RenderableScene {
     }
 
     /**
+     * onCopy - Copy current selection
+     * @param  {Event} e  Event
+     * @override
+     */
+    onCopy(e) {
+        this.clipboard = this.selected_parts.map(p => {
+            return {
+                x: p.x, y: p.y,
+                rotation: p.sprite.rotation,
+                id: p.id
+            };
+        });
+    }
+
+    /**
+     * onCut - Cut current selection
+     * @param  {Event} e  Event
+     * @override
+     */
+    onCut(e) {
+        this.onCopy(e);
+        editor_man.deleteSelection(this);
+    }
+
+    /**
+     * onPaste - Paste selection
+     * @param  {Event} e  Event
+     * @override
+     */
+    onPaste(e) {
+        editor_man.unselectAll(this);
+
+        let cx = this.camera_focus.x;
+        let cy = this.camera_focus.y;
+        let round = editor_man.snapCoordToGrid(cx, cy, 1, 1);
+
+        cx = round.x;
+        cy = round.y;
+
+        for (let part of this.clipboard) {
+            let obj = new RocketPartGraphic(part.id, part.x + cx, part.y + cy);
+
+            this.current_build.push(obj);
+            this.stage.addChild(obj.sprite);
+
+            editor_man.selectPartObject(this, obj, true);
+        }
+    }
+
+    /**
      * updatedSelectedIcon - Update the current
      * little mouse icon that displays the part
      * that is selected
@@ -284,6 +343,8 @@ class Editor extends RenderableScene {
 
         if (!this.current_select_build) {
             icon.style.display = 'none';
+            icon.style.transform = 'rotate(0deg)';
+            this.placement_rotation = 0;
             return;
         }
 
@@ -340,8 +401,9 @@ class Editor extends RenderableScene {
         let parts = this.current_build.map(part => {
             /* Adjust from corner coordinates to
              * centered coordinates */
-            let x = part.x + part.sprite.width / 2;
-            let y = part.y + part.sprite.height / 2;
+            let bounds = part.getBounds();
+            let x = (bounds[0] + bounds[2]) / 2;
+            let y = (bounds[1] + bounds[3]) / 2;
             let returned = new allParts.index[part.id](x, y);
 
             returned.setSpriteRotation(part.sprite.rotation);

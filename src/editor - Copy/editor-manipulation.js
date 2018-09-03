@@ -96,7 +96,7 @@ module.exports = {
 
         for (let part of editor.current_build) {
             if (gameUtil.math.rectIntersect(x_bounds[0], y_bounds[0], x_bounds[1], y_bounds[1],
-                    part.x - part.getRealWidth() / 2, part.y - part.getRealHeight() / 2, part.x + part.getRealWidth() / 2, part.y + part.getRealHeight() / 2)) {
+                    part.x, part.y, part.x + part.data.width, part.y + part.data.height)) {
                 editor.selected_parts.push(part);
                 part.select();
             }
@@ -163,7 +163,7 @@ module.exports = {
 
         obj.sprite.rotation = angle;
 
-        /*let a = Math.round(angle / (Math.PI / 2));
+        let a = Math.round(angle / (Math.PI / 2));
 
         if ( a === 1) {
             x += part_data.height;
@@ -173,11 +173,11 @@ module.exports = {
             y += part_data.height;
         } else if (a === 3) {
             y += part_data.width;
-        }*/
+        }
 
-        ({x, y} = this.snapCoordToGrid(x , y, part_data.data.min_snap_multiplier_x, part_data.data.min_snap_multiplier_y));
+        ({x, y} = this.snapCoordToGrid(x, y, part_data.data.min_snap_multiplier_x, part_data.data.min_snap_multiplier_y));
 
-        obj.moveTo(x + obj.getRealWidth() / 2, y  +  obj.getRealHeight() / 2);
+        obj.moveTo(x, y);
 
         // Can the part be allowed to overlap at that point?
         if (!part_data.data.can_overlap && !force) {
@@ -186,10 +186,8 @@ module.exports = {
                 let bounds = part.getBounds();
                 let bounds2 = obj.getBounds();
 
-                if (gameUtil.math.rectIntersect(obj.x - obj.getRealWidth() / 2 + 1, obj.y - obj.getRealHeight() / 2 + 1,
-                obj.x + obj.getRealWidth() / 2 - 1, obj.y + obj.getRealHeight() / 2 - 1,
-                part.x - part.getRealWidth() / 2, part.y - part.getRealHeight() / 2,
-            part.x + part.getRealWidth() / 2, part.y + part.getRealHeight() / 2))
+                if (gameUtil.math.rectIntersect(bounds[0], bounds[1], bounds[2], bounds[3],
+                    bounds2[0] + 1, bounds2[1] + 1, bounds2[2] - 1, bounds2[3] - 1))
                         return false;
 
             }
@@ -239,10 +237,10 @@ module.exports = {
         /* Due to some bug with rotating large/negative angles,
          * it will rotate the angle in 90 DEG increments */
         angle = gameUtil.math.normalizeAngle(angle);
-        /*while (angle >= Math.PI) {
+        while (angle >= Math.PI) {
             angle -= Math.PI / 2;
             this.rotateParts90Deg(parts, Math.PI / 2);
-        }*/
+        }
 
         let {center, largest_snap, w_range, h_range} = this.getSelectionData(parts, true);
 
@@ -251,51 +249,23 @@ module.exports = {
 
         /* Rotate each part around the center,
          * then rotate the part itself */
-
-        let largest_width = { width: 0 };
-        let largest_height = { height: 0 };
-
         for (let part of parts) {
             let [px, py] = [part.x, part.y];
 
             part.sprite.rotation = gameUtil.math.normalizeAngle(part.sprite.rotation);
 
-            let x = -(py - center.y) + center.x;
-            let y = (px - center.x) + center.y;
-
-            part.sprite.rotation += angle;
-            part.sprite.rotation = gameUtil.math.normalizeAngle(part.sprite.rotation);
-
-            if (part.getRealWidth() > largest_width.width) {
-                largest_width = {
-                    width: part.getRealWidth(),
-                    x: x
-                }
+            /* Fix for rotating single parts in place */
+            if (parts.length === 1) {
+                px += part.sprite.width *  gameUtil.math.quadCos(part.sprite.rotation);
+                py += part.sprite.height * gameUtil.math.quadSin(part.sprite.rotation);
             }
-            if (part.getRealHeight() > largest_height.height) {
-                largest_height = {
-                    height: part.getRealHeight(),
-                    y: y
-                }
-            }
-
-            part.sprite.rotation -= angle;
-        }
-
-        for (let part of parts) {
-            let px = part.x;
-            let py = part.y;
 
             let x = -(py - center.y) + center.x;
             let y = (px - center.x) + center.y;
 
-            let snap = this.snapCoordToGrid(largest_width.x + largest_width.width / 2, largest_height.y + largest_height.height / 2, largest_snap.x, largest_snap.y, true);
+            ({x, y} = this.snapCoordToGrid(x, y, largest_snap.x, largest_snap.y, true));
 
-            let dx = snap.x - (largest_width.x + largest_width.width / 2);
-            let dy = snap.y - (largest_height.y + largest_height.height / 2);
-
-
-            part.moveTo(x + dx, y + dy);
+            part.moveTo(x, y);
             part.sprite.rotation += angle;
         }
     },
@@ -308,9 +278,6 @@ module.exports = {
      * @return {type}               description
      */
     mirrorSelection(editor, vertical=true) {
-
-        //TODO rewrite This
-
         /* No parts to rotate */
         if (editor.selected_parts.length === 0) return;
 
@@ -351,6 +318,55 @@ module.exports = {
         editor.addCurrentStateToStack();
     },
 
+    // /**
+    //  * rotateSelection - Rotates the current
+    //  * selection by an angle
+    //  *
+    //  * @param {Editor} editor  Level editor
+    //  * @param {number} angle  Rotation in RAD
+    //  */
+    // rotateSelection (editor, angle) {
+    //     /* No parts to rotate */
+    //     if (editor.selected_parts.length === 0) return;
+    //
+    //     /* Due to some bug with rotating large/negative angles,
+    //      * it will rotate the angle in 90 DEG increments */
+    //     while (angle < 0) angle += Math.PI * 2;
+    //     while (angle > Math.PI * 2) angle -= Math.PI * 2;
+    //     while (angle >= Math.PI) {
+    //         angle -= Math.PI / 2;
+    //         this.rotateSelection(editor, Math.PI / 2);
+    //     }
+    //
+    //     let use_exact_center = true;
+    //     let {center, largest_snap, w_range, h_range} = this.getSelectionData(editor, editor.selected_parts, use_exact_center);
+    //
+    //     /* Radius is max X or Y difference */
+    //     let r = Math.max(h_range[1] - h_range[0], w_range[1] - w_range[0]);
+    //
+    //     /* Rotate each part around the center,
+    //      * then rotate the part itself */
+    //     for (let part of editor.selected_parts) {
+    //         let [px, py] = [part.x, part.y];
+    //
+    //         /* Correction factor, same as above */
+    //         if (use_exact_center) {
+    //             px += part.sprite.width * Math.cos(part.sprite.rotation);
+    //             py += part.sprite.height * Math.sin(part.sprite.rotation);
+    //         }
+    //
+    //         //let x = Math.cos(angle) * (px - center.x) - Math.sin(angle) * (py - center.y) + center.x;
+    //         //let y = Math.sin(angle) * (px - center.x) + Math.cos(angle) * (py - center.y) + center.y;
+    //
+    //         //let temp = this.snapCoordToGrid(x, y, largest_snap.x, largest_snap.y, true);
+    //
+    //         let x = -(py - center.y) + center.x;
+    //         let y = (px - center.x) + center.y;
+    //
+    //         part.moveTo(x, y);
+    //         part.sprite.rotation += angle;
+    //     }
+    // },
 
     /**
      * getSelectionData - Get selection data for an
@@ -381,8 +397,8 @@ module.exports = {
              * (Calculated from the CORNER of the sprites) as
              * using exact center causes bugs */
             if (use_exact_center) {
-                //center.x += part.sprite.width * Math.cos(part.sprite.rotation);
-                //center.y += part.sprite.height * Math.sin(part.sprite.rotation);
+                center.x += part.sprite.width * Math.cos(part.sprite.rotation);
+                center.y += part.sprite.height * Math.sin(part.sprite.rotation);
             }
 
             /* Obtain the max, min values for above variables */

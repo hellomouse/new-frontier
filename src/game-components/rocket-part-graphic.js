@@ -26,6 +26,7 @@ class RocketPartGraphic {
         this.sprite.height = this.data.height;
         this.sprite.x = x;
         this.sprite.y = y;
+        this.sprite.anchor.set(0.5, 0.5);
 
         /* Alias for sprite.x */
         this.x = x;
@@ -47,8 +48,8 @@ class RocketPartGraphic {
      */
     containsPoint(x, y) {
         let bounds = this.getBounds();
-        return gameUtil.math.isBetween(x, bounds[0], bounds[2]) &&
-               gameUtil.math.isBetween(y, bounds[1], bounds[3]);
+        return gameUtil.math.isBetween(x, this.x - this.getRealWidth() / 2, this.x + this.getRealWidth() / 2) &&
+               gameUtil.math.isBetween(y, this.y - this.getRealHeight() / 2, this.y + this.getRealHeight() / 2);
     }
 
     /**
@@ -56,27 +57,28 @@ class RocketPartGraphic {
      * @return {array}  [x1, y1, x2, y2]
      */
     getBounds() {
+        return [this.x - this.getRealWidth() / 2, this.x + this.getRealWidth() / 2, this.y - this.getRealHeight() / 2, this.y + this.getRealHeight() / 2]
+    }
+
+    /**
+     * getRealWidth - Return the real width
+     * TODO fix doc
+     * @return {type}  description
+     */
+    getRealWidth() {
         let rotation = Math.floor(this.sprite.rotation / (Math.PI / 2));
-        let bounds;
+        if (rotation === 0 || rotation === 4 || rotation == 2) return this.sprite.width;
+        return this.sprite.height;
+    }
 
-        if (rotation === 0 || rotation === 4) bounds = [this.x, this.y, this.x + this.sprite.width, this.y + this.sprite.height];
-        else if (rotation === 2) bounds = [this.x, this.y, this.x - this.sprite.width, this.y - this.sprite.height];
-        else if (rotation === 1) bounds = [this.x, this.y, this.x - this.sprite.height, this.y + this.sprite.width];
-        else if (rotation === 3) bounds = [this.x, this.y, this.x + this.sprite.height, this.y - this.sprite.width];
+    getRealHeight() {
+        let rotation = Math.floor(this.sprite.rotation / (Math.PI / 2));
+        if (rotation === 0 || rotation === 4 || rotation === 2) return this.sprite.height;
+        return this.sprite.width;
+    }
 
-        let t;
-        if (bounds[0] > bounds[2]) {
-            t = bounds[0];
-            bounds[0] = bounds[2];
-            bounds[2] = t;
-        }
-        if (bounds[1] > bounds[3]) {
-            t = bounds[1];
-            bounds[1] = bounds[3];
-            bounds[3] = t;
-        }
+    rotateInPlace(angle) {
 
-        return bounds;
     }
 
 

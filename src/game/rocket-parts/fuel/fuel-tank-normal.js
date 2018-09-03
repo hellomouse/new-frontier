@@ -14,7 +14,7 @@ const DATA = {
     volume: 80.21 * 2,
     density: 52.98,  // Including fuel
     description: 'A fuel tank carrying liquid fuel and oxygen. Explosive.',
-    category: 'Fuel'
+    category: 'Fuel',
 };
 
 class FuelTankNormal extends FuelTank {

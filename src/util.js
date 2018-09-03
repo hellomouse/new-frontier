@@ -1,7 +1,7 @@
 'use strict';
 
 module.exports = {
-    large_number: 1e99,
+    large_number: Number.MAX_SAFE_INTEGER,
     math: {
         /**
          * fastAtan - Fast atan approximation. About

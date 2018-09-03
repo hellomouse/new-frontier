@@ -77,7 +77,8 @@ class RocketPart extends PhysicalSprite {
          *     },
          *
          *     explosiveness: 1,  // Explosive force multiplier
-         *     cost: 0
+         *     cost: 0,
+         *
          * }
          */
         this.data = data;

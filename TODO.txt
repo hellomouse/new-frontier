@@ -29,26 +29,29 @@ UTIL FOLDER
 Add a debug console
 
 
+Planet editor tool
+
+Download fonts
+
 
 Editor draw the select box if drag
-    Tidy everything - no magic numbers, no underscore, linting and shit
-        table of contents, file desc
 
-    REDO CONTROLS - Buttons
-        Swipe controls at bottom, with move and rotate buttons
-        undo, redo buttons
-        collapsable bottom bar
+    REDO CONTROLS
+        Bottom bar is control/help/engineering
 
     Editor neater grid
-    Editor select part category
-
-    editor right click to edit part
 
 
+
+    EXPERIMENT WITH NEW SPRITE THING - 0.5 0.5 vs corner
 
     MIRRORING!!!
-        shift-ctrl-R - horz
-        ctrl-R - vertical
+        shift-ctrl-f - horz
+        ctrl-f - vertical
+        BUGGY
+
+    rotating slabs in place doesn't work - snap rotates too
+            x and y snapping ALSO rotates
 
     paste - move down and to left 1 each paste, reset on camera move
 
@@ -59,13 +62,19 @@ Editor draw the select box if drag
     -----------------------------------------------
     Moving object - move camera if it goes off screen
     Disable launch until rocket is constructed
-    Editor top-bar smaller, and don't deselect
 
     //TODO collision check after rotate and move
     // Fix rotating out of bounds, make it red and invalid
 
 
+    -- At this point start extensive linting --
+        Tidy everything - no magic numbers, no underscore, linting and shit
+            table of contents, file desc
+        HTML formatting
 
+
+    editor right click to edit part
+    Editor select part category
     center of gravity, thrust, aero
 
     editor engineering report

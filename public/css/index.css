@@ -14,7 +14,7 @@ body {
 }
 
 .noselect {
-    user-select: none; 
+    user-select: none;
 }
 
 .brighten-on-hover {
@@ -26,3 +26,21 @@ body {
      filter: brightness(120%);
 }
 .cursor-on-hover:hover {cursor: pointer; }
+
+.fadeable {
+    opacity: 0;
+	overflow: hidden;
+	transition: opacity 750ms ease-in-out;
+}
+
+.fadeable.is-visible {
+    display: block;
+    opacity: 1;
+}
+
+.caption {
+    position: fixed;
+    bottom: 50px;
+    left: 50%;
+    color: white;
+}

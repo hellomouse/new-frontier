@@ -25,6 +25,7 @@
     "@mohayonao/perlin-noise": "^0.2.0",
     "keyboard-key": "^1.0.2",
     "node-dir": "^0.1.17",
-    "pixi.js": "^4.6.2"
+    "pixi.js": "^4.6.2",
+    "undo-redo-js": "^1.2.7"
   }
 }

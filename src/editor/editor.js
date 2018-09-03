@@ -1,6 +1,8 @@
 'use strict';
 
 /* Util and other required */
+const UndoRedo = require('undo-redo-js').UndoRedo;
+
 const RenderableScene = require('../ui/renderable-scene.js');
 const gameUtil = require('../util.js');
 const config = require('../game/config.js');
@@ -34,6 +36,9 @@ class Editor extends RenderableScene {
         this.current_select_build = null;
         this.placement_rotation = 0;
         this.swipe = false;  // Swipe enabled is drag a select box, otherwise camera drag
+        this.stack = new UndoRedo({
+            limit: 100,             // defaults to -1 = unlimited
+        });
 
         // Camera
         this.camera_focus = {x: 0, y: 0};
@@ -83,6 +88,13 @@ class Editor extends RenderableScene {
     update() {
         this.camera.focusOn(this.camera_focus);
         this.camera.updateScene(this.stage, this.renderer);
+    }
+
+    addCurrentStateToStack() {
+        let state = this.current_build.map(x => {return {
+            x: x.x, y: x.y, rotation: x.sprite.rotation, id: x.id
+        }})
+        this.stack.add(state);
     }
 
     /**
@@ -179,6 +191,9 @@ class Editor extends RenderableScene {
     onRightClick(e) {
         /* Right mouse click
          * Options for part at <x, y> */
+        this.current_select_build = null;
+        this.updatedSelectedIcon(e);
+
         let coords = this.processMouseCoordinates(e);
         if (!coords) return;
         let [x, y] = coords;
@@ -225,6 +240,40 @@ class Editor extends RenderableScene {
 
                 for (let part of this.selected_parts)
                     part.moveToRelative(dpos.dx, dpos.dy);
+
+                this.addCurrentStateToStack();
+                break;
+            }
+
+            /* Undo */
+            case 'z': {
+                if (control_state.keyboard.Control) {
+                    let undo = this.stack.undo();
+                    if (undo) {
+                        editor_man.deleteAll(this, false);
+                        for (let part of undo) {
+                            this.current_select_build = part.id;
+                            editor_man.addPart(this, part.x, part.y, true, false);
+                        }
+                        this.current_select_build = null;
+                    }
+                }
+                break;
+            }
+
+            /* Redo */
+            case 'y': {
+                if (control_state.keyboard.Control) {
+                    let redo = this.stack.redo();
+                    if (redo) {
+                        editor_man.deleteAll(this, false);
+                        for (let part of redo) {
+                            this.current_select_build = part.id;
+                            editor_man.addPart(this, part.x, part.y, true, false);
+                        }
+                        this.current_select_build = null;
+                    }
+                }
                 break;
             }
         }
@@ -247,6 +296,8 @@ class Editor extends RenderableScene {
         if (!e) return; // Outside of screen
         this.updatedSelectedIcon(e);  // Updated selected icon
 
+        document.getElementById('ui-overlay').style.cursor = 'initial';
+
         /* Draw the select rectangle that shows the selection */
         if (!control_state.mouse.isdown) {
             this.removeRectangleGraphic();
@@ -262,6 +313,8 @@ class Editor extends RenderableScene {
         else {
             this.camera_focus.x = this.camera_focus_initial.x + initial_pos.x - coords.x;
             this.camera_focus.y = this.camera_focus_initial.y + initial_pos.y - coords.y;
+
+            document.getElementById('ui-overlay').style.cursor = 'move';
 
             if (Math.abs(this.camera_focus.x) > config.build_grid_boundary)
                 this.camera_focus.x = gameUtil.math.copySign(this.camera_focus.x) * config.build_grid_boundary;
@@ -321,12 +374,15 @@ class Editor extends RenderableScene {
 
         for (let part of this.clipboard) {
             let obj = new RocketPartGraphic(part.id, part.x + cx, part.y + cy);
+            obj.sprite.rotation = part.rotation;
 
             this.current_build.push(obj);
             this.stage.addChild(obj.sprite);
 
             editor_man.selectPartObject(this, obj, true);
         }
+
+        this.addCurrentStateToStack();
     }
 
     /**

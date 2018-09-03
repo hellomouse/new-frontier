@@ -119,6 +119,27 @@ module.exports = {
 
         editor.selected_parts = [];
         editor.current_build = editor.current_build.filter(x => x !== undefined);
+
+        editor.addCurrentStateToStack();
+    },
+
+    /**
+     * deleteAll - Deletes all objects currently
+     * in the editor.
+     *
+     * @param {Editor} editor       Level editor
+     * @param {boolean} undo=true  Save as undo action?
+     */
+    deleteAll(editor, undo=true) {
+        for (let part of editor.current_build) {
+            /* Delete parts from stage, graphics array and part array */
+            editor.stage.removeChild(part.sprite);
+            delete editor.current_build[editor.current_build.indexOf(part)];
+        }
+        editor.current_build = [];
+        editor.selected_parts = [];
+
+        if (undo) editor.addCurrentStateToStack();
     },
 
     /**
@@ -129,9 +150,10 @@ module.exports = {
      * @param  {number} x      X pos
      * @param  {number} y      Y pos
      * @param  {boolean} force Force placement?
+     * @param {boolean} undo=true  Save as undo action?
      * @return {boolean}       Did it place
      */
-    addPart (editor, x, y, force=false) {
+    addPart (editor, x, y, force=false, undo=true) {
         if (!editor.current_select_build) return false;  // Nothing selected
 
         // Snap to smallest grid size
@@ -173,6 +195,8 @@ module.exports = {
 
         editor.current_build.push(obj);
         editor.stage.addChild(obj.sprite);
+
+        if (undo) editor.addCurrentStateToStack();
 
         return true;
     },
@@ -236,6 +260,8 @@ module.exports = {
             part.moveTo(x, y);
             part.sprite.rotation += angle;
         }
+
+        editor.addCurrentStateToStack();
     },
 
     // /**

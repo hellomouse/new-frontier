@@ -23,10 +23,12 @@ PIXI destroy texture after load to save memory
 Work on culling - pixi does not cull
 
 
-Ramp object to snap objects diagionally
-    and horiziontal fuel tanks and shit
-
 UTIL FOLDER
+
+
+Add a debug console
+
+
 
 Editor draw the select box if drag
     Tidy everything - no magic numbers, no underscore, linting and shit
@@ -34,28 +36,35 @@ Editor draw the select box if drag
 
     REDO CONTROLS - Buttons
         Swipe controls at bottom, with move and rotate buttons
+        undo, redo buttons
         collapsable bottom bar
-
-    Dragging cursor effect
-
 
     Editor neater grid
     Editor select part category
 
     editor right click to edit part
 
-    undo, redo + buttons
+
+
+    MIRRORING!!!
+        shift-ctrl-R - horz
+        ctrl-R - vertical
 
     paste - move down and to left 1 each paste, reset on camera move
 
     editor auto-rotate part
 
+
+    Easy
+    -----------------------------------------------
+    Moving object - move camera if it goes off screen
+    Disable launch until rocket is constructed
     Editor top-bar smaller, and don't deselect
 
     //TODO collision check after rotate and move
     // Fix rotating out of bounds, make it red and invalid
 
-    right click while part is selected TO Place to deselect it
+
 
     center of gravity, thrust, aero
 

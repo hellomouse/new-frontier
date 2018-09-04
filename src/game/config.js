@@ -4,6 +4,7 @@ module.exports = {
     // Build grid
     build_grid_size: 52,
     build_grid_boundary: 500,
+    buildMaxUndo: 30,
 
     // Planets
     planet_sector_size: 0.523599 / 40960 * 10, // Size of a sector in rad
@@ -18,9 +19,6 @@ module.exports = {
     // Physics
     G_CONSTANT: 2000,
 
-    // Editor
-    EDITOR_X_SIZE: 30,
-    EDITOR_Y_SIZE: 100,
 
     // File
     IMG_PATH: '../assets/img/'

@@ -66,15 +66,25 @@ class RocketPartGraphic {
      * @return {type}  description
      */
     getRealWidth() {
-        let rotation = Math.floor(this.sprite.rotation / (Math.PI / 2));
+        let rotation = Math.round(this.sprite.rotation / (Math.PI / 2));
         if (rotation === 0 || rotation === 4 || rotation == 2) return this.sprite.width;
         return this.sprite.height;
     }
 
     getRealHeight() {
-        let rotation = Math.floor(this.sprite.rotation / (Math.PI / 2));
+        let rotation = Math.round(this.sprite.rotation / (Math.PI / 2));
         if (rotation === 0 || rotation === 4 || rotation === 2) return this.sprite.height;
         return this.sprite.width;
+    }
+
+    getSnapX() {
+        let rotation = Math.round(this.sprite.rotation / (Math.PI / 2));
+        return [1, 3].includes(rotation) ? this.data.data.min_snap_multiplier_y : this.data.data.min_snap_multiplier_x;
+    }
+
+    getSnapY() {
+        let rotation = Math.round(this.sprite.rotation / (Math.PI / 2));
+        return [0, 2, 4].includes(rotation) ? this.data.data.min_snap_multiplier_y : this.data.data.min_snap_multiplier_x;
     }
 
     rotateInPlace(angle) {

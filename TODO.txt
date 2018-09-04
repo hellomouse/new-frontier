@@ -34,16 +34,13 @@ Planet editor tool
 Download fonts
 
 
+https://github.com/discordjs/RPC/tree/master/example
+
+
 Editor draw the select box if drag
 
     REDO CONTROLS
         Bottom bar is control/help/engineering
-
-    Editor neater grid
-
-
-    rotating slabs in place doesn't work - snap rotates too
-            x and y snapping ALSO rotates
 
     paste - move down and to left 1 each paste, reset on camera move
 
@@ -60,9 +57,8 @@ Editor draw the select box if drag
 
 
     -- At this point start extensive linting --
-        Tidy everything - no magic numbers, no underscore, linting and shit
-            table of contents, file desc
         HTML formatting
+        CSS file for editor
 
 
     editor right click to edit part

@@ -59,7 +59,7 @@ let stage_handler;
 global.scenes = {
     sim: new (require('./simulation'))(),
     map: new (require('./simulation/map.js'))(),
-    editor: new (require('./editor/editor.js'))()
+    editor: new (require('./editor'))()
 };
 
 

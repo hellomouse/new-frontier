@@ -3,7 +3,6 @@
 const allParts = require('../game/rocket-parts/all-parts.js');
 const config = require('../game/config.js');
 const control_state = require('../controls.js');
-
 const properties = require('../game/rocket-parts/property-formatter.js');
 const units = require('../game/units.js');
 
@@ -16,17 +15,29 @@ const PART_ICON_SIZE = 40;
 /* Setup global */
 global.editorFunctions = global.editorFunctions ? global.editorFunctions : {};
 
-/* Create the functions */
-global.editorFunctions.changeEditorBuild = function(id, button) {
-    scenes.editor.current_select_build = scenes.editor.current_select_build === id ? null : id;
-    scenes.editor.updatedSelectedIcon(control_state.mouse.pos_event);
+/**
+ * anonymous function - Changes the current selected
+ * editor part to ID
+ *
+ * @param  {string} id ID of the part
+ */
+global.editorFunctions.changeEditorBuild = function (id) {
+    let editor = stage_handler.getStageByName('editor');
+
+    editor.currentSelectBuild = editor.currentSelectBuild === id ? null : id;
+    editor.updatedSelectedIcon(control_state.mouse.pos_event);
 }
 
-global.editorFunctions.displayPartData = function(id) {
+/**
+ * global - Display data for a part on the side
+ * (When the part is hovered over)
+ *
+ * @param  {string} id ID of the part
+ */
+global.editorFunctions.displayPartData = function (id) {
     let container = document.getElementById('part-desc');
     let left_half = document.getElementById('part-desc-1');
     let right_half = document.getElementById('part-desc-2');
-
     let data = allParts.index_data[id];
 
     container.style.display = 'inline';
@@ -54,21 +65,25 @@ global.editorFunctions.displayPartData = function(id) {
     ${
         Object.keys(data.properties.static ? data.properties.static : {})
             .filter(x => properties[x] && properties[x].display)
-            .map(x => '<b>' + properties[x].display_name +'</b> ' + data.properties.static[x] + ' ' + properties[x].unit).join('<br>')
+            .map(x => '<b>' + properties[x].display_name +'</b> '
+                    + data.properties.static[x] + ' ' + properties[x].unit).join('<br>')
     }
     </span>
     `;
 }
 
-global.editorFunctions.spawnCurrentRocketAtLaunchPad = function() {
+/**
+ * global - Spawns the rocket at the launch pad
+ * Runs when "launch" button is clicked
+ */
+global.editorFunctions.spawnCurrentRocketAtLaunchPad = function () {
     let rocket = stage_handler.getCurrentStage().constructRocket();
 
     rocket.control = true;
     scenes.sim.addRocket(rocket);
-
-    console.log(rocket)
-
     stage_handler.switchStage('sim');
+
+    console.log(rocket);
 }
 
 /* Load the actual html */
@@ -89,7 +104,8 @@ module.exports = `
             height=${CATEGORY_ICON_SIZE * 0.85}px
             style="
                 margin: 0 ${CATEGORY_ICON_SIZE * 0.075}px 0 ${CATEGORY_ICON_SIZE * 0.075}px;
-                clip: rect(0px, ${CATEGORY_ICON_SIZE * 0.15}px, ${CATEGORY_ICON_SIZE}px, ${CATEGORY_ICON_SIZE * 0.85}px);
+                clip: rect(0px, ${CATEGORY_ICON_SIZE * 0.15}px,
+                                ${CATEGORY_ICON_SIZE}px, ${CATEGORY_ICON_SIZE * 0.85}px);
                 background-color: #DDD
             "
             class="brighten-on-hover cursor-on-hover"
@@ -124,7 +140,7 @@ module.exports = `
                 border: 1px solid gray;
             "
             src='${x.image_path}' id="part-button-${x.id}"
-            onclick='editorFunctions.changeEditorBuild("${x.id}", this);'
+            onclick='editorFunctions.changeEditorBuild("${x.id}");'
             onmouseover='editorFunctions.displayPartData("${x.id}")'
             onmouseleave='document.getElementById("part-desc").style.display = "none";'>`;
         }).join('')

@@ -115,12 +115,12 @@ module.exports = `
 
     <!-- Part display -->
     <div id="parts" style="
-        width: 250px;
+        width: 240px;
         height: 100%;
         position: absolute;
         top: 0;
         left: ${CATEGORY_ICON_SIZE}px;
-        background-color: rgba(0, 0, 0, 0.9);
+        background-color: rgba(0, 0, 0, 0.7);
     " class="noselect"
     >${
         allParts.partsData.map(x => {

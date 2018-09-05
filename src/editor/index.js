@@ -87,7 +87,7 @@ class Editor extends RenderableScene {
 
         /* Scene and camera */
         this.scene = null;                    /* Created in init */
-        this.camera = new Camera(0.1, 4, 1);  /* Min zoom = 0.1, max zoom = 4, initial zoom = 1 */
+        this.camera = new Camera(0.28, 4, 1);  /* Min zoom = 0.28, max zoom = 4, initial zoom = 1 */
 
         this.cameraFocus = { x: 0, y: 0 };    /* Coordinates to focus camera on */
         this.cameraFocusBeforeDrag = { x: 0, y: 0 };  /* Camera focus before camera is dragged */
@@ -108,8 +108,8 @@ class Editor extends RenderableScene {
         this.clipboard = [];      /* Array of objects that can be converted to RocketPartgraphic */
 
         /* Width of left side of editor (selectors)
-         * Since HTML is not yet loaded will be loaded on click */
-        this.leftPartWidth = null;
+         * MUST MATCH SUM OF THE 2 LEFT DIVS in UI-html */
+        this.leftPartWidth = 280;
 
         /* Select rectangle graphic */
         this.selectRectangleGraphic = null;
@@ -128,11 +128,12 @@ class Editor extends RenderableScene {
         let bound = editorConfig.buildAreaBoundary;
         let thickness;
 
+        lines.alpha = 0.1;
         this.stage.addChild(lines);
 
         for (let i = -bound; i <= bound; i += editorConfig.buildGridSize) {
             /* Adjust for a thicker outer boundary */
-            thickness = editorConfig.gridThickness * (Math.abs(i) === bound ? 5 : 1);
+            thickness = editorConfig.gridThickness * (Math.abs(i) === bound ? editorConfig.edgeGridMultiplier : 1);
 
             lines.lineStyle(thickness, editorConfig.gridLineColor);
             lines.moveTo(i, -bound).lineTo(i, bound);
@@ -148,6 +149,7 @@ class Editor extends RenderableScene {
     update () {
         this.camera.focusOn(this.cameraFocus);
         this.camera.updateScene(this.stage, this.renderer);
+        this.stage.pivot.x -= this.leftPartWidth;  /* Adjust for extra space on left */
     }
 
     /**
@@ -183,13 +185,6 @@ class Editor extends RenderableScene {
     processMouseCoordinates (e) {
         let x = e.clientX;
         let y = e.clientY;
-
-        /* Add variable if doesn't exist */
-        if (!this.leftPartWidth) {
-            this.leftPartWidth =
-                +document.getElementById('editor-left-1').style.width.replace('px', '') +
-                +document.getElementById('parts').style.width.replace('px', '');
-        }
 
         /* X coordinate is on the left side of the screen
          * (User is selecting parts and not placing down parts)
@@ -398,11 +393,19 @@ class Editor extends RenderableScene {
                 break;
             }
 
-            /* Move selection left, up, down or right */
+            /* Move selection left, up, down or right
+             * Ctrl-A is select all */
             case 'a': case 'ArrowLeft':
             case 's': case 'ArrowDown':
             case 'w': case 'ArrowUp':
             case 'd': case 'ArrowRight': {
+                if (controlState.keyboard.Control && name === 'a') {
+                    for (let part of this.currentBuild)
+                        part.select();
+                    this.selectedParts = this.currentBuild;
+                    break;
+                }
+
                 let dpos = gameUtil.controls.WASDToDxDy(
                     Math.max.apply(null, this.selectedParts.map(p => p.getSnapX())) * editorConfig.buildGridSize,
                     Math.max.apply(null, this.selectedParts.map(p => p.getSnapY())) * editorConfig.buildGridSize,
@@ -471,11 +474,11 @@ class Editor extends RenderableScene {
             this.cameraFocus.x = this.cameraFocusBeforeDrag.x + initial_pos.x - coords.x;
             this.cameraFocus.y = this.cameraFocusBeforeDrag.y + initial_pos.y - coords.y;
 
-            /* Camera boundary */
-            if (Math.abs(this.cameraFocus.x) > editorConfig.buildAreaBoundary)
-                this.cameraFocus.x = gameUtil.math.copySign(this.cameraFocus.x) * editorConfig.buildAreaBoundary;
-            if (Math.abs(this.cameraFocus.y) > editorConfig.buildAreaBoundary)
-                this.cameraFocus.y = gameUtil.math.copySign(this.cameraFocus.y) * editorConfig.buildAreaBoundary;
+            /* Camera boundary. Y boundary is stricter */
+            if (Math.abs(this.cameraFocus.x) > editorConfig.buildAreaBoundary / 2)
+                this.cameraFocus.x = gameUtil.math.copySign(this.cameraFocus.x) * editorConfig.buildAreaBoundary / 2;
+            if (Math.abs(this.cameraFocus.y) > editorConfig.buildAreaBoundary / 4)
+                this.cameraFocus.y = gameUtil.math.copySign(this.cameraFocus.y) * editorConfig.buildAreaBoundary / 4;
 
             /* Set move mouse pointer */
             document.getElementById('ui-overlay').style.cursor = 'move';

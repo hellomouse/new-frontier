@@ -9,6 +9,7 @@ module.exports = {
     selectRectangleColor: 0x00FF00,
     gridLineColor: 0xDDDDDD,
     gridThickness: 2,
+    edgeGridMultiplier: 5, // How much thicker is the grid edge?
 
     /* Building */
     buildGridSize: 52,

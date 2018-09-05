@@ -8,7 +8,10 @@ class StageHandler {
         this.renderer = PIXI.autoDetectRenderer(
             window.innerWidth,
             window.innerHeight,
-            { view: document.getElementById('canvas') }
+            {
+                view: document.getElementById('canvas'),
+                antialias: true
+            }
         );
     }
 

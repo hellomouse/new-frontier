@@ -44,7 +44,6 @@ Editor draw the select box if drag
     editor auto-rotate part
 
     Moving object - move camera if it goes off screen
-    Disable launch until rocket is constructed
 
     -- At this point start extensive linting --
         HTML formatting
@@ -58,18 +57,34 @@ Editor draw the select box if drag
     editor engineering report
         parachute
         comm checks
+        t to w ratio
         idk
+            Disable launch until rocket is constructed
+                missing pod, no rocket
+
     editor no-control report
     editor control list
     editor actions
     editor crew tab
     editor save, load managment of ships
 
+    part search
+
+    stage control
+
     adaptable parts
         like fuel tanks grow to fit smaller/slant
         skins for parts
 
     Seperate parts ine editor into seperate rockets (not connected)
+
+    style something like this https://i.ytimg.com/vi/c0XCUzwDDAs/maxresdefault.jpg
+    style parts like this https://forums.unrealengine.com/filedata/fetch?id=1167897&d=1449197772
+        or this? http://i.cubeupload.com/Wm196j.png
+
+
+Control ring is displayed around the rocket
+fuel percentage on the fuel tank
 
 
 

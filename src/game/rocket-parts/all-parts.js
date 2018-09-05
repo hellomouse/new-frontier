@@ -17,9 +17,9 @@ const CATEGORIES = [
     'Habitat'
 ];
 
-let parts_data = [];
+let partsData = [];
 let all_parts_index = {};
-let all_parts_index_data = {};
+let all_parts_indexData = {};
 
 /**
  * const isBlacklist - Is a path in
@@ -66,14 +66,14 @@ ALL_PARTS.forEach(x => {
     };
 
     all_parts_index[t.id] = x;
-    all_parts_index_data[t.id] = data;
-    parts_data.push(data);
+    all_parts_indexData[t.id] = data;
+    partsData.push(data);
 });
 
 module.exports = {
     parts: ALL_PARTS,
     categories: CATEGORIES,
-    parts_data: parts_data,
+    partsData: partsData,
     index: all_parts_index,
-    index_data: all_parts_index_data
+    indexData: all_parts_indexData
 };

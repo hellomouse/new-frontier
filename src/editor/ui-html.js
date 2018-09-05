@@ -38,7 +38,7 @@ global.editorFunctions.displayPartData = function (id) {
     let container = document.getElementById('part-desc');
     let left_half = document.getElementById('part-desc-1');
     let right_half = document.getElementById('part-desc-2');
-    let data = allParts.index_data[id];
+    let data = allParts.indexData[id];
 
     container.style.display = 'inline';
     left_half.innerHTML = `
@@ -123,7 +123,7 @@ module.exports = `
         background-color: rgba(0, 0, 0, 0.9);
     " class="noselect"
     >${
-        allParts.parts_data.map(x => {
+        allParts.partsData.map(x => {
             let x_ratio = x.width / Math.max(x.width, x.height);
             let y_ratio = x.height / Math.max(x.width, x.height);
 

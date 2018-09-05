@@ -125,19 +125,18 @@ class Editor extends RenderableScene {
 
         /* Draw a build grid */
         let lines = new PIXI.Graphics();
+        let bound = editorConfig.buildAreaBoundary;
+        let thickness;
+
         this.stage.addChild(lines);
 
-        for (let i = -editorConfig.buildAreaBoundary;
-                i < editorConfig.buildAreaBoundary;
-                i += editorConfig.buildGridSize) {
-            lines
-                .lineStyle(editorConfig.gridThickness, editorConfig.gridLineColor)
-                .moveTo(i, -editorConfig.buildAreaBoundary)
-                .lineTo(i, editorConfig.buildAreaBoundary);
-            lines
-                .lineStyle(editorConfig.gridThickness, editorConfig.gridLineColor)
-                .moveTo(-editorConfig.buildAreaBoundary, i)
-                .lineTo(editorConfig.buildAreaBoundary, i);
+        for (let i = -bound; i <= bound; i += editorConfig.buildGridSize) {
+            /* Adjust for a thicker outer boundary */
+            thickness = editorConfig.gridThickness * (Math.abs(i) === bound ? 5 : 1);
+
+            lines.lineStyle(thickness, editorConfig.gridLineColor);
+            lines.moveTo(i, -bound).lineTo(i, bound);
+            lines.moveTo(-bound, i).lineTo(bound, i);
         }
     }
 
@@ -228,7 +227,7 @@ class Editor extends RenderableScene {
         /* Keep image at mouse location */
         let x = e.clientX;
         let y = e.clientY;
-        let data = allParts.index_data[this.currentSelectBuild];
+        let data = allParts.indexData[this.currentSelectBuild];
 
         icon.style.left = x + 'px';
         icon.style.top = y + 'px';
@@ -303,11 +302,6 @@ class Editor extends RenderableScene {
         rocket.reposition(90, -100); // TODO update to launch pad coords
         return rocket;
     }
-
-
-
-
-
 
     /**
      * onLeftClick - On click event. Places
@@ -416,6 +410,8 @@ class Editor extends RenderableScene {
 
                 for (let part of this.selectedParts)
                     part.moveToRelative(dpos.dx, dpos.dy);
+
+                editorMan.snapOutOfBounds(this);
                 this.addCurrentStateToStack();
                 break;
             }

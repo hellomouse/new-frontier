@@ -157,6 +157,9 @@ module.exports = {
     addPart (editor, x, y, force=false, undo=true) {
         if (!editor.currentSelectBuild) return false;  // Nothing selected
 
+        /* Part is outside of the build area */
+        if (Math.abs(x) >= editorConfig.buildAreaBoundary || Math.abs(y) >=editorConfig.buildAreaBoundary) return;
+
         /* Create the object and other variables */
         let angle = gameUtil.math.normalizeAngle(Math.PI / 2 * editor.placement_rotation);
         let obj = new RocketPartGraphic(editor.currentSelectBuild, x, y);
@@ -185,6 +188,7 @@ module.exports = {
 
         editor.currentBuild.push(obj);
         editor.stage.addChild(obj.sprite);
+        this.snapOutOfBounds(editor);
 
         if (undo) editor.addCurrentStateToStack();
         return true;
@@ -225,6 +229,7 @@ module.exports = {
         if (editor.selectedParts.length === 0) return;
 
         this.rotateParts(editor.selectedParts, angle);
+        this.snapOutOfBounds(editor);
         editor.addCurrentStateToStack();
     },
 
@@ -336,6 +341,7 @@ module.exports = {
             part.moveTo(px + dx, py + dy);
         }
 
+        this.snapOutOfBounds(editor);
         editor.addCurrentStateToStack();
     },
 
@@ -407,5 +413,28 @@ module.exports = {
         x = f(x / smallest_x) * smallest_x;
         y = f(y / smallest_y) * smallest_y;
         return { x: x, y: y };
+    },
+
+    /**
+     * snapOutOfBounds - Snaps all out of bound
+     * parts in the editor back into bounds
+     *
+     * @param  {Editor}  editor         Editor object
+     */
+    snapOutOfBounds (editor) {
+        for (let part of editor.currentBuild) {
+            let dw = part.getRealWidth() / 2;
+            let dh = part.getRealHeight() / 2;
+            
+            /* Snap part to correct x and y boundary */
+            if (part.x - dw < -editorConfig.buildAreaBoundary)
+                part.moveTo(-editorConfig.buildAreaBoundary + dw, part.y);
+            else if (part.x + dw > editorConfig.buildAreaBoundary)
+                part.moveTo(editorConfig.buildAreaBoundary - dw, part.y);
+            if (part.y - dh < -editorConfig.buildAreaBoundary)
+                part.moveTo(part.x, -editorConfig.buildAreaBoundary + dh);
+            else if (part.y + dh > editorConfig.buildAreaBoundary)
+                part.moveTo(part.x, editorConfig.buildAreaBoundary - dh);
+        }
     }
 };

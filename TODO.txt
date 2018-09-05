@@ -28,7 +28,6 @@ UTIL FOLDER
 
 Add a debug console
 
-
 Planet editor tool
 
 Download fonts
@@ -42,19 +41,10 @@ Editor draw the select box if drag
     REDO CONTROLS
         Bottom bar is control/help/engineering
 
-    paste - move down and to left 1 each paste, reset on camera move
-
     editor auto-rotate part
 
-
-    Easy
-    -----------------------------------------------
     Moving object - move camera if it goes off screen
     Disable launch until rocket is constructed
-
-    //TODO collision check after rotate and move
-    // Fix rotating out of bounds, make it red and invalid
-
 
     -- At this point start extensive linting --
         HTML formatting
@@ -74,6 +64,10 @@ Editor draw the select box if drag
     editor actions
     editor crew tab
     editor save, load managment of ships
+
+    adaptable parts
+        like fuel tanks grow to fit smaller/slant
+        skins for parts
 
     Seperate parts ine editor into seperate rockets (not connected)
 
